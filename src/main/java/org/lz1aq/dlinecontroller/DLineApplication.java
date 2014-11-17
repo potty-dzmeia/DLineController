@@ -1,7 +1,6 @@
-package dlinecontroller_lz1aq;
+package org.lz1aq.dlinecontroller;
 
 
-import dlinecontroller_lz1aq.DLineApplicationState.AntennaDirections;
 import java.awt.Event;
 import java.awt.event.ItemEvent;
 import java.util.logging.Level;
@@ -14,13 +13,16 @@ import javax.swing.SwingUtilities;
  * and open the template in the editor.
  */
 
+import org.lz1aq.dlinecontroller.DLineApplicationState.AntennaDirections;
+
 /**
  *
  * @author Chavdar
  */
 public class DLineApplication extends javax.swing.JFrame {   
     
-    static final int MIN_SWITCHING_SPEED_IN_MS = 150;
+	private static final long serialVersionUID = 1L;
+	static final int MIN_SWITCHING_SPEED_IN_MS = 150;
     static final int DEFAULT_SWITCHING_SPEED_IN_MS = 2000;
     static final int MAX_SWITCHING_SPEED_IN_MS = 60000;
 

@@ -5,7 +5,7 @@
  */
 
 
-package dlinecontroller_lz1aq;
+package org.lz1aq.dlinecontroller;
 
 /**
  * 

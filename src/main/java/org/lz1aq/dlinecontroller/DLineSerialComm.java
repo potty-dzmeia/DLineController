@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dlinecontroller_lz1aq;
+package org.lz1aq.dlinecontroller;
 
 import gnu.io.*;
 
