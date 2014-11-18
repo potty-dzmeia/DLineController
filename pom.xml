@@ -27,12 +27,15 @@
     	<version>2.1.7</version>
     </dependency>
     
+    <!--
     <dependency>
       <groupId>org.lz1aq</groupId>
       <artifactId>rxtx-native-files</artifactId>
       <version>2.1.7</version>
       <classifier>${build.type}</classifier>
     </dependency>
+    -->
+    
   </dependencies>
   
   
