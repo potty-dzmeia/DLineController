@@ -117,6 +117,12 @@ public class DLineApplication extends javax.swing.JFrame {
         // Create the object which will take care of sending data through the UART
         dLineSerialComm = new DLineSerialComm();
         
+        // Set java.library.path so that we see librxtxSerial.so/dll
+        System.out.println("Working Directory = " +
+                System.getProperty("user.dir"));
+        System.out.println(System.getProperty("java.library.path"));
+        //System.setProperty("java.library.path", yourPath);
+        
         // Init GUI
         initComponents();      
     }
