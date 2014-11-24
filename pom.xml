@@ -69,7 +69,7 @@
             <manifest>
               
               <addClasspath>true</addClasspath>
-              <classpathPrefix>lib/</classpathPrefix>
+              <classpathPrefix>libs/</classpathPrefix>
               
               <mainClass>org.lz1aq.dlinecontroller.DLineApplication</mainClass>
             </manifest>
@@ -79,63 +79,12 @@
       
       -->
       
-      <!-- Package in uber jar -->
-      <!--
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.5.1</version>
-        <configuration>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-          <archive>
-            
-            <manifest>
-              <mainClass>org.lz1aq.dlinecontroller.DLineApplication</mainClass>
-            </manifest>
-            <manifestEntries>
-              <Class-Path>./lib</Class-Path>
-            </manifestEntries>
-          </archive>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      -->
+    
       
-      <!-- Package in uber jar -->
-      <!--
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-shade-plugin</artifactId>
-            <version>2.3</version>
-            <executions>
-              <execution>
-                <phase>package</phase>
-                <goals>
-                  <goal>shade</goal>
-                </goals>
-                <configuration>
-                  <transformers>
-                    <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                      <mainClass>org.lz1aq.dlinecontroller.DLineApplication</mainClass>
-                    </transformer>
-                  </transformers>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-      -->
-      
-      <!-- Plugin for copying dependencies from repo to lib/ -->
+    
+      <!-- Copy dependencies from "repository" to "lib/" -->
       <plugin>
+        
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <version>2.9</version>
@@ -145,10 +94,8 @@
             <id>Unpack-native-libraries</id>
             <phase>compile</phase>
             <goals>
-<!--               <goal>unpack</goal> -->
-            <goal>unpack</goal>
-            </goals>
-            
+              <goal>unpack</goal>
+            </goals>    
             <configuration>
               <artifactItems>
                 <artifactItem>
@@ -169,8 +116,7 @@
             <phase>compile</phase>
             <goals>
               <goal>copy</goal>
-            </goals>
-      
+            </goals>   
             <configuration>
               <artifactItems>           
                 <artifactItem>
@@ -179,67 +125,50 @@
                   <version>2.1.7</version>
                   <type>jar</type>
                   <overWrite>true</overWrite>
-                  <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                  <outputDirectory>${project.build.directory}/libs</outputDirectory>
                 </artifactItem>
               </artifactItems>
             </configuration>
-          </execution>
-          
+          </execution>          
         </executions>
+        
       </plugin>
       
     
       <plugin>
-                <groupId>org.dstovall</groupId>
-                <artifactId>onejar-maven-plugin</artifactId>
-                <version>1.4.4</version>
-                <executions>
-                    <execution>
-                        <configuration>
-
-                          <mainClass>org.lz1aq.dlinecontroller.DLineApplication</mainClass>
-                          <onejarVersion>0.97</onejarVersion>
-                            <!-- Optional, use only if you need to include native libraries (dll's) -->
-                            <binlibs>
-                                <fileSet>
-                                    <directory>${project.build.directory}/native_libs</directory>
-                                    <includes>
-                                        <include>librxtxSerial.so</include>
-                                    </includes>
-                                </fileSet>
-                            </binlibs>
-                           
-                        </configuration>
-                        <goals>
-                            <goal>one-jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+        <groupId>org.dstovall</groupId>
+        <artifactId>onejar-maven-plugin</artifactId>
+        <version>1.4.4</version>
+        <executions>
+          <execution>
+           <configuration>
+              <mainClass>org.lz1aq.dlinecontroller.DLineApplication</mainClass>
+              <onejarVersion>0.97</onejarVersion>
+              <!-- Optional, use only if you need to include native libraries (dll's) -->
+              <binlibs>
+                <fileSet>
+                  <directory>${project.build.directory}/native_libs</directory>
+                  <includes>
+									   <include>librxtxSerial.so</include>
+									</includes>
+                </fileSet>
+              </binlibs>
+           </configuration>
+           <goals>
+             <goal>one-jar</goal>
+           </goals>
+         </execution>
+       </executions>
+     </plugin>
             
-      
-      
-      <!-- For sure fire to see the needed libraries -->
-      <!--
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <systemProperties>
-            <property>
-              <name>java.library.path</name>
-              <value>${project.build.directory}/lib</value>
-            </property>
-          </systemProperties>
-        </configuration>
-      </plugin>
-      -->
       
     </plugins>
     
+    
   </build>
   
-  <!-- Specify the local repository (we keep the dependencies there) -->
+  
+  <!-- My local repository (we keep the dependencies there) -->
   <repositories>
     <repository>
         <id>my-local-repo</id>
@@ -254,6 +183,7 @@
         </pluginRepository>
     </pluginRepositories>
   
+    
    <!-- Build Type -->
   <profiles>
     <profile>
