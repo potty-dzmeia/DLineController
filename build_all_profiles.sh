@@ -21,9 +21,9 @@ do
    # build each of the profiles
    mvn -P "$i" clean install
    # copy the jar file to /distribution 
-   cp ./target/dlinecontroller-"$i".jar ./distribution/
-   
+   cp ./target/dlinecontroller_v*.jar ./distribution/
+
 done
 
-
+mvn clean
 

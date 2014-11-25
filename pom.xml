@@ -11,6 +11,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    
   </properties>
 
 
@@ -134,7 +135,7 @@
             <configuration>
               <mainClass>org.lz1aq.dlinecontroller.DLineApplication</mainClass>
               <onejarVersion>0.97</onejarVersion>
-              <filename>dlinecontroller-${build.type}.jar</filename> 
+              <filename>dlinecontroller_v${project.version}-${build.type}.jar</filename> 
               <!-- Include native libraries (.dll/.so) -->
               <binlibs>
                 <fileSet>
