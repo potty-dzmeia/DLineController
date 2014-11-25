@@ -29,4 +29,5 @@ You will need to do the following:
   * Extract the file from the directory named `/binlib` to the same place where the `nameofthedownloadedfile.jar` file is located.
 E.g. if you are using Windows OS, the file that you need to extract is called rxtxSerial.dll
   * Now start the program by typing: `java -Djava.path.library=./  -jar nameofthedownloadedfile.jar`
-    *Note: What you do here with this `-Djava.path.library=./` is to tell Java to look for the rxtxSerial.dll file in the local directory.
+
+Note: What you do here with this `-Djava.path.library=./` is to tell Java to look for the rxtxSerial.dll file in the local directory.
