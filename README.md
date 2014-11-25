@@ -26,8 +26,9 @@ Installation:
 
 You will need to do the following:
 * The `nameofthedownloadedfile.jar` file that you have downloaded is actually an archive. 
-Open it with an appropriate file archiver program (e.g. 7zip).
+ Open it with an appropriate file archiver program (e.g. 7zip).
 * Extract the file from the directory named `/binlib` to the same place where the `nameofthedownloadedfile.jar` file is located.
 E.g. if you are using Windows OS, the file that you need to extract is called rxtxSerial.dll
-* Now start the program by typing:`java -Djava.path.library=./  -jar nameofthedownloadedfile.jar`
-Note: What you do here with this "-Djava.path.library=./" is to tell Java to look for the rxtxSerial.dll file in the local directory.
+* Now start the program by typing:
+ `java -Djava.path.library=./  -jar nameofthedownloadedfile.jar`
+  *Note: What you do here with this `-Djava.path.library=./` is to tell Java to look for the rxtxSerial.dll file in the local directory.
