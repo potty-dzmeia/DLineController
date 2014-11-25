@@ -14,8 +14,8 @@ Installation:
 1) Make sure you have installed Java Runtime Environment (JRE) version 1.7 or later.
    
 2) Download the appropriate .jar file from the `/distribution` directory.
-    * For example: if you are running Windows with 32bit version of Java please download the file which contains "win32" in its name (i.e. dlinecontroller_v1.0-win32.jar)
-    * For demonstrative purposes I will designate the downloaded file name by `nameofthedownloadedfile.jar`
+   * For example: if you are running Windows with 32bit version of Java please download the file which contains "win32" in its name (i.e. dlinecontroller_v1.0-win32.jar)
+   * For demonstrative purposes I will designate the downloaded file name by `nameofthedownloadedfile.jar`
     
 3) To start the program double-click on the downloaded file.
     * If double click doesn't work use the command line to start it by writing: 
