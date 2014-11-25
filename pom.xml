@@ -6,7 +6,6 @@
   <artifactId>dlinecontroller</artifactId>
   <version>1.0</version>
   <packaging>jar</packaging>
-
   <name>dlinecontroller</name>
   <url>www.active-antenna.eu</url>
 
@@ -15,7 +14,9 @@
   </properties>
 
 
+  <!-- ============================Dependencies============================ -->
   <dependencies>
+    
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -28,25 +29,19 @@
     	<artifactId>rxtx</artifactId>
     	<version>2.1.7</version>
     </dependency>
-    
-    
-    <!-- Not needed
-    <dependency>
-      <groupId>org.lz1aq</groupId>
-      <artifactId>rxtx-native-files</artifactId>
-      <version>2.1.7</version>
-      <classifier>${build.type}</classifier>
-    </dependency>
-    -->
-    
+   
   </dependencies>
   
   
+  
+  
+  <!-- ============================Build============================ -->
   <build>
   
+
     <plugins>
     
-      <!-- Specify which Java version -->
+      <!-- =====Plugin===== -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -57,7 +52,7 @@
         </configuration>
       </plugin>
       
-      
+      <!-- =====Plugin===== -->
       <!-- Specify which class is started when the jar is executed -->
       <!--
       <plugin>
@@ -76,20 +71,15 @@
           </archive>
         </configuration>
       </plugin>
-      
       -->
       
-    
-      
-    
-      <!-- Copy dependencies from "repository" to "lib/" -->
-      <plugin>
-        
+      <!-- =====Plugin===== -->
+      <plugin>    
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <version>2.9</version>
-        <executions>
-          
+        <executions>   
+          <!-- Unpack native dependencies from "repository" to "native_libs/" -->
           <execution>           
             <id>Unpack-native-libraries</id>
             <phase>compile</phase>
@@ -109,8 +99,8 @@
                 </artifactItem>
               </artifactItems>
             </configuration>
-          </execution> 
-          
+          </execution>         
+          <!-- Copy dependencies from "repository" to "libs/" -->
           <execution>
             <id>Copy-dependencies</id>
             <phase>compile</phase>
@@ -131,79 +121,90 @@
             </configuration>
           </execution>          
         </executions>
-        
       </plugin>
       
-    
+      <!-- =====Plugin===== -->
       <plugin>
         <groupId>org.dstovall</groupId>
         <artifactId>onejar-maven-plugin</artifactId>
         <version>1.4.4</version>
-        <executions>
+        <executions>       
+          <!-- Pack all files in one uberjar -->
           <execution>
-           <configuration>
+            <configuration>
               <mainClass>org.lz1aq.dlinecontroller.DLineApplication</mainClass>
               <onejarVersion>0.97</onejarVersion>
-              <!-- Optional, use only if you need to include native libraries (dll's) -->
+              <filename>dlinecontroller-${build.type}.jar</filename> 
+              <!-- Include native libraries (.dll/.so) -->
               <binlibs>
                 <fileSet>
                   <directory>${project.build.directory}/native_libs</directory>
                   <includes>
-									   <include>librxtxSerial.so</include>
-									</includes>
+                    <include>*</include>
+                  </includes>
                 </fileSet>
               </binlibs>
-           </configuration>
-           <goals>
-             <goal>one-jar</goal>
-           </goals>
-         </execution>
-       </executions>
-     </plugin>
+            </configuration>
+            <goals>
+              <goal>one-jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
             
-      
     </plugins>
     
     
   </build>
   
   
-  <!-- My local repository (we keep the dependencies there) -->
-  <repositories>
+  
+  
+  <!-- ============================Repositories============================ -->
+  <repositories> 
+    <!-- My local repository (we keep the dependencies there) -->
     <repository>
-        <id>my-local-repo</id>
-        <url>file:${project.basedir}/repository</url>
+      <id>my-local-repo</id>
+      <url>file:${project.basedir}/repository</url>
     </repository>
   </repositories>
   
-   <pluginRepositories>
-        <pluginRepository>
-            <id>onejar-maven-plugin.googlecode.com</id>
-            <url>http://onejar-maven-plugin.googlecode.com/svn/mavenrepo</url>
-        </pluginRepository>
-    </pluginRepositories>
+  
+  
+  <!-- ============================pluginRepositories============================ -->
+  <pluginRepositories>
+    <pluginRepository>
+      <id>onejar-maven-plugin.googlecode.com</id>
+      <url>http://onejar-maven-plugin.googlecode.com/svn/mavenrepo</url>
+    </pluginRepository>
+  </pluginRepositories>
   
     
-   <!-- Build Type -->
+  
+   <!-- ============================profiles============================ -->
   <profiles>
+    
     <profile>
       <id>win32</id> 
       <properties>
         <build.type>win32</build.type>
       </properties>
     </profile>
+    
     <profile>
       <id>win64</id>
       <properties>
         <build.type>win64</build.type>
       </properties>
     </profile>
+    
     <profile>
       <id>linux_x86</id>
       <properties>
         <build.type>linux_x86</build.type>
       </properties>
     </profile>
+    
      <profile>
       <id>linux_x86_64</id>
       <activation>
@@ -213,18 +214,22 @@
         <build.type>linux_x86_64</build.type>
       </properties>
     </profile>
+    
     <profile>
       <id>linux_ia64</id>
       <properties>
         <build.type>linux_ia64</build.type>
       </properties>
     </profile>
+    
     <profile>
       <id>mac_os_x</id>
       <properties>
         <build.type>mac_os_x</build.type>
       </properties>
     </profile>
+    
   </profiles>
+  
   
 </project>
