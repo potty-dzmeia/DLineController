@@ -50,13 +50,13 @@ public class DLineSerialComm
 
     
     /** Sends command to the DLine Controller device
-     * @param sendToPort
+     * @param portName
      * @param baudRate
      * @param deviceId
      * @param command
      * @throws Exception 
      */
-    public void sendCommand(String sendToPort,
+    public void sendCommand(String portName,
                             int    baudRate,
                             byte   deviceId,
                             byte   command)  throws Exception
@@ -66,14 +66,14 @@ public class DLineSerialComm
         if(commPort == null)
         {
             System.out.println("First time opening commPort");
-            OpenPortAndGetStream(sendToPort, baudRate);
+            OpenPortAndGetStream(portName, baudRate);
         }
         // If another port needs to be used
-        else if(sendToPort.compareTo(commPortName) !=0)
+        else if(portName.compareTo(commPortName) !=0)
         {
             System.out.println("Opening another commPort");
             commPort.close();
-            OpenPortAndGetStream(sendToPort, baudRate);
+            OpenPortAndGetStream(portName, baudRate);
         }
             
         
@@ -83,6 +83,13 @@ public class DLineSerialComm
     }
  
    
+    public void close()
+    {
+        if(commPort!=null)
+        {
+            commPort.close();
+        }
+    }
     private void OpenPortAndGetStream(String comPort, int baudRate)  throws Exception
     {
         commPortName = comPort;

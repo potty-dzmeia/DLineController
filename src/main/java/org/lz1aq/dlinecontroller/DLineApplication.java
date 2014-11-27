@@ -903,6 +903,8 @@ public class DLineApplication extends javax.swing.JFrame {
             return; // do not save if maximized
         dLineSettings.setJFrameDimensions(this.getBounds());
         dLineSettings.SaveSettingsToDisk();
+        
+        dLineSerialComm.close();
     }//GEN-LAST:event_formWindowClosing
 
     private void jDialogRelaySwitchingComponentShown(java.awt.event.ComponentEvent evt)//GEN-FIRST:event_jDialogRelaySwitchingComponentShown
@@ -952,6 +954,7 @@ public class DLineApplication extends javax.swing.JFrame {
 
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_exitMenuItemActionPerformed
     {//GEN-HEADEREND:event_exitMenuItemActionPerformed
+        dLineSerialComm.close();
         System.exit(0);
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
