@@ -28,9 +28,9 @@ You will need to do the following:
  Open it with an appropriate file archiver program (e.g. 7zip).
   * Extract the file from the directory named `/binlib` to the same place where the `nameofthedownloadedfile.jar` file is located.
 E.g. if you are using Windows OS, the file that you need to extract is called rxtxSerial.dll
-  * Now start the program by typing: `java -Djava.path.library=./  -jar nameofthedownloadedfile.jar`
+  * Now start the program by typing: `java -Djava.library.path=./  -jar nameofthedownloadedfile.jar`
 
-Note: What you do here with this `-Djava.path.library=./` is to tell Java to look for the rxtxSerial.dll file in the local directory.
+Note: What you do here with this `-Djava.library.path=./` is to tell Java to look for the rxtxSerial.dll file in the local directory.
 
 5) [Linux] If you have started the program but you don't see the comm port in the "Settings" dialog, 
 probably you don't have the permission to access the commport file (e.g. /dev/ttyS0)
