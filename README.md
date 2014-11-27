@@ -36,3 +36,26 @@ Note: What you do here with this `-Djava.path.library=./` is to tell Java to loo
 probably you don't have the permission to access the commport file (e.g. /dev/ttyS0)
 * You need to add your username to the `dialout` group by writing: `sudo gpasswd --add yourusername dialout`
 * Then either login and logout or write `exec su – $USER`
+
+
+IDE Installation:
+-----------------
+
+1) Netbeans [recommended]
+* Go to `File->Open Project` and select the directory where you have downloaded the project
+* From the drop-down box in the Run tab select your current environment (e.g. linux_x86_64)
+* Right click on the project dlinecontroller and select `Properties->Run->VM Options` and write down `-Djava.library.path=./target/native_libs`
+* Now you are ready to run and debug the project
+
+2) Eclipse
+* From command line in the root directory of the project write `mvn -P linux_x86_64 clean install` 
+  * The `-P` option specifies the environment that we are working on, so pickup the appropriate value for you.
+* From command line in root directory of the project write `mvn eclipse:eclipse`
+  * This creates all the needed files so that eclipse recognizes the folder as a project
+* From Eclipse select `File->Import->General->Existing Project into Workspace` and point to the place where you have downloaded the project
+* Right click on the project and select `Run As->Run Configurations...` Double-click on `Java Application`
+  * In the `Main` tab specify the `Main Class:` to be  `DLineApplication` 
+  * In the `Arguments` tab specify the VM Arguments: `-Djava.library.path=./target/native_libs`
+  * Press on `Apply` and then `Run`
+* Note that every time you make changes in the source code you will need to write again `mvn -P linux_x86_64 clean install` 
+  * Then you write click on the project and select `Run As(or Debug As)->Java Application`
