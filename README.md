@@ -31,3 +31,8 @@ E.g. if you are using Windows OS, the file that you need to extract is called rx
   * Now start the program by typing: `java -Djava.path.library=./  -jar nameofthedownloadedfile.jar`
 
 Note: What you do here with this `-Djava.path.library=./` is to tell Java to look for the rxtxSerial.dll file in the local directory.
+
+5) [Linux] If you have started the program but you don't see the comm port in the "Settings" dialog, 
+probably you don't have the permission to access the commport file (e.g. /dev/ttyS0)
+* You need to add your username to the `dialout` group by writing: `sudo gpasswd --add yourusername dialout`
+* Then either login and logout or write `exec su – $USER`
