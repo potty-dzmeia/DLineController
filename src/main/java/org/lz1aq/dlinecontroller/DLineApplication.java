@@ -2,11 +2,14 @@ package org.lz1aq.dlinecontroller;
 
 
 import java.awt.Event;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -34,69 +37,17 @@ public class DLineApplication extends javax.swing.JFrame {
     private final DefaultComboBoxModel  baudRateComboBoxModel;
     private final DefaultComboBoxModel  deviceIdComboBoxModel;
     
-    private DirectionSwitchingThread directionSwitchingThread;
+    //private DirectionSwitchingThread directionSwitchingThread;
     
-    /**
-     * Thread responsible of automatic direction switching. The thread is started
-     * when the user selects the menu item: File->Debug mode
-     */
-    private class DirectionSwitchingThread extends Thread
-    {   
-        private int switchingSpeed = DEFAULT_SWITCHING_SPEED_IN_MS; // Time interval between direction change
-        private boolean running = false; // true - means the thread is running
-        private long timer = 0;
-        
-        public synchronized int getSwitchingSpeed()
-        {
-            return switchingSpeed;
-        }
-
-        public synchronized void setSwitchingSpeed(int switchingSpeed)
-        {
-            this.switchingSpeed = switchingSpeed;
-        }
-
-        public synchronized boolean isRunning()
-        {
-            return running;
-        }
-
-        public synchronized void setRunning(boolean running)
-        {
-            this.running = running;
-        }
-        
-        
-        @Override
-        public void run()
-        {
-            setRunning(true);
-            
-            while(isRunning())
+    private Timer timerForDirectionSwitching;    
+    private ActionListener directionSwitching = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt)
             {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() 
-                    {
-                        toggleDirectionButtons();
-                    }});
-                
-                timer = System.currentTimeMillis();
-                
-                while( System.currentTimeMillis() < (timer+switchingSpeed) )
-                {
-                    if(!isRunning())
-                        return;
-                }
-//                synchronized(this)
-//                {
-//                    try{wait(switchingSpeed);}catch (InterruptedException ex){Logger.getLogger(DLineApplication.class.getName()).log(Level.SEVERE, null, ex);}
-//                }             
+                toggleDirectionButtons();
             }
-        }
-        
-        
-    };
+    };        
+   
     
     
     /**
@@ -909,18 +860,17 @@ public class DLineApplication extends javax.swing.JFrame {
 
     private void jDialogRelaySwitchingComponentShown(java.awt.event.ComponentEvent evt)//GEN-FIRST:event_jDialogRelaySwitchingComponentShown
     {//GEN-HEADEREND:event_jDialogRelaySwitchingComponentShown
-        // Start the direction switching thread
-        directionSwitchingThread = new DirectionSwitchingThread();
-           //Read the initial switching speed
         int speed = Integer.parseInt(jTextFieldDebugSwitchingSpeed.getText());
-        directionSwitchingThread.setSwitchingSpeed(speed);
-        directionSwitchingThread.start();
+        
+        // Star the timer responsible for direction switching
+        timerForDirectionSwitching = new Timer(speed, directionSwitching);
+        timerForDirectionSwitching.setRepeats(true);
+        timerForDirectionSwitching.start();
     }//GEN-LAST:event_jDialogRelaySwitchingComponentShown
 
     private void jDialogRelaySwitchingComponentHidden(java.awt.event.ComponentEvent evt)//GEN-FIRST:event_jDialogRelaySwitchingComponentHidden
     {//GEN-HEADEREND:event_jDialogRelaySwitchingComponentHidden
-        // Tell the thread to stop running if it is running
-        directionSwitchingThread.setRunning(false);
+        timerForDirectionSwitching.stop();
     }//GEN-LAST:event_jDialogRelaySwitchingComponentHidden
 
     private void jTextFieldDebugSwitchingSpeedKeyPressed(java.awt.event.KeyEvent evt)//GEN-FIRST:event_jTextFieldDebugSwitchingSpeedKeyPressed
@@ -949,7 +899,7 @@ public class DLineApplication extends javax.swing.JFrame {
             jTextFieldDebugSwitchingSpeed.setText(Integer.toString(speed));
         }
 
-        directionSwitchingThread.setSwitchingSpeed(speed);        
+        timerForDirectionSwitching.setDelay(speed);        
     }//GEN-LAST:event_jTextFieldDebugSwitchingSpeedKeyPressed
 
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_exitMenuItemActionPerformed
