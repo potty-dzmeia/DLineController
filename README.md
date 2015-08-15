@@ -38,7 +38,7 @@ probably you don't have the permission to access the commport file (e.g. /dev/tt
 * Then either login and logout or write `exec su – $USER`
 
 
-IDE Installation:
+Development - IDE Installation:
 -----------------
 
 1) Netbeans [recommended]
