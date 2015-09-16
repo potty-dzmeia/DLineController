@@ -22,7 +22,9 @@ Installation:
 4) To start the program double-click on the downloaded file.
   * If double click doesn't work use the command line to start it by writing: `java -jar nameofthedownloadedfile.jar`
 
-5) If the program doesn't start because of the following exception:
+**In case of problems**: 
+
+1) If the program doesn't start because of the following exception:
    `java.lang.UnsatisfiedLinkError: no rxtxSerial in java.library.path thrown while loading gnu.io.RXTXCommDriver`
 
 You will need to do the following:
@@ -34,7 +36,7 @@ E.g. if you are using Windows OS, the file that you need to extract is called rx
 
 Note: What you do here with this `-Djava.library.path=./` is to tell Java to look for the rxtxSerial.dll file in the local directory.
 
-6) [Linux] If you have started the program but you don't see the comm port in the "Settings" dialog, 
+2) [Linux] If you have started the program but you don't see the comm port in the "Settings" dialog, 
 probably you don't have the permission to access the commport file (e.g. /dev/ttyS0)
 * You need to add your username to the `dialout` group by writing: `sudo gpasswd --add yourusername dialout`
 * Then either login and logout or write `exec su – $USER`
@@ -42,6 +44,8 @@ probably you don't have the permission to access the commport file (e.g. /dev/tt
 
 Development - IDE Installation:
 -----------------
+
+Clone or download the project.
 
 1) Netbeans [recommended]
 * Go to `File->Open Project` and select the directory where you have downloaded the project
