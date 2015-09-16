@@ -1,6 +1,7 @@
 package org.lz1aq.dlinecontroller;
 
 
+import java.awt.Dimension;
 import java.awt.Event;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -85,8 +86,7 @@ public class DLineApplication extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
 
         jDialogSettings = new javax.swing.JDialog();
         jPanel1 = new javax.swing.JPanel();
@@ -145,10 +145,8 @@ public class DLineApplication extends javax.swing.JFrame {
         jDialogSettings.setTitle("Settings");
         jDialogSettings.setAlwaysOnTop(true);
         jDialogSettings.setModal(true);
-        jDialogSettings.addComponentListener(new java.awt.event.ComponentAdapter()
-        {
-            public void componentShown(java.awt.event.ComponentEvent evt)
-            {
+        jDialogSettings.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
                 jDialogSettingsComponentShown(evt);
             }
         });
@@ -170,19 +168,15 @@ public class DLineApplication extends javax.swing.JFrame {
         jComboBoxBaudRate.setModel(this.getBaudRateComboBoxModel());
 
         jButtonSave.setText("Save");
-        jButtonSave.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        jButtonSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSaveActionPerformed(evt);
             }
         });
 
         jButtonCancel.setText("Cancel");
-        jButtonCancel.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCancelActionPerformed(evt);
             }
         });
@@ -324,14 +318,11 @@ public class DLineApplication extends javax.swing.JFrame {
         jDialogRelaySwitching.setAlwaysOnTop(true);
         jDialogRelaySwitching.setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
         jDialogRelaySwitching.setResizable(false);
-        jDialogRelaySwitching.addComponentListener(new java.awt.event.ComponentAdapter()
-        {
-            public void componentHidden(java.awt.event.ComponentEvent evt)
-            {
+        jDialogRelaySwitching.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentHidden(java.awt.event.ComponentEvent evt) {
                 jDialogRelaySwitchingComponentHidden(evt);
             }
-            public void componentShown(java.awt.event.ComponentEvent evt)
-            {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
                 jDialogRelaySwitchingComponentShown(evt);
             }
         });
@@ -342,10 +333,8 @@ public class DLineApplication extends javax.swing.JFrame {
         jLabelDebugMode.setToolTipText("");
 
         jButton1.setText("Cancel");
-        jButton1.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
@@ -353,10 +342,8 @@ public class DLineApplication extends javax.swing.JFrame {
         jTextFieldDebugSwitchingSpeed.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jTextFieldDebugSwitchingSpeed.setText("2000");
         jTextFieldDebugSwitchingSpeed.setToolTipText("Type a value [150 to 60000] and press Enter.");
-        jTextFieldDebugSwitchingSpeed.addKeyListener(new java.awt.event.KeyAdapter()
-        {
-            public void keyPressed(java.awt.event.KeyEvent evt)
-            {
+        jTextFieldDebugSwitchingSpeed.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
                 jTextFieldDebugSwitchingSpeedKeyPressed(evt);
             }
         });
@@ -414,10 +401,8 @@ public class DLineApplication extends javax.swing.JFrame {
         jDialogAbout.setResizable(false);
 
         jButton2.setText("OK");
-        jButton2.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
@@ -430,6 +415,8 @@ public class DLineApplication extends javax.swing.JFrame {
         jTextField1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jTextField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextField1.setText("www.active-antenna.eu");
+        jTextField1.setToolTipText("");
+        jTextField1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         javax.swing.GroupLayout jDialogAboutLayout = new javax.swing.GroupLayout(jDialogAbout.getContentPane());
         jDialogAbout.getContentPane().setLayout(jDialogAboutLayout);
@@ -457,16 +444,13 @@ public class DLineApplication extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Serial Interface to LZ1AQ's DLine Controller");
-        setMinimumSize(new java.awt.Dimension(233, 234));
-        addWindowListener(new java.awt.event.WindowAdapter()
-        {
-            public void windowClosing(java.awt.event.WindowEvent evt)
-            {
-                formWindowClosing(evt);
-            }
-            public void windowOpened(java.awt.event.WindowEvent evt)
-            {
+        setMinimumSize(new java.awt.Dimension(150, 150));
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
+            }
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
             }
         });
 
@@ -477,10 +461,8 @@ public class DLineApplication extends javax.swing.JFrame {
         jToggleButton7.setText("+Y");
         jToggleButton7.setMinimumSize(new java.awt.Dimension(0, 0));
         jToggleButton7.setPreferredSize(new java.awt.Dimension(40, 40));
-        jToggleButton7.addItemListener(new java.awt.event.ItemListener()
-        {
-            public void itemStateChanged(java.awt.event.ItemEvent evt)
-            {
+        jToggleButton7.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jToggleButton7ItemStateChanged(evt);
             }
         });
@@ -491,10 +473,8 @@ public class DLineApplication extends javax.swing.JFrame {
         jToggleButton8.setText("+Y");
         jToggleButton8.setMinimumSize(new java.awt.Dimension(0, 0));
         jToggleButton8.setPreferredSize(new java.awt.Dimension(40, 40));
-        jToggleButton8.addItemListener(new java.awt.event.ItemListener()
-        {
-            public void itemStateChanged(java.awt.event.ItemEvent evt)
-            {
+        jToggleButton8.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jToggleButton8ItemStateChanged(evt);
             }
         });
@@ -505,10 +485,8 @@ public class DLineApplication extends javax.swing.JFrame {
         jToggleButton9.setText("-X");
         jToggleButton9.setMinimumSize(new java.awt.Dimension(0, 0));
         jToggleButton9.setPreferredSize(new java.awt.Dimension(40, 40));
-        jToggleButton9.addItemListener(new java.awt.event.ItemListener()
-        {
-            public void itemStateChanged(java.awt.event.ItemEvent evt)
-            {
+        jToggleButton9.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jToggleButton9ItemStateChanged(evt);
             }
         });
@@ -519,10 +497,8 @@ public class DLineApplication extends javax.swing.JFrame {
         jToggleButton4.setText("+X");
         jToggleButton4.setMinimumSize(new java.awt.Dimension(0, 0));
         jToggleButton4.setPreferredSize(new java.awt.Dimension(40, 40));
-        jToggleButton4.addItemListener(new java.awt.event.ItemListener()
-        {
-            public void itemStateChanged(java.awt.event.ItemEvent evt)
-            {
+        jToggleButton4.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jToggleButton4ItemStateChanged(evt);
             }
         });
@@ -533,10 +509,8 @@ public class DLineApplication extends javax.swing.JFrame {
         jToggleButton5.setText("Add");
         jToggleButton5.setMinimumSize(new java.awt.Dimension(0, 0));
         jToggleButton5.setPreferredSize(new java.awt.Dimension(40, 40));
-        jToggleButton5.addItemListener(new java.awt.event.ItemListener()
-        {
-            public void itemStateChanged(java.awt.event.ItemEvent evt)
-            {
+        jToggleButton5.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jToggleButton5ItemStateChanged(evt);
             }
         });
@@ -547,10 +521,8 @@ public class DLineApplication extends javax.swing.JFrame {
         jToggleButton6.setText("-X");
         jToggleButton6.setMinimumSize(new java.awt.Dimension(0, 0));
         jToggleButton6.setPreferredSize(new java.awt.Dimension(40, 40));
-        jToggleButton6.addItemListener(new java.awt.event.ItemListener()
-        {
-            public void itemStateChanged(java.awt.event.ItemEvent evt)
-            {
+        jToggleButton6.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jToggleButton6ItemStateChanged(evt);
             }
         });
@@ -561,10 +533,8 @@ public class DLineApplication extends javax.swing.JFrame {
         jToggleButton1.setText("+X");
         jToggleButton1.setMinimumSize(new java.awt.Dimension(0, 0));
         jToggleButton1.setPreferredSize(new java.awt.Dimension(40, 40));
-        jToggleButton1.addItemListener(new java.awt.event.ItemListener()
-        {
-            public void itemStateChanged(java.awt.event.ItemEvent evt)
-            {
+        jToggleButton1.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jToggleButton1ItemStateChanged(evt);
             }
         });
@@ -575,10 +545,8 @@ public class DLineApplication extends javax.swing.JFrame {
         jToggleButton2.setText("-Y");
         jToggleButton2.setMinimumSize(new java.awt.Dimension(0, 0));
         jToggleButton2.setPreferredSize(new java.awt.Dimension(40, 40));
-        jToggleButton2.addItemListener(new java.awt.event.ItemListener()
-        {
-            public void itemStateChanged(java.awt.event.ItemEvent evt)
-            {
+        jToggleButton2.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jToggleButton2ItemStateChanged(evt);
             }
         });
@@ -589,73 +557,52 @@ public class DLineApplication extends javax.swing.JFrame {
         jToggleButton3.setText("-Y");
         jToggleButton3.setMinimumSize(new java.awt.Dimension(0, 0));
         jToggleButton3.setPreferredSize(new java.awt.Dimension(40, 40));
-        jToggleButton3.addItemListener(new java.awt.event.ItemListener()
-        {
-            public void itemStateChanged(java.awt.event.ItemEvent evt)
-            {
+        jToggleButton3.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jToggleButton3ItemStateChanged(evt);
             }
         });
         jPanel11.add(jToggleButton3);
 
+        jPanel12.setLayout(new java.awt.BorderLayout());
+
         jToggleButtonAntennaMode.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jToggleButtonAntennaMode.setText("Dipole");
         jToggleButtonAntennaMode.setMinimumSize(null);
-        jToggleButtonAntennaMode.setPreferredSize(new java.awt.Dimension(40, 40));
-        jToggleButtonAntennaMode.addItemListener(new java.awt.event.ItemListener()
-        {
-            public void itemStateChanged(java.awt.event.ItemEvent evt)
-            {
+        jToggleButtonAntennaMode.setPreferredSize(null);
+        jToggleButtonAntennaMode.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jToggleButtonAntennaModeItemStateChanged(evt);
             }
         });
+        jPanel12.add(jToggleButtonAntennaMode, java.awt.BorderLayout.CENTER);
 
         jLabelSerialComm.setText("Serial Comm:");
-
-        javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
-        jPanel12.setLayout(jPanel12Layout);
-        jPanel12Layout.setHorizontalGroup(
-            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jToggleButtonAntennaMode, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
-            .addComponent(jLabelSerialComm, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel12Layout.setVerticalGroup(
-            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel12Layout.createSequentialGroup()
-                .addComponent(jToggleButtonAntennaMode, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelSerialComm)
-                .addContainerGap())
-        );
-
+        jLabelSerialComm.setMinimumSize(null);
+        jLabelSerialComm.setPreferredSize(null);
+        jPanel12.add(jLabelSerialComm, java.awt.BorderLayout.PAGE_END);
         jLabelSerialComm.getAccessibleContext().setAccessibleName("jLabelSerialComm");
         jLabelSerialComm.getAccessibleContext().setAccessibleDescription("");
 
         fileMenu.setMnemonic('f');
         fileMenu.setText("File");
-        fileMenu.addKeyListener(new java.awt.event.KeyAdapter()
-        {
-            public void keyPressed(java.awt.event.KeyEvent evt)
-            {
+        fileMenu.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
                 fileMenuKeyPressed(evt);
             }
         });
 
         jMenuSettigns.setText("Settings");
-        jMenuSettigns.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        jMenuSettigns.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuSettignsActionPerformed(evt);
             }
         });
         fileMenu.add(jMenuSettigns);
 
         jMenuDebugMode.setText("Debug mode");
-        jMenuDebugMode.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        jMenuDebugMode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuDebugModeActionPerformed(evt);
             }
         });
@@ -663,10 +610,8 @@ public class DLineApplication extends javax.swing.JFrame {
 
         exitMenuItem.setMnemonic('x');
         exitMenuItem.setText("Exit");
-        exitMenuItem.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 exitMenuItemActionPerformed(evt);
             }
         });
@@ -679,10 +624,8 @@ public class DLineApplication extends javax.swing.JFrame {
 
         aboutMenuItem.setMnemonic('a');
         aboutMenuItem.setText("About");
-        aboutMenuItem.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 aboutMenuItemActionPerformed(evt);
             }
         });
@@ -703,7 +646,7 @@ public class DLineApplication extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
+                .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
@@ -1104,10 +1047,16 @@ public class DLineApplication extends javax.swing.JFrame {
                                               Byte.parseByte(dLineSettings.getDeviceId()),
                                               dLineApplicationState.getState());
              // Draw the command being send at the bottom of the jFrame
+             final Dimension size = jLabelSerialComm.getPreferredSize();
+             jLabelSerialComm.setMinimumSize(size);
+             jLabelSerialComm.setPreferredSize(size);
              jLabelSerialComm.setText("Serial "+dLineSettings.getComPort()+": " +String.format("%8s", Integer.toBinaryString(dLineApplicationState.getState())).replace(" ", "0")); 
         } catch (Exception ex) 
         {
             // Draw debug info at the bottom of the jFrame
+             final Dimension size = jLabelSerialComm.getPreferredSize();
+             jLabelSerialComm.setMinimumSize(size);
+             jLabelSerialComm.setPreferredSize(size);
             jLabelSerialComm.setText("Serial "+dLineSettings.getComPort()+": " +ex.toString()); 
             Logger.getLogger(DLineApplication.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1218,7 +1167,17 @@ public class DLineApplication extends javax.swing.JFrame {
             dLineSettings.setButtonOrientation(DLineApplicationSettings.ButtonOrientation.NorthWest);
         
         dLineSettings.setBaudRate(jComboBoxBaudRate.getSelectedItem().toString());
-        dLineSettings.setComPort(jComboBoxComPort.getSelectedItem().toString());
+        
+        // In case there is no defined com port name use the string "notDefined"
+        if(jComboBoxComPort.getSelectedItem()==null)
+        {
+            dLineSettings.setComPort("notDefined");
+        }
+        else
+        {
+            dLineSettings.setComPort(jComboBoxComPort.getSelectedItem().toString());
+        }
+        
         
         // Store direction button texts
         dLineSettings.setLabelPlusY(jFormattedTextFieldPlusY.getText());

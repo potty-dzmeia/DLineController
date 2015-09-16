@@ -4,8 +4,8 @@
 
   <groupId>org.lz1aq</groupId>
   <artifactId>dlinecontroller</artifactId>
-  <version>1.1</version>
-  <description>What's new: Direction switching is now done using timer (i.e. not so CPU intesive).</description>
+  <version>1.2</version>
+  <description>What's new: Fixed issue where program was not working correctly in case no valid COM port was set. GUI improvement</description>
   <packaging>jar</packaging>
   <name>dlinecontroller</name>
   <url>www.active-antenna.eu</url>
