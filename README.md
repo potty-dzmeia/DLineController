@@ -13,14 +13,16 @@ Installation:
 
 1) Make sure you have installed Java Runtime Environment (JRE) version 1.7 or later.
 
-2) Download the appropriate .jar file from the `/distribution` directory.
-* For example: if you are running Windows with 32bit version of Java please download the file which contains "win32" in its name (i.e. dlinecontroller_v1.0-win32.jar)
+2) From the button "branch:master" select "tags" and select the newest available version (currently 1.2). 
+
+3) Download the appropriate .jar file from the `/distribution` directory.
+* For example: if you are running Windows with 32bit version of Java please download the file which contains "win32" in its name (i.e. dlinecontroller_v1.2-win32.jar)
 * For demonstrative purposes I will designate the downloaded file name by `nameofthedownloadedfile.jar`
 
-3) To start the program double-click on the downloaded file.
+4) To start the program double-click on the downloaded file.
   * If double click doesn't work use the command line to start it by writing: `java -jar nameofthedownloadedfile.jar`
 
-4) If the program doesn't start because of the following exception:
+5) If the program doesn't start because of the following exception:
    `java.lang.UnsatisfiedLinkError: no rxtxSerial in java.library.path thrown while loading gnu.io.RXTXCommDriver`
 
 You will need to do the following:
@@ -32,7 +34,7 @@ E.g. if you are using Windows OS, the file that you need to extract is called rx
 
 Note: What you do here with this `-Djava.library.path=./` is to tell Java to look for the rxtxSerial.dll file in the local directory.
 
-5) [Linux] If you have started the program but you don't see the comm port in the "Settings" dialog, 
+6) [Linux] If you have started the program but you don't see the comm port in the "Settings" dialog, 
 probably you don't have the permission to access the commport file (e.g. /dev/ttyS0)
 * You need to add your username to the `dialout` group by writing: `sudo gpasswd --add yourusername dialout`
 * Then either login and logout or write `exec su – $USER`
