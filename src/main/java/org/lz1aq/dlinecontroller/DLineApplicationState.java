@@ -19,7 +19,8 @@ public class DLineApplicationState
    
     private final DLineHardwareState    hardwareState;   // State of the relays in the DLine Controller
     private AntennaDirections           antennaDirection;// Current direction selection
-    private AntennaModes                antennaMode;     // Dipole or Loop
+    private AntennaModes                antennaMode;     // Directive or Additive
+    private AntennaTypes                antennaType;     // Dipole or Loop
    
     private final byte TRUE  = 1;
     private final byte FALSE = 0;
@@ -27,8 +28,9 @@ public class DLineApplicationState
     
     DLineApplicationState()
     {
-        antennaDirection  = DLineApplicationState.AntennaDirections.undefined;
-        antennaMode       = DLineApplicationState.AntennaModes.undefined;
+        antennaDirection  = AntennaDirections.undefined;
+        antennaType       = AntennaTypes.undefined;
+        antennaMode       = AntennaModes.undefined;
         hardwareState     = new DLineHardwareState();
     }
     
@@ -48,56 +50,65 @@ public class DLineApplicationState
         {
             case plusY:
                 hardwareState.setBit0(TRUE); // Y
-                hardwareState.setBit1(TRUE); // directive
                 hardwareState.setBit2(FALSE); // (+)
                 break;
                 
             case minusY:
                 hardwareState.setBit0(TRUE); // Y
-                hardwareState.setBit1(TRUE); // directive
                 hardwareState.setBit2(TRUE); // (-)
                 break;
                 
             case plusX:
                 hardwareState.setBit0(FALSE); // X
-                hardwareState.setBit1(TRUE); // directive
                 hardwareState.setBit2(FALSE); // (+)
                 break;
                 
             case minusX:
                 hardwareState.setBit0(FALSE); // X
-                hardwareState.setBit1(TRUE); // directive
                 hardwareState.setBit2(TRUE); // (-)
-                break;
-                
-            case add:
-                hardwareState.setBit1(FALSE); // Additive
                 break;
                 
             case undefined:
                 // Do nothing
                 break;
         }
-                
-    
-        //Also make sure that we have valid antenna mode:
-        if(antennaMode == AntennaModes.undefined)
-        {
-            this.setAntennaMode(AntennaModes.dipole);
-        }
     }
-
-    /** Sets the current antenna mode
-     * 
-     * @param mode Possible modes are dipole or loop
+    
+    /**
+     * Sets the mode - additive(add) or directive(normal)
+     * @param mode 
      */
     public void setAntennaMode(AntennaModes mode)
     {
-        antennaMode = mode;
+      this.antennaMode = mode;
+      
+      switch (mode)
+      {
+        case additive:
+          hardwareState.setBit1(FALSE); 
+          break;
+        case directive:
+          hardwareState.setBit1(TRUE);
+          break;
+        case undefined:
+          // Do nothing
+          break;
+
+      }
+    }
+    
+
+    /** Sets the current antenna mode
+     * 
+     * @param type Possible types are dipole or loop
+     */
+    public void setAntennaType(AntennaTypes type)
+    {
+        antennaType = type;
            
        // Mange the DLine Controller states:
        // ---------------------------------  
-       switch(mode)
+       switch(type)
        {
            case dipole:
                hardwareState.setDipole();
@@ -109,25 +120,26 @@ public class DLineApplicationState
                // do nothing
                break;
        }
-       
-        
-       //Also make sure that we have valid antenna direction:
-       if(antennaDirection == AntennaDirections.undefined)
-       {
-           this.setAntennaDirection(AntennaDirections.add);
-       }
     }
     
     
     public AntennaModes getAntennaMode()
     {
-        return antennaMode;
+      return antennaMode;
     }
+    
+    
+    public AntennaTypes getAntennaType()
+    {
+        return antennaType;
+    }
+    
     
     public AntennaDirections getAntennaDirection()
     {
         return antennaDirection;
     }
+    
     
     /** Returns which was the last directive mode that was used: Y or X
      *  This is useful when the current direction is "Add" and we need to inform
@@ -172,10 +184,19 @@ public class DLineApplicationState
         undefined
     }
     
-    /**
-     * Two antenna modes are available
-     */
+    
     public static enum AntennaModes
+    {
+      additive,
+      directive,
+      undefined
+    }
+    
+    
+    /**
+     * Two antenna types are available
+     */
+    public static enum AntennaTypes
     {
         dipole,
         loop,
@@ -259,7 +280,7 @@ public class DLineApplicationState
         }
 
         /**
-         * 0 - Additive      <br>
+         * 0 - Additive  <br>
          * 1 - Directive <br>
          * @param bit1 
          */
