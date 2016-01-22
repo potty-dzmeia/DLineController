@@ -4,8 +4,8 @@
 
   <groupId>org.lz1aq</groupId>
   <artifactId>dlinecontroller</artifactId>
-  <version>1.2</version>
-  <description>What's new: Fixed issue where program was not working correctly in case no valid COM port was set. GUI improvement</description>
+  <version>1.3</version>
+  <description>What's new: "Add" mode is not swtiched off by pressing a direction button; Debug window has now two mode: F/B and AllDirection switching</description>
   <packaging>jar</packaging>
   <name>dlinecontroller</name>
   <url>www.active-antenna.eu</url>

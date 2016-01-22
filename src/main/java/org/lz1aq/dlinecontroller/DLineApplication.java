@@ -45,7 +45,14 @@ public class DLineApplication extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent evt)
             {
-                toggleDirectionButtons();
+              if(jRadioButtonAllDirections.isSelected())
+              {
+                toggleAllDirectionButtons();
+              }
+              else
+              {
+                toggleFrontAndBack();
+              }
             }
     };        
    
@@ -118,10 +125,14 @@ public class DLineApplication extends javax.swing.JFrame {
     jButton1 = new javax.swing.JButton();
     jTextFieldDebugSwitchingSpeed = new javax.swing.JTextField();
     jLabel9 = new javax.swing.JLabel();
+    jRadioButtonAllDirections = new javax.swing.JRadioButton();
+    jRadioButtonFrontBack = new javax.swing.JRadioButton();
     jDialogAbout = new javax.swing.JDialog();
     jButton2 = new javax.swing.JButton();
     jLabel11 = new javax.swing.JLabel();
     jTextField1 = new javax.swing.JTextField();
+    jLabel10 = new javax.swing.JLabel();
+    buttonGroupDebugWindow = new javax.swing.ButtonGroup();
     jPanel11 = new javax.swing.JPanel();
     jToggleButton7 = new javax.swing.JToggleButton();
     jToggleButton8 = new javax.swing.JToggleButton();
@@ -364,25 +375,44 @@ public class DLineApplication extends javax.swing.JFrame {
 
     jLabel9.setText("msecs");
 
+    buttonGroupDebugWindow.add(jRadioButtonAllDirections);
+    jRadioButtonAllDirections.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+    jRadioButtonAllDirections.setSelected(true);
+    jRadioButtonAllDirections.setText("Toggle all four directions");
+
+    buttonGroupDebugWindow.add(jRadioButtonFrontBack);
+    jRadioButtonFrontBack.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+    jRadioButtonFrontBack.setText("Toggle F/B direction");
+    jRadioButtonFrontBack.addActionListener(new java.awt.event.ActionListener()
+    {
+      public void actionPerformed(java.awt.event.ActionEvent evt)
+      {
+        jRadioButtonFrontBackActionPerformed(evt);
+      }
+    });
+
     javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
     jPanel2.setLayout(jPanel2Layout);
     jPanel2Layout.setHorizontalGroup(
       jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanel2Layout.createSequentialGroup()
-        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-            .addContainerGap()
-            .addComponent(jLabelDebugMode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
           .addGroup(jPanel2Layout.createSequentialGroup()
+            .addContainerGap()
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+              .addComponent(jRadioButtonAllDirections, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+              .addComponent(jLabelDebugMode, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)))
+          .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+            .addContainerGap()
+            .addComponent(jRadioButtonFrontBack, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+          .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+            .addGap(99, 99, 99)
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
               .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(50, 50, 50)
                 .addComponent(jTextFieldDebugSwitchingSpeed, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel9))
-              .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(42, 42, 42)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel9)))
             .addGap(0, 0, Short.MAX_VALUE)))
         .addContainerGap())
     );
@@ -394,7 +424,11 @@ public class DLineApplication extends javax.swing.JFrame {
         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jTextFieldDebugSwitchingSpeed, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jLabel9))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(jRadioButtonAllDirections)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+        .addComponent(jRadioButtonFrontBack)
+        .addGap(18, 18, 18)
         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
     );
 
@@ -425,7 +459,7 @@ public class DLineApplication extends javax.swing.JFrame {
 
     jLabel11.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
     jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-    jLabel11.setText("by LZ1AQ");
+    jLabel11.setText("Serial Interface to LZ1AQ's DLine Controller ");
 
     jTextField1.setEditable(false);
     jTextField1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -434,6 +468,8 @@ public class DLineApplication extends javax.swing.JFrame {
     jTextField1.setToolTipText("");
     jTextField1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
+    jLabel10.setText("by LZ1AQ");
+
     javax.swing.GroupLayout jDialogAboutLayout = new javax.swing.GroupLayout(jDialogAbout.getContentPane());
     jDialogAbout.getContentPane().setLayout(jDialogAboutLayout);
     jDialogAboutLayout.setHorizontalGroup(
@@ -441,10 +477,14 @@ public class DLineApplication extends javax.swing.JFrame {
       .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDialogAboutLayout.createSequentialGroup()
         .addContainerGap()
         .addGroup(jDialogAboutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-          .addComponent(jTextField1)
-          .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE))
+          .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
+          .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         .addContainerGap())
+      .addGroup(jDialogAboutLayout.createSequentialGroup()
+        .addGap(142, 142, 142)
+        .addComponent(jLabel10)
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
     jDialogAboutLayout.setVerticalGroup(
       jDialogAboutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -452,9 +492,11 @@ public class DLineApplication extends javax.swing.JFrame {
         .addContainerGap()
         .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jLabel11)
-        .addGap(18, 18, 18)
-        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+        .addComponent(jLabel10)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(jButton2)
         .addContainerGap())
     );
 
@@ -939,6 +981,11 @@ public class DLineApplication extends javax.swing.JFrame {
         setButtonsOrientation();
     }//GEN-LAST:event_jButtonSaveActionPerformed
 
+  private void jRadioButtonFrontBackActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jRadioButtonFrontBackActionPerformed
+  {//GEN-HEADEREND:event_jRadioButtonFrontBackActionPerformed
+    // TODO add your handling code here:
+  }//GEN-LAST:event_jRadioButtonFrontBackActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -977,6 +1024,7 @@ public class DLineApplication extends javax.swing.JFrame {
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JMenuItem aboutMenuItem;
+  private javax.swing.ButtonGroup buttonGroupDebugWindow;
   private javax.swing.ButtonGroup buttonGroupDirections;
   private javax.swing.ButtonGroup buttonGroupInSettings;
   private javax.swing.JMenuItem exitMenuItem;
@@ -997,6 +1045,7 @@ public class DLineApplication extends javax.swing.JFrame {
   private javax.swing.JFormattedTextField jFormattedTextFieldPlusX;
   private javax.swing.JFormattedTextField jFormattedTextFieldPlusY;
   private javax.swing.JLabel jLabel1;
+  private javax.swing.JLabel jLabel10;
   private javax.swing.JLabel jLabel11;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
@@ -1014,6 +1063,8 @@ public class DLineApplication extends javax.swing.JFrame {
   private javax.swing.JPanel jPanel11;
   private javax.swing.JPanel jPanel12;
   private javax.swing.JPanel jPanel2;
+  private javax.swing.JRadioButton jRadioButtonAllDirections;
+  private javax.swing.JRadioButton jRadioButtonFrontBack;
   private javax.swing.JRadioButton jRadioButtonNorth;
   private javax.swing.JRadioButton jRadioButtonNorthWest;
   private javax.swing.JTextField jTextField1;
@@ -1174,38 +1225,92 @@ public class DLineApplication extends javax.swing.JFrame {
     this.setTitle(type+": "+direction+mode);
   }
 
+  
   /**
-   * When called this function will change the current direction (clockwise)
+   * When called this will change the current direction to the opposite of
+   * the current one (i.e. Front and Back)
    */
-  private void toggleDirectionButtons()
+  private void toggleFrontAndBack()
   {
-    if (dLineSettings.getButtonOrientation() == DLineApplicationSettings.ButtonOrientation.North)
+     if (dLineSettings.getButtonOrientation() == DLineApplicationSettings.ButtonOrientation.North)
     {
       if (jToggleButton8.isSelected())
       {
-        jToggleButton6.setSelected(true);
-      } else if (jToggleButton6.isSelected())
-      {
         jToggleButton2.setSelected(true);
-      } else if (jToggleButton2.isSelected())
+      } 
+      else if (jToggleButton6.isSelected())
       {
         jToggleButton4.setSelected(true);
-      } else
+      } 
+      else if (jToggleButton2.isSelected())
       {
         jToggleButton8.setSelected(true);
+      } 
+      else
+      {
+        jToggleButton6.setSelected(true);
       }
     } else
     {
       if (jToggleButton1.isSelected())
       {
-        jToggleButton7.setSelected(true);
-      } else if (jToggleButton7.isSelected())
-      {
         jToggleButton9.setSelected(true);
-      } else if (jToggleButton9.isSelected())
+      } 
+      else if (jToggleButton7.isSelected())
       {
         jToggleButton3.setSelected(true);
-      } else
+      } 
+      else if (jToggleButton9.isSelected())
+      {
+        jToggleButton1.setSelected(true);
+      } 
+      else
+      {
+        jToggleButton7.setSelected(true);
+      }
+    }
+  }
+  
+  
+  /**
+   * When called this function will change the current direction (clockwise)
+   */
+  private void toggleAllDirectionButtons()
+  {
+    if(dLineSettings.getButtonOrientation() == DLineApplicationSettings.ButtonOrientation.North)
+    {
+      if(jToggleButton8.isSelected())
+      {
+        jToggleButton6.setSelected(true);
+      }
+      else if(jToggleButton6.isSelected())
+      {
+        jToggleButton2.setSelected(true);
+      }
+      else if(jToggleButton2.isSelected())
+      {
+        jToggleButton4.setSelected(true);
+      }
+      else
+      {
+        jToggleButton8.setSelected(true);
+      }
+    }
+    else
+    {
+      if(jToggleButton1.isSelected())
+      {
+        jToggleButton7.setSelected(true);
+      }
+      else if(jToggleButton7.isSelected())
+      {
+        jToggleButton9.setSelected(true);
+      }
+      else if(jToggleButton9.isSelected())
+      {
+        jToggleButton3.setSelected(true);
+      }
+      else
       {
         jToggleButton1.setSelected(true);
       }
