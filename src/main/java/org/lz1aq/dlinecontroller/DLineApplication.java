@@ -208,7 +208,7 @@ public class DLineApplication extends javax.swing.JFrame {
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.weightx = 1.0;
     gridBagConstraints.weighty = 1.0;
-    gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
+    gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 5);
     jPanel3.add(jRadioButtonNorthWest, gridBagConstraints);
 
     jFormattedTextFieldPlusX.setText("jFormattedTextField3");
