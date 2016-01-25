@@ -169,6 +169,22 @@ public class DLineApplicationState
         return hardwareState.getState();        
     }
     
+    
+    /**
+     * @param bEnabled It true sets the device into single element mode
+     */
+    public void setSingleElementMode(boolean bEnabled)
+    {
+      if(bEnabled)
+      {
+        hardwareState.setBit6(TRUE);
+      }
+      else
+      {
+        hardwareState.setBit6(FALSE);
+      }
+ 
+    }
    
     
     /**
@@ -279,6 +295,13 @@ public class DLineApplicationState
             this.setLoop();           
         }
 
+        
+        public byte getBit0() 
+        {
+            return bit0;
+        }
+           
+        
         /**
          * 0 - Additive  <br>
          * 1 - Directive <br>
@@ -287,6 +310,7 @@ public class DLineApplicationState
         public void setBit1(byte value) {
             this.bit1 = value;
         }
+        
 
         /**
          * 0 - Forward  (+) <br>
@@ -297,6 +321,17 @@ public class DLineApplicationState
             this.bit2 = value;
         }
 
+        
+        /**
+         * Enables/disables single element mode
+         * @param value 
+         */
+        public void setBit6(byte value) 
+        {
+          this.bit6 = value;
+        }
+        
+        
         /**
          * When selecting Loop antenna it matters which direction we have
          * currently selected: X or Y.<br> 
@@ -354,9 +389,7 @@ public class DLineApplicationState
             return command;          
         }
 
-        public byte getBit0() {
-            return bit0;
-        }
+     
         
         
     }

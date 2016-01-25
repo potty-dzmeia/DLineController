@@ -50,6 +50,7 @@ public final class DLineApplicationSettings
     private String labelMinusY;
     private String labelPlusX;
     private String labelMinusX;
+    private boolean isSingleElementMode = false; // This setting is not saved to the file
     
     private final Properties prop;
     
@@ -153,7 +154,27 @@ public final class DLineApplicationSettings
         this.labelMinusX = labelMinusX;
     }
 
+    /**
+     * This setting is not saved to a file (i.e. it is set to 0 on object
+     * creation)
+     * 
+     * @param isEnabled True is single element mode is enabled
+     */
+    public void setSingleElementMode(boolean isEnabled)
+    {
+      this.isSingleElementMode = isEnabled;
+    }
     
+    /**
+     * This setting is not saved to a file (i.e. it is set to 0 every time
+     * the object is created)
+     * 
+   * @return True is single element mode is enabled
+     */
+    public boolean isSingleElementMode()
+    {
+      return this.isSingleElementMode;
+    }
     
     /**
      * Saves the settings into a file called "DLineSettings.properties"

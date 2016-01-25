@@ -95,28 +95,35 @@ public class DLineApplication extends javax.swing.JFrame {
   // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents()
   {
+    java.awt.GridBagConstraints gridBagConstraints;
 
     jDialogSettings = new javax.swing.JDialog();
     jPanel1 = new javax.swing.JPanel();
-    jRadioButtonNorth = new javax.swing.JRadioButton();
+    jPanel3 = new javax.swing.JPanel();
+    jFormattedTextFieldMinusX = new javax.swing.JFormattedTextField();
+    jLabel6 = new javax.swing.JLabel();
     jRadioButtonNorthWest = new javax.swing.JRadioButton();
-    jLabel1 = new javax.swing.JLabel();
+    jFormattedTextFieldPlusX = new javax.swing.JFormattedTextField();
+    jFormattedTextFieldMinusY = new javax.swing.JFormattedTextField();
+    jLabel5 = new javax.swing.JLabel();
+    jFormattedTextFieldPlusY = new javax.swing.JFormattedTextField();
+    jLabel8 = new javax.swing.JLabel();
+    jLabel4 = new javax.swing.JLabel();
+    jLabel3 = new javax.swing.JLabel();
+    jLabel2 = new javax.swing.JLabel();
+    jRadioButtonNorth = new javax.swing.JRadioButton();
+    jPanel4 = new javax.swing.JPanel();
+    jComboBoxDeviceId = new javax.swing.JComboBox();
     jComboBoxComPort = new javax.swing.JComboBox();
     jComboBoxBaudRate = new javax.swing.JComboBox();
-    jButtonSave = new javax.swing.JButton();
-    jButtonCancel = new javax.swing.JButton();
-    jLabel2 = new javax.swing.JLabel();
-    jLabel3 = new javax.swing.JLabel();
-    jFormattedTextFieldPlusY = new javax.swing.JFormattedTextField();
-    jFormattedTextFieldMinusY = new javax.swing.JFormattedTextField();
-    jFormattedTextFieldPlusX = new javax.swing.JFormattedTextField();
-    jFormattedTextFieldMinusX = new javax.swing.JFormattedTextField();
-    jLabel4 = new javax.swing.JLabel();
-    jLabel5 = new javax.swing.JLabel();
-    jLabel8 = new javax.swing.JLabel();
-    jLabel6 = new javax.swing.JLabel();
     jLabel7 = new javax.swing.JLabel();
-    jComboBoxDeviceId = new javax.swing.JComboBox();
+    jLabel12 = new javax.swing.JLabel();
+    jLabel13 = new javax.swing.JLabel();
+    jPanel5 = new javax.swing.JPanel();
+    jButtonCancel = new javax.swing.JButton();
+    jButtonSave = new javax.swing.JButton();
+    jPanel6 = new javax.swing.JPanel();
+    jCheckBoxSingleElementMode = new javax.swing.JCheckBox();
     buttonGroupInSettings = new javax.swing.ButtonGroup();
     buttonGroupDirections = new javax.swing.ButtonGroup();
     jDialogRelaySwitching = new javax.swing.JDialog();
@@ -164,31 +171,222 @@ public class DLineApplication extends javax.swing.JFrame {
         jDialogSettingsComponentShown(evt);
       }
     });
+    jDialogSettings.getContentPane().setLayout(new java.awt.GridBagLayout());
 
-    jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Settings"));
+    jPanel1.setLayout(new java.awt.GridBagLayout());
 
-    buttonGroupInSettings.add(jRadioButtonNorth);
-    jRadioButtonNorth.setText("N-S orientation");
-    jRadioButtonNorth.setToolTipText("North-South");
+    jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Button settings"));
+    jPanel3.setLayout(new java.awt.GridBagLayout());
+
+    jFormattedTextFieldMinusX.setText("jFormattedTextField5");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 3;
+    gridBagConstraints.gridy = 5;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+    jPanel3.add(jFormattedTextFieldMinusX, gridBagConstraints);
+
+    jLabel6.setText("-X:");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 2;
+    gridBagConstraints.gridy = 5;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 0.01;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(0, 20, 10, 0);
+    jPanel3.add(jLabel6, gridBagConstraints);
 
     buttonGroupInSettings.add(jRadioButtonNorthWest);
     jRadioButtonNorthWest.setText("NW-SE orientation");
     jRadioButtonNorthWest.setToolTipText("NorthWest-SouthEast");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 2;
+    gridBagConstraints.gridy = 1;
+    gridBagConstraints.gridwidth = 2;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
+    jPanel3.add(jRadioButtonNorthWest, gridBagConstraints);
 
-    jLabel1.setText("COM port settings:");
+    jFormattedTextFieldPlusX.setText("jFormattedTextField3");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 5;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
+    jPanel3.add(jFormattedTextFieldPlusX, gridBagConstraints);
+
+    jFormattedTextFieldMinusY.setText("jFormattedTextField2");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 3;
+    gridBagConstraints.gridy = 3;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
+    jPanel3.add(jFormattedTextFieldMinusY, gridBagConstraints);
+
+    jLabel5.setText("+X:");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 5;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 0.01;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(0, 5, 10, 0);
+    jPanel3.add(jLabel5, gridBagConstraints);
+
+    jFormattedTextFieldPlusY.setText("jFormattedTextField1");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 3;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
+    jPanel3.add(jFormattedTextFieldPlusY, gridBagConstraints);
+
+    jLabel8.setText("-Y:");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 2;
+    gridBagConstraints.gridy = 3;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 0.01;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 0);
+    jPanel3.add(jLabel8, gridBagConstraints);
+
+    jLabel4.setText("+Y:");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 3;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 0.01;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+    jPanel3.add(jLabel4, gridBagConstraints);
+
+    jLabel3.setText("Labes of direction buttons:");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 2;
+    gridBagConstraints.gridwidth = 4;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(10, 5, 5, 5);
+    jPanel3.add(jLabel3, gridBagConstraints);
+
+    jLabel2.setText("Button orientation:");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.gridwidth = 4;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(5, 5, 0, 5);
+    jPanel3.add(jLabel2, gridBagConstraints);
+
+    buttonGroupInSettings.add(jRadioButtonNorth);
+    jRadioButtonNorth.setText("N-S orientation");
+    jRadioButtonNorth.setToolTipText("North-South");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 1;
+    gridBagConstraints.gridwidth = 2;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+    jPanel3.add(jRadioButtonNorth, gridBagConstraints);
+
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 1;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+    jPanel1.add(jPanel3, gridBagConstraints);
+
+    jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("CommPort settings"));
+    jPanel4.setLayout(new java.awt.GridBagLayout());
+
+    jComboBoxDeviceId.setModel(deviceIdComboBoxModel);
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 5);
+    jPanel4.add(jComboBoxDeviceId, gridBagConstraints);
 
     jComboBoxComPort.setModel(this.comPortComboBoxModel);
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 1;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
+    jPanel4.add(jComboBoxComPort, gridBagConstraints);
 
     jComboBoxBaudRate.setModel(this.getBaudRateComboBoxModel());
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 2;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
+    jPanel4.add(jComboBoxBaudRate, gridBagConstraints);
 
-    jButtonSave.setText("Save");
-    jButtonSave.addActionListener(new java.awt.event.ActionListener()
-    {
-      public void actionPerformed(java.awt.event.ActionEvent evt)
-      {
-        jButtonSaveActionPerformed(evt);
-      }
-    });
+    jLabel7.setText("Device ID");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(5, 5, 0, 0);
+    jPanel4.add(jLabel7, gridBagConstraints);
+
+    jLabel12.setText("CommPort name");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 1;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+    jPanel4.add(jLabel12, gridBagConstraints);
+
+    jLabel13.setText("Baud rate");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 2;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
+    jPanel4.add(jLabel13, gridBagConstraints);
+
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+    jPanel1.add(jPanel4, gridBagConstraints);
+
+    jPanel5.setLayout(new java.awt.GridBagLayout());
 
     jButtonCancel.setText("Cancel");
     jButtonCancel.addActionListener(new java.awt.event.ActionListener()
@@ -198,139 +396,69 @@ public class DLineApplication extends javax.swing.JFrame {
         jButtonCancelActionPerformed(evt);
       }
     });
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(5, 2, 5, 5);
+    jPanel5.add(jButtonCancel, gridBagConstraints);
 
-    jLabel2.setText("Button orientation:");
+    jButtonSave.setText("Save");
+    jButtonSave.addActionListener(new java.awt.event.ActionListener()
+    {
+      public void actionPerformed(java.awt.event.ActionEvent evt)
+      {
+        jButtonSaveActionPerformed(evt);
+      }
+    });
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 2);
+    jPanel5.add(jButtonSave, gridBagConstraints);
 
-    jLabel3.setText("Direction buttons text:");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 3;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+    jPanel1.add(jPanel5, gridBagConstraints);
 
-    jFormattedTextFieldPlusY.setText("jFormattedTextField1");
+    jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Other"));
+    jPanel6.setLayout(new java.awt.GridBagLayout());
 
-    jFormattedTextFieldMinusY.setText("jFormattedTextField2");
+    jCheckBoxSingleElementMode.setText("Single element mode");
+    jCheckBoxSingleElementMode.setToolTipText("If checked this will set bit6 to TRUE");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(5, 5, 10, 5);
+    jPanel6.add(jCheckBoxSingleElementMode, gridBagConstraints);
 
-    jFormattedTextFieldPlusX.setText("jFormattedTextField3");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 2;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+    jPanel1.add(jPanel6, gridBagConstraints);
 
-    jFormattedTextFieldMinusX.setText("jFormattedTextField5");
-
-    jLabel4.setText("+Y:");
-
-    jLabel5.setText("+X:");
-
-    jLabel8.setText("-Y:");
-
-    jLabel6.setText("-X:");
-
-    jLabel7.setText("Device ID");
-
-    jComboBoxDeviceId.setModel(deviceIdComboBoxModel);
-
-    javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-    jPanel1.setLayout(jPanel1Layout);
-    jPanel1Layout.setHorizontalGroup(
-      jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanel1Layout.createSequentialGroup()
-        .addContainerGap()
-        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addGroup(jPanel1Layout.createSequentialGroup()
-            .addComponent(jButtonSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGap(30, 30, 30)
-            .addComponent(jButtonCancel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addContainerGap())
-          .addGroup(jPanel1Layout.createSequentialGroup()
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jRadioButtonNorth, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jRadioButtonNorthWest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-              .addComponent(jLabel1)
-              .addComponent(jLabel2)
-              .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                  .addComponent(jComboBoxBaudRate, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                  .addComponent(jComboBoxComPort, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(132, 132, 132)))
-            .addGap(6, 6, 6))
-          .addGroup(jPanel1Layout.createSequentialGroup()
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                  .addComponent(jLabel4)
-                  .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                  .addComponent(jFormattedTextFieldPlusY)
-                  .addComponent(jFormattedTextFieldPlusX))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                  .addComponent(jLabel8)
-                  .addComponent(jLabel6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                  .addComponent(jFormattedTextFieldMinusY)
-                  .addComponent(jFormattedTextFieldMinusX)))
-              .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addContainerGap())
-          .addGroup(jPanel1Layout.createSequentialGroup()
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(jLabel3)
-              .addComponent(jComboBoxDeviceId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-    );
-    jPanel1Layout.setVerticalGroup(
-      jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanel1Layout.createSequentialGroup()
-        .addGap(4, 4, 4)
-        .addComponent(jLabel7)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jComboBoxDeviceId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addComponent(jLabel2)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jRadioButtonNorth, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(jRadioButtonNorthWest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        .addGap(12, 12, 12)
-        .addComponent(jLabel1)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jComboBoxComPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addComponent(jComboBoxBaudRate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addGap(18, 18, 18)
-        .addComponent(jLabel3)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jFormattedTextFieldPlusY, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jFormattedTextFieldMinusY, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jLabel4)
-          .addComponent(jLabel8))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jFormattedTextFieldPlusX, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jFormattedTextFieldMinusX, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jLabel5)
-          .addComponent(jLabel6))
-        .addGap(18, 18, 18)
-        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jButtonSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(jButtonCancel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        .addContainerGap())
-    );
-
-    javax.swing.GroupLayout jDialogSettingsLayout = new javax.swing.GroupLayout(jDialogSettings.getContentPane());
-    jDialogSettings.getContentPane().setLayout(jDialogSettingsLayout);
-    jDialogSettingsLayout.setHorizontalGroup(
-      jDialogSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jDialogSettingsLayout.createSequentialGroup()
-        .addContainerGap()
-        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        .addContainerGap())
-    );
-    jDialogSettingsLayout.setVerticalGroup(
-      jDialogSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jDialogSettingsLayout.createSequentialGroup()
-        .addContainerGap()
-        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        .addContainerGap())
-    );
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
+    jDialogSettings.getContentPane().add(jPanel1, gridBagConstraints);
 
     jDialogRelaySwitching.setTitle("Debug mode");
     jDialogRelaySwitching.setAlwaysOnTop(true);
@@ -760,6 +888,7 @@ public class DLineApplication extends javax.swing.JFrame {
         // Set the desired buttons orientation and labels  
         setButtonsOrientation();
         setButtonsLabels();
+        dLineApplicationState.setSingleElementMode(dLineSettings.isSingleElementMode());
         // Read last used JFrame dimensions and restore it
         this.setBounds(dLineSettings.getJFrameDimensions());
         
@@ -974,11 +1103,11 @@ public class DLineApplication extends javax.swing.JFrame {
 
     private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButtonSaveActionPerformed
     {//GEN-HEADEREND:event_jButtonSaveActionPerformed
-        
         jDialogSettings.setVisible(false); // Hide the SettingsDialog
         saveUserSettings(); // Read the state of the controls and save them
         setButtonsLabels();
         setButtonsOrientation();
+        dLineApplicationState.setSingleElementMode(dLineSettings.isSingleElementMode());
     }//GEN-LAST:event_jButtonSaveActionPerformed
 
   private void jRadioButtonFrontBackActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jRadioButtonFrontBackActionPerformed
@@ -1034,6 +1163,7 @@ public class DLineApplication extends javax.swing.JFrame {
   private javax.swing.JButton jButton2;
   private javax.swing.JButton jButtonCancel;
   private javax.swing.JButton jButtonSave;
+  private javax.swing.JCheckBox jCheckBoxSingleElementMode;
   private javax.swing.JComboBox jComboBoxBaudRate;
   private javax.swing.JComboBox jComboBoxComPort;
   private javax.swing.JComboBox jComboBoxDeviceId;
@@ -1044,9 +1174,10 @@ public class DLineApplication extends javax.swing.JFrame {
   private javax.swing.JFormattedTextField jFormattedTextFieldMinusY;
   private javax.swing.JFormattedTextField jFormattedTextFieldPlusX;
   private javax.swing.JFormattedTextField jFormattedTextFieldPlusY;
-  private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel10;
   private javax.swing.JLabel jLabel11;
+  private javax.swing.JLabel jLabel12;
+  private javax.swing.JLabel jLabel13;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
   private javax.swing.JLabel jLabel4;
@@ -1063,6 +1194,10 @@ public class DLineApplication extends javax.swing.JFrame {
   private javax.swing.JPanel jPanel11;
   private javax.swing.JPanel jPanel12;
   private javax.swing.JPanel jPanel2;
+  private javax.swing.JPanel jPanel3;
+  private javax.swing.JPanel jPanel4;
+  private javax.swing.JPanel jPanel5;
+  private javax.swing.JPanel jPanel6;
   private javax.swing.JRadioButton jRadioButtonAllDirections;
   private javax.swing.JRadioButton jRadioButtonFrontBack;
   private javax.swing.JRadioButton jRadioButtonNorth;
@@ -1148,14 +1283,14 @@ public class DLineApplication extends javax.swing.JFrame {
       final Dimension size = jLabelSerialComm.getPreferredSize();
       jLabelSerialComm.setMinimumSize(size);
       jLabelSerialComm.setPreferredSize(size);
-      jLabelSerialComm.setText("Serial " + dLineSettings.getComPort() + ": " + String.format("%8s", Integer.toBinaryString(dLineApplicationState.getState())).replace(" ", "0"));
+      jLabelSerialComm.setText(dLineSettings.getComPort() + " code: " + String.format("%8s", Integer.toBinaryString(dLineApplicationState.getState())).replace(" ", "0"));
     } catch (Exception ex)
     {
       // Draw debug info at the bottom of the jFrame
       final Dimension size = jLabelSerialComm.getPreferredSize();
       jLabelSerialComm.setMinimumSize(size);
       jLabelSerialComm.setPreferredSize(size);
-      jLabelSerialComm.setText("Serial " + dLineSettings.getComPort() + ": " + ex.toString());
+      jLabelSerialComm.setText(dLineSettings.getComPort() + " code: " + ex.toString());
       Logger.getLogger(DLineApplication.class.getName()).log(Level.SEVERE, null, ex);
     }
   }
@@ -1349,7 +1484,10 @@ public class DLineApplication extends javax.swing.JFrame {
     dLineSettings.setLabelMinusY(jFormattedTextFieldMinusY.getText());
     dLineSettings.setLabelPlusX(jFormattedTextFieldPlusX.getText());
     dLineSettings.setLabelMinusX(jFormattedTextFieldMinusX.getText());
-
+    
+    // 
+    dLineSettings.setSingleElementMode(jCheckBoxSingleElementMode.isSelected());
+    
     dLineSettings.SaveSettingsToDisk();
   }
 
@@ -1376,5 +1514,8 @@ public class DLineApplication extends javax.swing.JFrame {
     jFormattedTextFieldMinusY.setText(dLineSettings.getLabelMinusY());
     jFormattedTextFieldPlusX.setText(dLineSettings.getLabelPlusX());
     jFormattedTextFieldMinusX.setText(dLineSettings.getLabelMinusX());
+    
+    //
+    jCheckBoxSingleElementMode.setSelected(dLineSettings.isSingleElementMode());
   }
 }
