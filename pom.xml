@@ -4,8 +4,8 @@
 
   <groupId>org.lz1aq</groupId>
   <artifactId>dlinecontroller</artifactId>
-  <version>1.3</version>
-  <description>What's new: "Add" mode is not swtiched off by pressing a direction button; Debug window has now two mode: F/B and AllDirection switching</description>
+  <version>1.3.1</version>
+  <description>What's new: New settings option called SingleElementMode; Instead of rxtx the program is using jssc for serial communication.</description>
   <packaging>jar</packaging>
   <name>dlinecontroller</name>
   <url>www.active-antenna.eu</url>
@@ -16,30 +16,8 @@
   </properties>
 
 
-  <!-- ============================Dependencies============================ -->
-  <dependencies>
-    
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-    
-    <dependency>
-    	<groupId>org.lz1aq</groupId>
-    	<artifactId>rxtx</artifactId>
-    	<version>2.1.7</version>
-    </dependency>
-   
-  </dependencies>
-  
-  
-  
-  
-  <!-- ============================Build============================ -->
+   <!-- ============================Build============================ -->
   <build>
-  
 
     <plugins>
     
@@ -55,100 +33,40 @@
       </plugin>
       
       <!-- =====Plugin===== -->
-      <!-- Specify which class is started when the jar is executed -->
-      <!--
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>2.3</version>
+        <version>2.6</version>
         <configuration>
           <archive>
             <manifest>
-              
+              <!-- Adds the classpath to the created manifest -->
               <addClasspath>true</addClasspath>
-              <classpathPrefix>libs/</classpathPrefix>
-              
+              <!--Specifies that all dependencies of our application are found from the lib directory.-->
+              <classpathPrefix>lib/</classpathPrefix>
               <mainClass>org.lz1aq.dlinecontroller.DLineApplication</mainClass>
             </manifest>
           </archive>
         </configuration>
       </plugin>
-      -->
       
       <!-- =====Plugin===== -->
-      <plugin>    
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>2.9</version>
-        <executions>   
-          <!-- Unpack native dependencies from "repository" to "native_libs/" -->
-          <execution>           
-            <id>Unpack-native-libraries</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>unpack</goal>
-            </goals>    
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>org.lz1aq</groupId>
-                  <artifactId>rxtx-native-files</artifactId>
-                  <version>2.1.7</version>
-                  <classifier>${build.type}</classifier>
-                  <type>jar</type>
-                  <overWrite>true</overWrite>
-                  <outputDirectory>${project.build.directory}/native_libs</outputDirectory>
-                </artifactItem>
-              </artifactItems>
-            </configuration>
-          </execution>         
-          <!-- Copy dependencies from "repository" to "libs/" -->
-          <execution>
-            <id>Copy-dependencies</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>copy</goal>
-            </goals>   
-            <configuration>
-              <artifactItems>           
-                <artifactItem>
-                  <groupId>org.lz1aq</groupId>
-                  <artifactId>rxtx</artifactId>
-                  <version>2.1.7</version>
-                  <type>jar</type>
-                  <overWrite>true</overWrite>
-                  <outputDirectory>${project.build.directory}/libs</outputDirectory>
-                </artifactItem>
-              </artifactItems>
-            </configuration>
-          </execution>          
-        </executions>
-      </plugin>
-      
-      <!-- =====Plugin===== -->
+      <!-- Creates zip distributable; Uses the assembly.xml file -->
       <plugin>
-        <groupId>org.dstovall</groupId>
-        <artifactId>onejar-maven-plugin</artifactId>
-        <version>1.4.4</version>
-        <executions>       
-          <!-- Pack all files in one uberjar -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.5.5</version>
+        <configuration>
+          <!-- Configures the used assembly descriptor -->
+          <descriptors>
+            <descriptor>src/main/assembly/assembly.xml</descriptor>
+          </descriptors>
+        </configuration>
+        <executions>
           <execution>
-            <configuration>
-              <mainClass>org.lz1aq.dlinecontroller.DLineApplication</mainClass>
-              <onejarVersion>0.97</onejarVersion>
-              <filename>dlinecontroller_v${project.version}-${build.type}.jar</filename> 
-              <!-- Include native libraries (.dll/.so) -->
-              <binlibs>
-                <fileSet>
-                  <directory>${project.build.directory}/native_libs</directory>
-                  <includes>
-                    <include>*</include>
-                  </includes>
-                </fileSet>
-              </binlibs>
-            </configuration>
+            <id>create-archive</id>
+            <phase>package</phase>
             <goals>
-              <goal>one-jar</goal>
+              <goal>single</goal>
             </goals>
           </execution>
         </executions>
@@ -156,82 +74,27 @@
             
     </plugins>
     
-    
   </build>
   
   
-  
-  
-  <!-- ============================Repositories============================ -->
-  <repositories> 
-    <!-- My local repository (we keep the dependencies there) -->
-    <repository>
-      <id>my-local-repo</id>
-      <url>file:${project.basedir}/repository</url>
-    </repository>
-  </repositories>
-  
-  
-  
-  <!-- ============================pluginRepositories============================ -->
-  <pluginRepositories>
-    <pluginRepository>
-      <id>onejar-maven-plugin.googlecode.com</id>
-      <url>http://onejar-maven-plugin.googlecode.com/svn/mavenrepo</url>
-    </pluginRepository>
-  </pluginRepositories>
-  
+  <!-- ============================Dependencies============================ -->
+  <dependencies>
     
-  
-   <!-- ============================profiles============================ -->
-  <profiles>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
     
-    <profile>
-      <id>win32</id> 
-      <properties>
-        <build.type>win32</build.type>
-      </properties>
-    </profile>
+    <dependency>
+	<groupId>org.scream3r</groupId>
+	<artifactId>jssc</artifactId>
+	<version>2.8.0</version>
+      <type>jar</type>
+    </dependency>
     
-    <profile>
-      <id>win64</id>
-      <properties>
-        <build.type>win64</build.type>
-      </properties>
-    </profile>
-    
-    <profile>
-      <id>linux_x86</id>
-      <properties>
-        <build.type>linux_x86</build.type>
-      </properties>
-    </profile>
-    
-     <profile>
-      <id>linux_x86_64</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <properties>
-        <build.type>linux_x86_64</build.type>
-      </properties>
-    </profile>
-    
-    <profile>
-      <id>linux_ia64</id>
-      <properties>
-        <build.type>linux_ia64</build.type>
-      </properties>
-    </profile>
-    
-    <profile>
-      <id>mac_os_x</id>
-      <properties>
-        <build.type>mac_os_x</build.type>
-      </properties>
-    </profile>
-    
-  </profiles>
+  </dependencies>
   
   
 </project>

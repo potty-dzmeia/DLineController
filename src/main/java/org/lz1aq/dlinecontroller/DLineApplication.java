@@ -65,7 +65,7 @@ public class DLineApplication extends javax.swing.JFrame {
     {  
         // Data for the Combo boxes in the settings Dialog
         this.baudRateComboBoxModel = new DefaultComboBoxModel(new String[] { "1200", "2400", "4800", "9600", "19200", "38400", "57600", "115200" });
-        this.comPortComboBoxModel  = new DefaultComboBoxModel(DLineSerialComm.getAvailableSerialPorts().toArray());
+        this.comPortComboBoxModel  = DLineSerialComm.getComportsComboboxModel();
         this.deviceIdComboBoxModel = new DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"});
                 
         // Load user settings from the properties file
