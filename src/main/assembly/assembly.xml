@@ -23,7 +23,7 @@
     <fileSets>
         <!--
             Adds startup scripts to the root directory of zip package. The startup
-            scripts are copied from the src/main/bin directory.
+            scripts are copied from the src/main/scripts directory.
         -->
          <fileSet>
             <directory>${project.build.scriptSourceDirectory}</directory>

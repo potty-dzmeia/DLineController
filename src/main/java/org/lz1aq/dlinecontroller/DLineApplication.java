@@ -41,7 +41,7 @@ public class DLineApplication extends javax.swing.JFrame {
     //private DirectionSwitchingThread directionSwitchingThread;
     
     private Timer timerForDirectionSwitching;    
-    private ActionListener directionSwitching = new ActionListener() {
+    private final ActionListener directionSwitching = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt)
             {
