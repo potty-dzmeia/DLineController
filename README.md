@@ -15,7 +15,7 @@ Installation:
 
 2) From the button "branch:master" select "tags" and select the newest available version (currently 1.3.1). 
 
-3) Download the .zip file from the `/distribution` directory.
+3) Download the .zip file from the `/distribution` directory by **left-pressing the mouse key** and then selecting **RAW button**. 
 
 4) Extract the archive in a directory of your choice.
 
