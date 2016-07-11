@@ -9,7 +9,6 @@ import java.awt.event.ItemEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -25,8 +24,8 @@ import org.lz1aq.dlinecontroller.DLineApplicationState.AntennaDirections;
  */
 public class DLineApplication extends javax.swing.JFrame {   
     
-	private static final long serialVersionUID = 1L;
-	static final int MIN_SWITCHING_SPEED_IN_MS = 150;
+    private static final long serialVersionUID = 1L;
+    static final int MIN_SWITCHING_SPEED_IN_MS = 150;
     static final int DEFAULT_SWITCHING_SPEED_IN_MS = 2000;
     static final int MAX_SWITCHING_SPEED_IN_MS = 60000;
 
@@ -41,7 +40,7 @@ public class DLineApplication extends javax.swing.JFrame {
     //private DirectionSwitchingThread directionSwitchingThread;
     
     private Timer timerForDirectionSwitching;    
-    private ActionListener directionSwitching = new ActionListener() {
+    private final ActionListener directionSwitching = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt)
             {
@@ -83,7 +82,11 @@ public class DLineApplication extends javax.swing.JFrame {
         //System.setProperty("java.library.path", yourPath); // not used 
         
         // Init GUI
-        initComponents();      
+        initComponents();    
+        
+        
+        // Set initial state of the buttons
+        pressDefaulButtons();
     }
 
     /**
@@ -1360,6 +1363,27 @@ public class DLineApplication extends javax.swing.JFrame {
     this.setTitle(type+": "+direction+mode);
   }
 
+  /**
+   * This presses +Y, Add, Loop 
+   */
+  private void pressDefaulButtons()
+  {
+    // press +Y
+    if(dLineSettings.getButtonOrientation() == DLineApplicationSettings.ButtonOrientation.North)
+    {
+      jToggleButton8.setSelected(true);
+    }
+    else
+    {
+      jToggleButton7.setSelected(true);
+    }
+    
+    // press Add
+    jToggleButton5.setSelected(true);
+    
+    // press Loop
+    jToggleButtonAntennaType.setSelected(true);
+  }
   
   /**
    * When called this will change the current direction to the opposite of
@@ -1367,7 +1391,7 @@ public class DLineApplication extends javax.swing.JFrame {
    */
   private void toggleFrontAndBack()
   {
-     if (dLineSettings.getButtonOrientation() == DLineApplicationSettings.ButtonOrientation.North)
+    if (dLineSettings.getButtonOrientation() == DLineApplicationSettings.ButtonOrientation.North)
     {
       if (jToggleButton8.isSelected())
       {
