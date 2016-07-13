@@ -21,7 +21,21 @@ import java.util.logging.Logger;
  */
 public final class DLineApplicationSettings 
 {
-
+    static final String SETTINGS_FILE_NAME          = "DLineSettings.properties";
+    static final String PROPERTY_DEVICE_ID          = "deviceId";
+    static final String PROPERTY_COMPORT            = "comPort";
+    static final String PROPERTY_BAUDE_RATE         = "baudRate";
+    static final String PROPERTY_BUTTON_ORIENTATION = "buttonOrientation";
+    static final String PROPERTY_MAIN_WINDOW_X      = "x";
+    static final String PROPERTY_MAIN_WINDOW_Y      = "y";
+    static final String PROPERTY_MAIN_WINDOW_WIDTH  = "w";
+    static final String PROPERTY_MAIN_WINDOW_HEIGHT = "h";
+    static final String PROPERTY_LABEL_PLUS_Y       = "labelPlusY";
+    static final String PROPERTY_LABEL_MINUS_Y      = "labelMinusY";
+    static final String PROPERTY_LABEL_PLUS_X       = "labelPlusX";
+    static final String PROPERTY_LABEL_MINUS_X      = "labelMinusX";
+        
+    
     /**
      *  The possible layout for the direction buttons
      */
@@ -32,16 +46,6 @@ public final class DLineApplicationSettings
     
 
     private String  deviceId;   // This is used when composing the command send thru the serial interface
-
-    public String getDeviceId()
-    {
-        return deviceId;
-    }
-
-    public void setDeviceId(String deviceId)
-    {
-        this.deviceId = deviceId;
-    }
     private String  comPort;
     private String  baudRate; 
     private ButtonOrientation buttonOrientation; // The layout scheme for the direction buttons. 
@@ -66,6 +70,17 @@ public final class DLineApplicationSettings
         this.LoadSettingsFromDisk();
     }
 
+    
+    public String getDeviceId()
+    {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId)
+    {
+        this.deviceId = deviceId;
+    }
+    
     public Rectangle getJFrameDimensions()
     {
         return jFrameDimensions;
@@ -182,26 +197,26 @@ public final class DLineApplicationSettings
     public void SaveSettingsToDisk()
     {
         // Store last used antenna and direction:
-        prop.setProperty("deviceId", deviceId);
-        prop.setProperty("comPort", comPort);
-        prop.setProperty("baudRate", baudRate);
-        prop.setProperty("buttonOrientation", buttonOrientation.toString());
+        prop.setProperty(PROPERTY_DEVICE_ID, deviceId);
+        prop.setProperty(PROPERTY_COMPORT, comPort);
+        prop.setProperty(PROPERTY_BAUDE_RATE, baudRate);
+        prop.setProperty(PROPERTY_BUTTON_ORIENTATION, buttonOrientation.toString());
         
         // Now save the JFrame dimensions:
-        prop.setProperty("x", Integer.toString(jFrameDimensions.x));
-        prop.setProperty("y", Integer.toString(jFrameDimensions.y));
-        prop.setProperty("w", Integer.toString(jFrameDimensions.width));
-        prop.setProperty("h", Integer.toString(jFrameDimensions.height));
+        prop.setProperty(PROPERTY_MAIN_WINDOW_X, Integer.toString(jFrameDimensions.x));
+        prop.setProperty(PROPERTY_MAIN_WINDOW_Y, Integer.toString(jFrameDimensions.y));
+        prop.setProperty(PROPERTY_MAIN_WINDOW_WIDTH, Integer.toString(jFrameDimensions.width));
+        prop.setProperty(PROPERTY_MAIN_WINDOW_HEIGHT, Integer.toString(jFrameDimensions.height));
         
         // Now save the texts for the Direction Buttons
-        prop.setProperty("labelPlusY", labelPlusY);
-        prop.setProperty("labelMinusY", labelMinusY);
-        prop.setProperty("labelPlusX", labelPlusX);
-        prop.setProperty("labelMinusX", labelMinusX);
+        prop.setProperty(PROPERTY_LABEL_PLUS_Y, labelPlusY);
+        prop.setProperty(PROPERTY_LABEL_MINUS_Y, labelMinusY);
+        prop.setProperty(PROPERTY_LABEL_PLUS_X, labelPlusX);
+        prop.setProperty(PROPERTY_LABEL_MINUS_X, labelMinusX);
         
         try
         {
-            prop.store(new FileOutputStream("DLineSettings.properties"), null);
+            prop.store(new FileOutputStream(SETTINGS_FILE_NAME), null);
         } catch (IOException ex)
         {
             Logger.getLogger(DLineApplicationSettings.class.getName()).log(Level.SEVERE, null, ex);
@@ -214,27 +229,32 @@ public final class DLineApplicationSettings
     }
     
     /**
-     * Loads the settings from a file called "DLineSettings.properties"
+     * Loads the settings from a file called DLineSettings.properties
      */
     public void LoadSettingsFromDisk()
     {
         try
         {
-            // Read last used antenna and direction
-            prop.load(new FileInputStream("DLineSettings.properties"));
             
-            deviceId = prop.getProperty("deviceId");
+            prop.load(new FileInputStream(SETTINGS_FILE_NAME));
+            
+            deviceId = prop.getProperty(PROPERTY_DEVICE_ID);
             if(deviceId == null)
-                throw new Exception("DLineSettings.properties error: DeviceId missing");
+                throwMissingPropertyException(PROPERTY_DEVICE_ID);
             
-            comPort  = prop.getProperty("comPort");
+            comPort  = prop.getProperty(PROPERTY_COMPORT);
             if(comPort == null)
-                throw new Exception("DLineSettings.properties error: comPort field is missing");
+                throwMissingPropertyException(PROPERTY_COMPORT);
                 
-            baudRate = prop.getProperty("baudRate");
+            baudRate = prop.getProperty(PROPERTY_BAUDE_RATE);
             if(baudRate == null)
-                throw new Exception("DLineSettings.properties error: baudRate field is missing");
-            if(prop.getProperty("buttonOrientation").equals(ButtonOrientation.North.toString()))
+                throwMissingPropertyException(PROPERTY_BAUDE_RATE);
+            
+           
+            String temp = prop.getProperty(PROPERTY_BUTTON_ORIENTATION);
+            if(temp==null)
+                throwMissingPropertyException(PROPERTY_BUTTON_ORIENTATION);
+            if(temp.equals(ButtonOrientation.North.toString()))
             {
                 buttonOrientation = ButtonOrientation.North;
             }
@@ -245,26 +265,26 @@ public final class DLineApplicationSettings
             
             
             // Read the JFrame dimensions:
-            int x = Integer.parseInt(prop.getProperty("x"));
-            int y = Integer.parseInt(prop.getProperty("y"));
-            int w = Integer.parseInt(prop.getProperty("w"));
-            int h = Integer.parseInt(prop.getProperty("h"));
+            int x = Integer.parseInt(prop.getProperty(PROPERTY_MAIN_WINDOW_X));
+            int y = Integer.parseInt(prop.getProperty(PROPERTY_MAIN_WINDOW_Y));
+            int w = Integer.parseInt(prop.getProperty(PROPERTY_MAIN_WINDOW_WIDTH));
+            int h = Integer.parseInt(prop.getProperty(PROPERTY_MAIN_WINDOW_HEIGHT));
             
             this.jFrameDimensions = new Rectangle(x,y,w,h);
             
             // Now save the texts for the Direction Buttons
-            labelPlusY  = prop.getProperty("labelPlusY");
+            labelPlusY  = prop.getProperty(PROPERTY_LABEL_PLUS_Y);
             if(labelPlusY == null)
-                throw new Exception("DLineSettings.properties error: labelPlusY field is missing");    
-            labelMinusY = prop.getProperty("labelMinusY");
+                throwMissingPropertyException(PROPERTY_LABEL_PLUS_Y);
+            labelMinusY = prop.getProperty(PROPERTY_LABEL_MINUS_Y);
             if(labelMinusY == null)
-                throw new Exception("DLineSettings.properties error: labelMinusY field is missing");
-            labelPlusX  = prop.getProperty("labelPlusX");
+                throwMissingPropertyException(PROPERTY_LABEL_MINUS_Y);
+            labelPlusX  = prop.getProperty(PROPERTY_LABEL_PLUS_X);
             if(labelPlusX == null)
-                throw new Exception("DLineSettings.properties error: labelPlusX field is missing");
-            labelMinusX = prop.getProperty("labelMinusX");
+                throwMissingPropertyException(PROPERTY_LABEL_PLUS_X);
+            labelMinusX = prop.getProperty(PROPERTY_LABEL_MINUS_X);
             if(labelMinusX == null)
-                throw new Exception("DLineSettings.properties error: labelMinusX field is missing");
+                throwMissingPropertyException(PROPERTY_LABEL_MINUS_X);
                     
         } catch (IOException ex)
         {
@@ -309,6 +329,8 @@ public final class DLineApplicationSettings
         labelMinusX = "-X";  
     }
     
-    
-      
+    void throwMissingPropertyException(String propertyName) throws Exception
+    {
+      throw new Exception("Error when trying to read element " + propertyName + " from file " + SETTINGS_FILE_NAME);
+    }
 }
