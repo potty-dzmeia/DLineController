@@ -9,6 +9,7 @@ import java.awt.event.ItemEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JToggleButton;
 import javax.swing.Timer;
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -46,7 +47,7 @@ public class DLineApplication extends javax.swing.JFrame {
             {
               if(jRadioButtonAllDirections.isSelected())
               {
-                toggleAllDirectionButtons();
+                toggleAllDirections();
               }
               else
               {
@@ -1344,11 +1345,8 @@ public class DLineApplication extends javax.swing.JFrame {
         type = "Dip";
         break;
       case loop:
-        type = "Loop";
-        break;
-      case undefined:
       default:
-        type = "Undefined";
+        type = "Loop";
         break;
     }
     
@@ -1359,11 +1357,8 @@ public class DLineApplication extends javax.swing.JFrame {
         mode = "(Add)";
         break;
       case directive:
-        mode = "";  // Directive mode will be considered "normal" and won't be designated
-        break;
-      case undefined:
-      default:
-        mode = "(Undefined)";
+      default: 
+        mode = "(Directive)";  // Directive mode will be considered "normal" and won't be designated
         break;
     }
 
@@ -1380,11 +1375,8 @@ public class DLineApplication extends javax.swing.JFrame {
         direction = dLineSettings.getLabelPlusX();
         break;
       case minusX:
+      default:  
         direction = dLineSettings.getLabelMinusX();
-        break;
-      case undefined:
-      default:
-        direction = "undefined";
         break;
     }
 
@@ -1462,7 +1454,7 @@ public class DLineApplication extends javax.swing.JFrame {
   /**
    * When called this function will change the current direction (clockwise)
    */
-  private void toggleAllDirectionButtons()
+  private void toggleAllDirections()
   {
     if(dLineSettings.getButtonOrientation() == DLineApplicationSettings.ButtonOrientation.North)
     {
@@ -1570,4 +1562,10 @@ public class DLineApplication extends javax.swing.JFrame {
     //
     jCheckBoxSingleElementMode.setSelected(dLineSettings.isSingleElementMode());
   }
+  
+  
+//  private JToggleButton getToggleButton(String buttonName)
+//  {
+//      
+//  }
 }

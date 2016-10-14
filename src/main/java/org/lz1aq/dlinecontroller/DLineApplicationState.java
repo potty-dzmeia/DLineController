@@ -28,9 +28,9 @@ public class DLineApplicationState
     
     DLineApplicationState()
     {
-        antennaDirection  = AntennaDirections.undefined;
-        antennaType       = AntennaTypes.undefined;
-        antennaMode       = AntennaModes.undefined;
+        antennaDirection  = AntennaDirections.plusY;
+        antennaType       = AntennaTypes.loop;
+        antennaMode       = AntennaModes.additive;
         hardwareState     = new DLineHardwareState();
     }
     
@@ -66,11 +66,7 @@ public class DLineApplicationState
             case minusX:
                 hardwareState.setBit0(FALSE); // X
                 hardwareState.setBit2(TRUE); // (-)
-                break;
-                
-            case undefined:
-                // Do nothing
-                break;
+                break;    
         }
     }
     
@@ -90,10 +86,6 @@ public class DLineApplicationState
         case directive:
           hardwareState.setBit1(TRUE);
           break;
-        case undefined:
-          // Do nothing
-          break;
-
       }
     }
     
@@ -115,9 +107,6 @@ public class DLineApplicationState
                break;
            case loop:
                hardwareState.setLoop();
-               break;
-           case undefined:
-               // do nothing
                break;
        }
     }
@@ -195,17 +184,14 @@ public class DLineApplicationState
         plusY,  
         minusY,
         plusX,
-        minusX,
-        add,
-        undefined
+        minusX
     }
     
     
     public static enum AntennaModes
     {
       additive,
-      directive,
-      undefined
+      directive
     }
     
     
@@ -215,8 +201,7 @@ public class DLineApplicationState
     public static enum AntennaTypes
     {
         dipole,
-        loop,
-        undefined
+        loop
     }
     
     
