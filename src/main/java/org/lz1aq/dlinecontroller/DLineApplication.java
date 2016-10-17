@@ -57,7 +57,7 @@ public class DLineApplication extends javax.swing.JFrame {
               else
               {
                 // Plus dirctions will be equal or longer than the Minus directions 
-                // fbSwitchingRatio specifies the ratio
+                // where fbSwitchingRatio specifies the ratio
                 if(getAntennaDirectionButton(AntennaDirections.plusY).isSelected() ||
                    getAntennaDirectionButton(AntennaDirections.plusX).isSelected())
                 {
@@ -134,6 +134,11 @@ public class DLineApplication extends javax.swing.JFrame {
     jLabel3 = new javax.swing.JLabel();
     jLabel2 = new javax.swing.JLabel();
     jRadioButtonNorth = new javax.swing.JRadioButton();
+    jLabel15 = new javax.swing.JLabel();
+    jLabel16 = new javax.swing.JLabel();
+    jTextField2 = new javax.swing.JTextField();
+    jLabel17 = new javax.swing.JLabel();
+    jTextField4 = new javax.swing.JTextField();
     jPanel4 = new javax.swing.JPanel();
     jComboBoxDeviceId = new javax.swing.JComboBox();
     jComboBoxComPort = new javax.swing.JComboBox();
@@ -331,6 +336,57 @@ public class DLineApplication extends javax.swing.JFrame {
     gridBagConstraints.weighty = 1.0;
     gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
     jPanel3.add(jRadioButtonNorth, gridBagConstraints);
+
+    jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+    jLabel15.setText("Labels of antenna button:");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 6;
+    gridBagConstraints.gridwidth = 4;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(10, 5, 5, 5);
+    jPanel3.add(jLabel15, gridBagConstraints);
+
+    jLabel16.setText("ant 1:");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 7;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 0.01;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+    jPanel3.add(jLabel16, gridBagConstraints);
+
+    jTextField2.setText("jTextField2");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 7;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
+    jPanel3.add(jTextField2, gridBagConstraints);
+
+    jLabel17.setText("ant 2:");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 2;
+    gridBagConstraints.gridy = 7;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 0.01;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 0);
+    jPanel3.add(jLabel17, gridBagConstraints);
+
+    jTextField4.setText("jTextField4");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 3;
+    gridBagConstraints.gridy = 7;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
+    jPanel3.add(jTextField4, gridBagConstraints);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
@@ -700,7 +756,7 @@ public class DLineApplication extends javax.swing.JFrame {
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
     setTitle("Serial Interface to LZ1AQ's DLine Controller");
-    setMinimumSize(new java.awt.Dimension(150, 150));
+    setMinimumSize(new java.awt.Dimension(300, 300));
     addWindowListener(new java.awt.event.WindowAdapter()
     {
       public void windowOpened(java.awt.event.WindowEvent evt)
@@ -843,9 +899,7 @@ public class DLineApplication extends javax.swing.JFrame {
     jPanel12.setLayout(new java.awt.BorderLayout());
 
     jToggleButtonAntennaType.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-    jToggleButtonAntennaType.setText("Dipole");
-    jToggleButtonAntennaType.setMinimumSize(null);
-    jToggleButtonAntennaType.setPreferredSize(null);
+    jToggleButtonAntennaType.setText("Antenna Type");
     jToggleButtonAntennaType.addItemListener(new java.awt.event.ItemListener()
     {
       public void itemStateChanged(java.awt.event.ItemEvent evt)
@@ -957,7 +1011,8 @@ public class DLineApplication extends javax.swing.JFrame {
     {//GEN-HEADEREND:event_formWindowOpened
         // Set the desired buttons orientation and labels  
         setButtonsOrientation();
-        setButtonsLabels();
+        setDirectionButtonsLabels();
+        setAntennaButtonLabel();
         dLineApplicationState.setSingleElementMode(dLineSettings.isSingleElementMode());
         // Read last used JFrame dimensions and restore it
         this.setBounds(dLineSettings.getJFrameDimensions());
@@ -1053,14 +1108,14 @@ public class DLineApplication extends javax.swing.JFrame {
     {//GEN-HEADEREND:event_jToggleButtonAntennaTypeItemStateChanged
         if(evt.getStateChange()==ItemEvent.SELECTED)
         {
-           dLineApplicationState.setAntennaType(DLineApplicationState.AntennaTypes.loop);
-           jToggleButtonAntennaType.setText("Loop");
+           dLineApplicationState.setAntennaType(DLineApplicationState.AntennaTypes.antenna_2);
+           jToggleButtonAntennaType.setText(dLineSettings.getLabelAnt2());
            setJFrameTitleToShowCurrentState();
         } 
         else if(evt.getStateChange()==ItemEvent.DESELECTED)
         {
-           dLineApplicationState.setAntennaType(DLineApplicationState.AntennaTypes.dipole);
-           jToggleButtonAntennaType.setText("Dipole");
+           dLineApplicationState.setAntennaType(DLineApplicationState.AntennaTypes.antenna_1);
+           jToggleButtonAntennaType.setText(dLineSettings.getLabelAnt1());
            setJFrameTitleToShowCurrentState();
         }
         
@@ -1175,7 +1230,8 @@ public class DLineApplication extends javax.swing.JFrame {
     {//GEN-HEADEREND:event_jButtonSaveActionPerformed
         jDialogSettings.setVisible(false); // Hide the SettingsDialog
         saveUserSettings(); // Read the state of the controls and save them
-        setButtonsLabels();
+        setDirectionButtonsLabels();
+        setAntennaButtonLabel();
         setButtonsOrientation();
         dLineApplicationState.setSingleElementMode(dLineSettings.isSingleElementMode());
     }//GEN-LAST:event_jButtonSaveActionPerformed
@@ -1289,6 +1345,9 @@ public class DLineApplication extends javax.swing.JFrame {
   private javax.swing.JLabel jLabel12;
   private javax.swing.JLabel jLabel13;
   private javax.swing.JLabel jLabel14;
+  private javax.swing.JLabel jLabel15;
+  private javax.swing.JLabel jLabel16;
+  private javax.swing.JLabel jLabel17;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
   private javax.swing.JLabel jLabel4;
@@ -1314,7 +1373,9 @@ public class DLineApplication extends javax.swing.JFrame {
   private javax.swing.JRadioButton jRadioButtonNorth;
   private javax.swing.JRadioButton jRadioButtonNorthWest;
   private javax.swing.JTextField jTextField1;
+  private javax.swing.JTextField jTextField2;
   private javax.swing.JTextField jTextField3;
+  private javax.swing.JTextField jTextField4;
   private javax.swing.JTextField jTextFieldDebugSwitchingSpeed;
   private javax.swing.JTextField jTextFieldFBRatio;
   private javax.swing.JToggleButton jToggleButton1;
@@ -1335,8 +1396,8 @@ public class DLineApplication extends javax.swing.JFrame {
     return baudRateComboBoxModel;
   }
 
-  /* Also sets the labels of the direction buttons.*/
-  private void setButtonsLabels()
+  /* Sets the labels of the direction buttons.*/
+  private void setDirectionButtonsLabels()
   {
     jToggleButton7.setText(dLineSettings.getLabelPlusY());
     jToggleButton9.setText(dLineSettings.getLabelPlusX());
@@ -1346,7 +1407,19 @@ public class DLineApplication extends javax.swing.JFrame {
     jToggleButton6.setText(dLineSettings.getLabelMinusX());
     jToggleButton4.setText(dLineSettings.getLabelPlusX());
     jToggleButton2.setText(dLineSettings.getLabelMinusY());
-
+  }
+  
+  
+  private void setAntennaButtonLabel()
+  {
+    if(jToggleButtonAntennaType.isSelected() == false)
+    {
+      jToggleButtonAntennaType.setText(dLineSettings.getLabelAnt1());
+    }
+    else
+    {
+      jToggleButtonAntennaType.setText(dLineSettings.getLabelAnt2());
+    }
   }
 
   /**
@@ -1411,7 +1484,7 @@ public class DLineApplication extends javax.swing.JFrame {
   /**
    * Sets the title of the JFrame to show the currently selected antenna and
    * direction. <br>
-   * For example: "Loop: +Y"
+   * For example: "Loop: +Y(additive)" quite low 
    */
   private void setJFrameTitleToShowCurrentState()
   {
@@ -1422,26 +1495,18 @@ public class DLineApplication extends javax.swing.JFrame {
     // Read antenna Type
     switch (dLineApplicationState.getAntennaType())
     {
-      case dipole:
-        type = "Dip";
+      case antenna_1:
+        type = dLineSettings.getLabelAnt1();
         break;
-      case loop:
+      case antenna_2:
       default:
-        type = "Loop";
+        type = dLineSettings.getLabelAnt2();
         break;
     }
     
     // Read antenna Mode
-    switch (dLineApplicationState.getAntennaMode())
-    {
-      case additive:
-        mode = "(Add)";
-        break;
-      case directive:
-      default: 
-        mode = "(Directive)"; 
-        break;
-    }
+    mode = "(" + dLineApplicationState.getAntennaMode().toString() + ")"; 
+  
 
     // Read the antenna Direction
     switch (dLineApplicationState.getAntennaDirection())
@@ -1465,7 +1530,7 @@ public class DLineApplication extends javax.swing.JFrame {
   }
 
   /**
-   * This presses +Y, Add, Loop 
+   * This presses "+Y", "Add" and the "antenna type" button  
    */
   private void pressDefaulButtons()
   {
@@ -1473,7 +1538,7 @@ public class DLineApplication extends javax.swing.JFrame {
     getAntennaDirectionButton(AntennaDirections.plusY).setSelected(true);
     // press Add
     jToggleButton5.setSelected(true);
-    // press Loop
+    // press antenna type button
     jToggleButtonAntennaType.setSelected(true);
   }
   
@@ -1560,6 +1625,10 @@ public class DLineApplication extends javax.swing.JFrame {
     dLineSettings.setLabelPlusX(jFormattedTextFieldPlusX.getText());
     dLineSettings.setLabelMinusX(jFormattedTextFieldMinusX.getText());
     
+    // Store antenna button texts
+    dLineSettings.setLabelAnt1(jTextField2.getText());
+    dLineSettings.setLabelAnt2(jTextField4.getText());
+    
     // 
     dLineSettings.setSingleElementMode(jCheckBoxSingleElementMode.isSelected());
     
@@ -1589,6 +1658,10 @@ public class DLineApplication extends javax.swing.JFrame {
     jFormattedTextFieldMinusY.setText(dLineSettings.getLabelMinusY());
     jFormattedTextFieldPlusX.setText(dLineSettings.getLabelPlusX());
     jFormattedTextFieldMinusX.setText(dLineSettings.getLabelMinusX());
+    
+    // Antenna button texts
+    jTextField2.setText(dLineSettings.getLabelAnt1());
+    jTextField4.setText(dLineSettings.getLabelAnt2());
     
     //
     jCheckBoxSingleElementMode.setSelected(dLineSettings.isSingleElementMode());

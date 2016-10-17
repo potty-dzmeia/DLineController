@@ -30,15 +30,14 @@ public final class DLineApplicationSettings
     static final String PROPERTY_LABEL_MINUS_Y      = "labelMinusY";
     static final String PROPERTY_LABEL_PLUS_X       = "labelPlusX";
     static final String PROPERTY_LABEL_MINUS_X      = "labelMinusX";
-        
+    static final String PROPERTY_LABEL_ANT1         = "labelAnt1";
+    static final String PROPERTY_LABEL_ANT2         = "labelAnt2";
+    
     
     /**
      *  The possible layout for the direction buttons
      */
-    public enum ButtonOrientation{
-        North,
-        NorthWest
-    };
+    public enum ButtonOrientation{North, NorthWest};
     
 
     private String  deviceId;   // This is used when composing the command send thru the serial interface
@@ -50,6 +49,8 @@ public final class DLineApplicationSettings
     private String labelMinusY;
     private String labelPlusX;
     private String labelMinusX;
+    private String labelAnt1;
+    private String labelAnt2;
     private boolean isSingleElementMode = false; // This setting is not saved to the file
     
     private final Properties prop;
@@ -125,45 +126,70 @@ public final class DLineApplicationSettings
         this.buttonOrientation = buttonOrientation;
     }
 
+    
     public String getLabelPlusY()
     {
         return labelPlusY;
     }
-
+    
     public void setLabelPlusY(String labelPlusY)
     {
         this.labelPlusY = labelPlusY;
     }
 
+    
     public String getLabelMinusY()
     {
         return labelMinusY;
     }
-
+    
     public void setLabelMinusY(String labelMinusY)
     {
         this.labelMinusY = labelMinusY;
     }
 
+    
     public String getLabelPlusX()
     {
         return labelPlusX;
     }
-
+    
     public void setLabelPlusX(String labelPlusX)
     {
         this.labelPlusX = labelPlusX;
     }
 
+    
     public String getLabelMinusX()
     {
         return labelMinusX;
     }
-
+    
     public void setLabelMinusX(String labelMinusX)
     {
         this.labelMinusX = labelMinusX;
     }
+    
+    
+    public void setLabelAnt1(String labelAnt1)
+    {
+      this.labelAnt1 = labelAnt1;
+    }
+    public String getLabelAnt1()
+    {
+      return labelAnt1;
+    }
+    
+    public void setLabelAnt2(String labelAnt2)
+    {
+      this.labelAnt2 = labelAnt2;
+    }
+    public String getLabelAnt2()
+    {
+      return labelAnt2;
+    }
+    
+    
 
     /**
      * This setting is not saved to a file (i.e. it is set to 0 on object
@@ -210,6 +236,10 @@ public final class DLineApplicationSettings
         prop.setProperty(PROPERTY_LABEL_PLUS_X, labelPlusX);
         prop.setProperty(PROPERTY_LABEL_MINUS_X, labelMinusX);
         
+        // Texts for antena types
+        prop.setProperty(PROPERTY_LABEL_ANT1, labelAnt1);
+        prop.setProperty(PROPERTY_LABEL_ANT2, labelAnt2);
+        
         try
         {
             prop.store(new FileOutputStream(SETTINGS_FILE_NAME), null);
@@ -250,6 +280,7 @@ public final class DLineApplicationSettings
             String temp = prop.getProperty(PROPERTY_BUTTON_ORIENTATION);
             if(temp==null)
                 throwMissingPropertyException(PROPERTY_BUTTON_ORIENTATION);
+            
             if(temp.equals(ButtonOrientation.North.toString()))
             {
                 buttonOrientation = ButtonOrientation.North;
@@ -268,7 +299,7 @@ public final class DLineApplicationSettings
             
             this.jFrameDimensions = new Rectangle(x,y,w,h);
             
-            // Now save the texts for the Direction Buttons
+            // Now read the texts for the Direction Buttons
             labelPlusY  = prop.getProperty(PROPERTY_LABEL_PLUS_Y);
             if(labelPlusY == null)
                 throwMissingPropertyException(PROPERTY_LABEL_PLUS_Y);
@@ -281,6 +312,14 @@ public final class DLineApplicationSettings
             labelMinusX = prop.getProperty(PROPERTY_LABEL_MINUS_X);
             if(labelMinusX == null)
                 throwMissingPropertyException(PROPERTY_LABEL_MINUS_X);
+            
+            //Read the antenna type texts
+            labelAnt1  = prop.getProperty(PROPERTY_LABEL_ANT1);
+            if(labelAnt1 == null)
+                throwMissingPropertyException(PROPERTY_LABEL_ANT1);
+            labelAnt2 = prop.getProperty(PROPERTY_LABEL_ANT2);
+            if(labelAnt2 == null)
+                throwMissingPropertyException(PROPERTY_LABEL_ANT2);
                     
         } catch (IOException ex)
         {
@@ -322,7 +361,12 @@ public final class DLineApplicationSettings
         labelPlusY  = "+Y";
         labelMinusY = "-Y"; 
         labelPlusX  = "+X";
-        labelMinusX = "-X";  
+        labelMinusX = "-X"; 
+        
+        // Set texts for the antenna types
+        labelAnt1 = "Dipole";
+        labelAnt2 = "Loop";
+                
     }
     
     void throwMissingPropertyException(String propertyName) throws Exception

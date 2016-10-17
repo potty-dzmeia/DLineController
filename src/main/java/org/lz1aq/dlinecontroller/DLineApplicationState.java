@@ -13,7 +13,7 @@ public class DLineApplicationState
     private final DLineHardwareState    hardwareState;   // State of the relays in the DLine Controller
     private AntennaDirections           antennaDirection;// Current direction selection
     private AntennaModes                antennaMode;     // Directive or Additive
-    private AntennaTypes                antennaType;     // Dipole or Loop
+    private AntennaTypes                antennaType;     // ant1(Dipole) or ant2(Loop)
    
     private final byte TRUE  = 1;
     private final byte FALSE = 0;
@@ -22,7 +22,7 @@ public class DLineApplicationState
     DLineApplicationState()
     {
         antennaDirection  = AntennaDirections.plusY;
-        antennaType       = AntennaTypes.loop;
+        antennaType       = AntennaTypes.antenna_2;
         antennaMode       = AntennaModes.additive;
         hardwareState     = new DLineHardwareState();
     }
@@ -94,10 +94,10 @@ public class DLineApplicationState
        // ---------------------------------  
        switch(type)
        {
-           case dipole:
+           case antenna_1:
                hardwareState.setDipole();
                break;
-           case loop:
+           case antenna_2:
                hardwareState.setLoop();
                break;
        }
@@ -177,8 +177,8 @@ public class DLineApplicationState
      */
     public static enum AntennaTypes
     {
-        dipole,
-        loop
+        antenna_1,  // by default this should be Dipole
+        antenna_2   // by default this should be Loop
     }
     
     
