@@ -4,8 +4,8 @@
 
   <groupId>org.lz1aq</groupId>
   <artifactId>dlinecontroller</artifactId>
-  <version>1.3.2</version>
-  <description>What's new: At program start-up certain buttons are press: +Y, Add and Loop;</description>
+  <version>1.3.3</version>
+  <description>What's new: Can change the label of the antenna button; Debug switching FB can be done using ration.</description>
   <packaging>jar</packaging>
   <name>dlinecontroller</name>
   <url>www.active-antenna.eu</url>
