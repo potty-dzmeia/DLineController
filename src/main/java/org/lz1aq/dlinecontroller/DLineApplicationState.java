@@ -1,10 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
 package org.lz1aq.dlinecontroller;
 
 /**
@@ -37,8 +30,7 @@ public class DLineApplicationState
     
     /** Set the desired direction of the antenna.
      * 
-     * @param direction Possible antenna directions plusY, minusY, plusX. minusX,
-     * Add.
+     * @param direction Possible antenna directions plusY, minusY, plusX. minusX
      */
     public void setAntennaDirection(AntennaDirections direction)
     {
@@ -127,21 +119,6 @@ public class DLineApplicationState
     public AntennaDirections getAntennaDirection()
     {
         return antennaDirection;
-    }
-    
-    
-    /** Returns which was the last directive mode that was used: Y or X
-     *  This is useful when the current direction is "Add" and we need to inform
-     *  the user about the last directive mode.
-     * @return Returns plusY if the last direction mode was Y <br>
-     *         Returns plusX if the last direction mode was X
-     */
-    public AntennaDirections getLastDirectiveMode()
-    {
-        if( hardwareState.getBit0() == 0)
-            return AntennaDirections.plusX;
-        else
-            return AntennaDirections.plusY;
     }
     
     
