@@ -12,7 +12,7 @@ public class DLineApplicationState
    
     private final DLineHardwareState    hardwareState;   // State of the relays in the DLine Controller
     private AntennaDirections           antennaDirection;// Current direction selection
-    private AntennaModes                antennaMode;     // Directive or Additive
+    private AntennaModes                antennaMode;     // Subtractive or Additive
     private AntennaTypes                antennaType;     // ant1(Dipole) or ant2(Loop)
    
     private final byte TRUE  = 1;
@@ -63,7 +63,7 @@ public class DLineApplicationState
     }
     
     /**
-     * Sets the mode - additive(add) or directive(normal)
+     * Sets the mode - additive(add) or subtractive
      * @param mode 
      */
     public void setAntennaMode(AntennaModes mode)
@@ -75,7 +75,7 @@ public class DLineApplicationState
         case additive:
           hardwareState.setBit1(FALSE); 
           break;
-        case directive:
+        case subtractive:
           hardwareState.setBit1(TRUE);
           break;
       }
@@ -126,7 +126,7 @@ public class DLineApplicationState
      * Gets the state in form of a byte. This byte should be send over the 
      * serial interface to the DLine Controller device. 
      *  
-     * @return bit0- X or Y direction; bit1- directive mode("Add"); 
+     * @return bit0- X or Y direction; bit1- mode; 
      * bit2-  (+) or (-); bit3- LoopB; bit4- LoopA; bit5- Dipole; 
      * bits 6 and 7 are not used (always 0)
      */
@@ -168,7 +168,7 @@ public class DLineApplicationState
     public static enum AntennaModes
     {
       additive,
-      directive
+      subtractive
     }
     
     
@@ -199,7 +199,7 @@ public class DLineApplicationState
         private byte bit0 = 0; 
 
         /**
-         * 1: Directive mode (relay K2 is ON)      <br>
+         * 1: Subtractive mode (relay K2 is ON)      <br>
          * 0: Additive mode (relay K2 is OFF, additive)<br>
          */
         private byte bit1 = 0;
@@ -266,7 +266,7 @@ public class DLineApplicationState
         
         /**
          * 0 - Additive  <br>
-         * 1 - Directive <br>
+         * 1 - Subtractive <br>
          * @param bit1 
          */
         public void setBit1(byte value) {

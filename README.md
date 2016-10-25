@@ -13,7 +13,7 @@ Installation:
 
 1) Make sure you have installed Java Runtime Environment (JRE) version 1.7 or later.
 
-2) From the button "branch:master" select "tags" and select the newest available version (currently 1.3.1). 
+2) Optional: From the button "branch:master" select "tags" and select the newest available version (currently 1.3.3). 
 
 3) Download the .zip file from the `/distribution` directory by **left-pressing the mouse key** and then selecting **RAW button**. 
 
