@@ -146,6 +146,8 @@ public class DLineApplication extends javax.swing.JFrame {
     jLabel7 = new javax.swing.JLabel();
     jLabel12 = new javax.swing.JLabel();
     jLabel13 = new javax.swing.JLabel();
+    jLabel18 = new javax.swing.JLabel();
+    jTextFieldCustomCommPort = new javax.swing.JTextField();
     jPanel5 = new javax.swing.JPanel();
     jButtonCancel = new javax.swing.JButton();
     jButtonSave = new javax.swing.JButton();
@@ -423,7 +425,7 @@ public class DLineApplication extends javax.swing.JFrame {
     jComboBoxBaudRate.setModel(this.getBaudRateComboBoxModel());
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 2;
+    gridBagConstraints.gridy = 3;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.weightx = 1.0;
     gridBagConstraints.weighty = 1.0;
@@ -453,12 +455,33 @@ public class DLineApplication extends javax.swing.JFrame {
     jLabel13.setText("Baud rate");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 2;
+    gridBagConstraints.gridy = 3;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.weightx = 1.0;
     gridBagConstraints.weighty = 1.0;
     gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
     jPanel4.add(jLabel13, gridBagConstraints);
+
+    jLabel18.setText("Custom ComPort name");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 2;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+    jPanel4.add(jLabel18, gridBagConstraints);
+
+    jTextFieldCustomCommPort.setText("jTextField5");
+    jTextFieldCustomCommPort.setToolTipText("Make sure this field is empty if you don't want to use a custom comport!");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 2;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
+    jPanel4.add(jTextFieldCustomCommPort, gridBagConstraints);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
@@ -1348,6 +1371,7 @@ public class DLineApplication extends javax.swing.JFrame {
   private javax.swing.JLabel jLabel15;
   private javax.swing.JLabel jLabel16;
   private javax.swing.JLabel jLabel17;
+  private javax.swing.JLabel jLabel18;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
   private javax.swing.JLabel jLabel4;
@@ -1376,6 +1400,7 @@ public class DLineApplication extends javax.swing.JFrame {
   private javax.swing.JTextField jTextField2;
   private javax.swing.JTextField jTextField3;
   private javax.swing.JTextField jTextField4;
+  private javax.swing.JTextField jTextFieldCustomCommPort;
   private javax.swing.JTextField jTextFieldDebugSwitchingSpeed;
   private javax.swing.JTextField jTextFieldFBRatio;
   private javax.swing.JToggleButton jToggleButton1;
@@ -1469,14 +1494,14 @@ public class DLineApplication extends javax.swing.JFrame {
       final Dimension size = jLabelSerialComm.getPreferredSize();
       jLabelSerialComm.setMinimumSize(size);
       jLabelSerialComm.setPreferredSize(size);
-      jLabelSerialComm.setText(dLineSettings.getComPort() + " code: " + String.format("%8s", Integer.toBinaryString(dLineApplicationState.getState())).replace(" ", "0"));
+      jLabelSerialComm.setText(dLineSettings.getComPort() + ": " + String.format("%8s", Integer.toBinaryString(dLineApplicationState.getState())).replace(" ", "0"));
     } catch (Exception ex)
     {
       // Draw debug info at the bottom of the jFrame
       final Dimension size = jLabelSerialComm.getPreferredSize();
       jLabelSerialComm.setMinimumSize(size);
       jLabelSerialComm.setPreferredSize(size);
-      jLabelSerialComm.setText(dLineSettings.getComPort() + " code: " + ex.toString());
+      jLabelSerialComm.setText(dLineSettings.getComPort() + ": " + ex.toString());
       Logger.getLogger(DLineApplication.class.getName()).log(Level.SEVERE, null, ex);
     }
   }
@@ -1607,17 +1632,21 @@ public class DLineApplication extends javax.swing.JFrame {
     {
       dLineSettings.setButtonOrientation(DLineApplicationSettings.ButtonOrientation.NorthWest);
     }
-
-    dLineSettings.setBaudRate(jComboBoxBaudRate.getSelectedItem().toString());
-
-    // In case there is no defined com port name use the string "notDefined"
-    if (jComboBoxComPort.getSelectedItem() == null)
+    
+    // In case there is CustomComPort defined we will use it...
+    if(!jTextFieldCustomCommPort.getText().isEmpty())
     {
-      dLineSettings.setComPort("notDefined");
-    } else
-    {
-      dLineSettings.setComPort(jComboBoxComPort.getSelectedItem().toString());
+      dLineSettings.setComPort(jTextFieldCustomCommPort.getText());
     }
+    else
+    {
+      if (jComboBoxComPort.getSelectedItem() != null)
+      {
+        dLineSettings.setComPort(jComboBoxComPort.getSelectedItem().toString());
+      }
+    }
+    
+    dLineSettings.setBaudRate(jComboBoxBaudRate.getSelectedItem().toString());
 
     // Store direction button texts
     dLineSettings.setLabelPlusY(jFormattedTextFieldPlusY.getText());
@@ -1635,6 +1664,12 @@ public class DLineApplication extends javax.swing.JFrame {
     dLineSettings.SaveSettingsToDisk();
   }
 
+  
+  
+  /**
+   * User has opened the setting dialog and we need to load the state of the
+   * controls
+   */
   private void loadUserSettings()
   {
     jComboBoxDeviceId.setSelectedItem(dLineSettings.getDeviceId());
@@ -1649,8 +1684,18 @@ public class DLineApplication extends javax.swing.JFrame {
       jRadioButtonNorthWest.setSelected(true);
     }
 
-    // Comm port settings
-    jComboBoxComPort.setSelectedItem(dLineSettings.getComPort());
+    // If standart ComPort is set...
+    if(comPortComboBoxModel.getIndexOf(dLineSettings.getComPort()) >= 0)
+    {
+      jComboBoxComPort.setSelectedItem(dLineSettings.getComPort());
+      jTextFieldCustomCommPort.setText(""); // Custom 
+    }
+    else
+    {
+      jTextFieldCustomCommPort.setText(dLineSettings.getComPort());
+    }
+           
+    
     jComboBoxBaudRate.setSelectedItem(dLineSettings.getBaudRate());
 
     // Direction buttons text       
