@@ -145,8 +145,8 @@ public class DLineApplication extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
-    jLabel18 = new javax.swing.JLabel();
-    jTextFieldCustomCommPort = new javax.swing.JTextField();
+        jLabel18 = new javax.swing.JLabel();
+        jTextFieldCustomCommPort = new javax.swing.JTextField();
         jPanel5 = new javax.swing.JPanel();
         jButtonCancel = new javax.swing.JButton();
         jButtonSave = new javax.swing.JButton();
@@ -196,6 +196,7 @@ public class DLineApplication extends javax.swing.JFrame {
         jDialogSettings.setTitle("Settings");
         jDialogSettings.setAlwaysOnTop(true);
         jDialogSettings.setModal(true);
+        jDialogSettings.setType(java.awt.Window.Type.UTILITY);
         jDialogSettings.addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentShown(java.awt.event.ComponentEvent evt) {
                 jDialogSettingsComponentShown(evt);
@@ -422,7 +423,7 @@ public class DLineApplication extends javax.swing.JFrame {
         jComboBoxBaudRate.setModel(this.getBaudRateComboBoxModel());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -452,33 +453,33 @@ public class DLineApplication extends javax.swing.JFrame {
         jLabel13.setText("Baud rate");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
         jPanel4.add(jLabel13, gridBagConstraints);
 
-    jLabel18.setText("Custom ComPort name");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 2;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.weightx = 1.0;
-    gridBagConstraints.weighty = 1.0;
-    gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
-    jPanel4.add(jLabel18, gridBagConstraints);
+        jLabel18.setText("Custom ComPort name");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+        jPanel4.add(jLabel18, gridBagConstraints);
 
-    jTextFieldCustomCommPort.setText("jTextField5");
-    jTextFieldCustomCommPort.setToolTipText("Make sure this field is empty if you don't want to use a custom comport!");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 2;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.weightx = 1.0;
-    gridBagConstraints.weighty = 1.0;
-    gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
-    jPanel4.add(jTextFieldCustomCommPort, gridBagConstraints);
+        jTextFieldCustomCommPort.setText("jTextField5");
+        jTextFieldCustomCommPort.setToolTipText("Make sure this field is empty if you don't want to use a custom comport!");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
+        jPanel4.add(jTextFieldCustomCommPort, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -559,9 +560,9 @@ public class DLineApplication extends javax.swing.JFrame {
         gridBagConstraints.weighty = 1.0;
         jDialogSettings.getContentPane().add(jPanel1, gridBagConstraints);
 
-        jDialogRelaySwitching.setTitle("Debug mode");
+        jDialogRelaySwitching.setTitle("Debug mode is running...");
         jDialogRelaySwitching.setAlwaysOnTop(true);
-        jDialogRelaySwitching.setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
+        jDialogRelaySwitching.setModal(false);
         jDialogRelaySwitching.setResizable(false);
         jDialogRelaySwitching.addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentHidden(java.awt.event.ComponentEvent evt) {
@@ -1318,7 +1319,7 @@ public class DLineApplication extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
-  private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1347,7 +1348,7 @@ public class DLineApplication extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
-  private javax.swing.JTextField jTextFieldCustomCommPort;
+    private javax.swing.JTextField jTextFieldCustomCommPort;
     private javax.swing.JTextField jTextFieldDebugSwitchingSpeed;
     private javax.swing.JTextField jTextFieldFBRatio;
     private javax.swing.JToggleButton jToggleButton1;
