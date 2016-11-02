@@ -4,8 +4,8 @@
 
   <groupId>org.lz1aq</groupId>
   <artifactId>dlinecontroller</artifactId>
-  <version>1.4</version>
-  <description>What's new: Directive mode is now called Subtractive</description>
+  <version>1.4.1</version>
+  <description>What's new: Now while in Debug mode the user can press buttons on the maini window</description>
   <packaging>jar</packaging>
   <name>dlinecontroller</name>
   <url>www.active-antenna.eu</url>
