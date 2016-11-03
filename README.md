@@ -5,7 +5,7 @@ Software for controlling LZ1AQ's Variable Delay Line Kit for Wideband Active Ant
 For more info see http://www.active-antenna.eu/
 
 The program is written in Java and supports the following operating systems:
-win32, win64, linux_x86, linux_x86_64, linux_ia64, mac_os_x
+linux, windows, macos
 
 
 Installation:
@@ -13,7 +13,7 @@ Installation:
 
 1) Make sure you have installed Java Runtime Environment (JRE) version 1.7 or later.
 
-2) Optional: From the button "branch:master" select "tags" and select the newest available version (currently 1.3.3). 
+2) Optional: From the button "branch:master" select "tags" and select the newest available version (currently 1.4.1). 
 
 3) Download the .zip file from the `/distribution` directory by **left-pressing the mouse key** and then selecting **RAW button**. 
 
