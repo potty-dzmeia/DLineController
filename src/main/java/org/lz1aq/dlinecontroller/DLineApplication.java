@@ -1106,10 +1106,11 @@ public class DLineApplication extends javax.swing.JFrame {
     private void formWindowClosing(java.awt.event.WindowEvent evt)//GEN-FIRST:event_formWindowClosing
     {//GEN-HEADEREND:event_formWindowClosing
         // Before closing we need to save the dimensions of the JFrame
-        if(this.getExtendedState()==MAXIMIZED_BOTH)
-            return; // do not save if maximized
-        dLineSettings.setJFrameDimensions(this.getBounds());
-        dLineSettings.SaveSettingsToDisk();
+        if(this.getExtendedState() != MAXIMIZED_BOTH)
+        {
+          dLineSettings.setJFrameDimensions(this.getBounds());
+          dLineSettings.SaveSettingsToDisk();
+        }
         
         dLineSerialComm.close();
     }//GEN-LAST:event_formWindowClosing
