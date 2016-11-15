@@ -1,1 +1,5 @@
--add possibility to open comport with random name (used for network comports)
+- save settings debug mode
+- about to contain the version number of the program
+- debug mode should be made the same as in AaaController
+- "Custom Com port" should be called "Virtual Comm Port"
+
