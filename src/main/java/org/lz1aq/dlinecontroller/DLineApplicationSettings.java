@@ -26,44 +26,45 @@ public final class DLineApplicationSettings
     static final String PROPERTY_MAIN_WINDOW_Y      = "y";
     static final String PROPERTY_MAIN_WINDOW_WIDTH  = "w";
     static final String PROPERTY_MAIN_WINDOW_HEIGHT = "h";
-    static final String PROPERTY_LABEL_PLUS_Y       = "labelPlusY";
-    static final String PROPERTY_LABEL_MINUS_Y      = "labelMinusY";
-    static final String PROPERTY_LABEL_PLUS_X       = "labelPlusX";
-    static final String PROPERTY_LABEL_MINUS_X      = "labelMinusX";
+    static final String PROPERTY_DIRECTION_LABEL    = "direction_label";
     static final String PROPERTY_LABEL_ANT1         = "labelAnt1";
     static final String PROPERTY_LABEL_ANT2         = "labelAnt2";
     
+    static final String PROPERTY_DIRECTION_SWITCHING_PERIOD  = "direction_period";
+    static final String PROPERTY_DIRECTION_IS_CHECKMARKED  = "direction_is_checkmarked";
+    
+    public static final int DIRECTIONS_COUNT = 4; // The number of direction buttons
     
     /**
      *  The possible layout for the direction buttons
      */
-    public enum ButtonOrientation{North, NorthWest};
+    public enum ButtonsOrientation{North, NorthWest};
     
 
-    private String  deviceId;   // This is used when composing the command send thru the serial interface
-    private String  comPort;
-    private String  baudRate; 
-    private ButtonOrientation buttonOrientation; // The layout scheme for the direction buttons. 
-    private Rectangle jFrameDimensions; // JFrame settings: position and size
-    private String labelPlusY;
-    private String labelMinusY;
-    private String labelPlusX;
-    private String labelMinusX;
-    private String labelAnt1;
-    private String labelAnt2;
-    private boolean isSingleElementMode = false; // This setting is not saved to the file
-    
-    private final Properties prop;
-    
-    
+    private String      deviceId;   // This is used when composing the command send thru the serial interface
+    private String      comPort;
+    private String      baudRate; 
+    private String      labelAnt1;
+    private String      labelAnt2;
+    private Rectangle   jFrameDimensions;             // JFrame settings: position and size
+    private boolean     isSingleElementMode = false;  // This setting is not saved to the file
+    private final String[]  arrayDirectionsSwitchingPeriods;  // Duration period for a direction during the automatic switching
+    private final String[]  arrayIsDirectionCheckmarked;      // If the direction is enabled for automatic switching
+    private final String[]  arrayDirectionLabels;             // Labels for the direction buttons
+    private ButtonsOrientation buttonsOrientation; // The layout scheme for the direction buttons. 
+    private final Properties   prop;
     
     /**
      * Tries to read the settings from the disk. If it fails default values are used.
      */
     public DLineApplicationSettings()
     {     
-        this.prop        = new Properties();
-        jFrameDimensions = new Rectangle();
+        this.prop         = new Properties();
+        jFrameDimensions  = new Rectangle();
+        arrayDirectionLabels            = new String[DIRECTIONS_COUNT];
+        arrayIsDirectionCheckmarked     = new String[DIRECTIONS_COUNT];
+        arrayDirectionsSwitchingPeriods = new String[DIRECTIONS_COUNT];
+        
         this.LoadSettingsFromDisk();
     }
 
@@ -112,62 +113,40 @@ public final class DLineApplicationSettings
      * 
      * @return Possible values are: North or NorthWest
      */
-    public ButtonOrientation getButtonOrientation()
+    public ButtonsOrientation getButtonsOrientation()
     {
-        return buttonOrientation;
+        return buttonsOrientation;
     }
 
     /**
      * 
-     * @param buttonOrientation   Possible values are: Orientation_North or Orientation_NorthWest
+     * @param orientation   Possible values are: Orientation_North or Orientation_NorthWest
      */
-    public void setButtonOrientation(ButtonOrientation buttonOrientation)
+    public void setButtonsOrientation(ButtonsOrientation orientation)
     {
-        this.buttonOrientation = buttonOrientation;
+        this.buttonsOrientation = orientation;
     }
 
-    
-    public String getLabelPlusY()
+    /**
+     * Get the name for the direction button
+     * 
+     * @param directionIndex - Number from 0 to DIRECTION_COUNT. 
+     * @return The label for the selected direction
+     */
+    public String getDirectionLabel(int directionIndex)
     {
-        return labelPlusY;
+        return arrayDirectionLabels[directionIndex];
     }
     
-    public void setLabelPlusY(String labelPlusY)
+    /**
+     * Sets the name of the direction button
+     * 
+     * @param directionIndex - Number from 0 to DIRECTION_COUNT. 
+     * @param label - name for the direction button
+     */
+    public void setDirectionLabel(int directionIndex, String label)
     {
-        this.labelPlusY = labelPlusY;
-    }
-
-    
-    public String getLabelMinusY()
-    {
-        return labelMinusY;
-    }
-    
-    public void setLabelMinusY(String labelMinusY)
-    {
-        this.labelMinusY = labelMinusY;
-    }
-
-    
-    public String getLabelPlusX()
-    {
-        return labelPlusX;
-    }
-    
-    public void setLabelPlusX(String labelPlusX)
-    {
-        this.labelPlusX = labelPlusX;
-    }
-
-    
-    public String getLabelMinusX()
-    {
-        return labelMinusX;
-    }
-    
-    public void setLabelMinusX(String labelMinusX)
-    {
-        this.labelMinusX = labelMinusX;
+        arrayDirectionLabels[directionIndex] = label;
     }
     
     
@@ -189,10 +168,9 @@ public final class DLineApplicationSettings
       return labelAnt2;
     }
     
-    
 
     /**
-     * This setting is not saved to a file (i.e. it is set to 0 on object
+     * This setting is not saved to a file (also it is initialized to 0 on object
      * creation)
      * 
      * @param isEnabled True is single element mode is enabled
@@ -203,8 +181,8 @@ public final class DLineApplicationSettings
     }
     
     /**
-     * This setting is not saved to a file (i.e. it is set to 0 every time
-     * the object is created)
+     * This setting is not saved to a file (also it is initialized to 0 on object
+     * creation)
      * 
    * @return True is single element mode is enabled
      */
@@ -212,6 +190,53 @@ public final class DLineApplicationSettings
     {
       return this.isSingleElementMode;
     }
+    
+    
+    public void setDirectionSwitchingPeriod(int directionIndex, int periodInMs)
+    {
+      arrayDirectionsSwitchingPeriods[directionIndex] = Integer.toString(periodInMs);
+    }
+    
+    public int getDirectionSwitchingPeriod(int directionIndex)
+    {
+      return Integer.parseInt(arrayDirectionsSwitchingPeriods[directionIndex]);
+    }
+    
+    public void setIsDirectionCheckmarked(int directionIndex, boolean isCycled)
+    {
+      arrayIsDirectionCheckmarked[directionIndex] = Boolean.toString(isCycled);
+    }   
+    
+    public boolean getIsDirectionCheckmarked(int directionIndex)
+    {
+      return Boolean.parseBoolean(arrayIsDirectionCheckmarked[directionIndex]);
+    }
+ 
+    
+    /**
+     * Stores the array of values into properties which are named using
+     * key+index of the value
+     * 
+     * @param key - property key that will be used for writing this property
+     * @param values - array of values that will be written
+     */
+    private void setProperties(String key, String[] values)
+    {
+      for(int i=0; i<values.length; i++)
+      {
+        prop.setProperty(key+i, values[i]);
+      }
+    }
+    
+    
+    private void getProperties(String key, String[] values)
+    {
+      for(int i=0; i<values.length; i++)
+      {
+        values[i] = prop.getProperty(key+i);
+      }
+    }
+    
     
     /**
      * Saves the settings into a file called "DLineSettings.properties"
@@ -222,7 +247,7 @@ public final class DLineApplicationSettings
         prop.setProperty(PROPERTY_DEVICE_ID, deviceId);
         prop.setProperty(PROPERTY_COMPORT, comPort);
         prop.setProperty(PROPERTY_BAUDE_RATE, baudRate);
-        prop.setProperty(PROPERTY_BUTTON_ORIENTATION, buttonOrientation.toString());
+        prop.setProperty(PROPERTY_BUTTON_ORIENTATION, buttonsOrientation.toString());
         
         // Now save the JFrame dimensions:
         prop.setProperty(PROPERTY_MAIN_WINDOW_X, Integer.toString(jFrameDimensions.x));
@@ -231,14 +256,16 @@ public final class DLineApplicationSettings
         prop.setProperty(PROPERTY_MAIN_WINDOW_HEIGHT, Integer.toString(jFrameDimensions.height));
         
         // Now save the texts for the Direction Buttons
-        prop.setProperty(PROPERTY_LABEL_PLUS_Y, labelPlusY);
-        prop.setProperty(PROPERTY_LABEL_MINUS_Y, labelMinusY);
-        prop.setProperty(PROPERTY_LABEL_PLUS_X, labelPlusX);
-        prop.setProperty(PROPERTY_LABEL_MINUS_X, labelMinusX);
-        
+        setProperties(PROPERTY_DIRECTION_LABEL, arrayDirectionLabels);
+         
         // Texts for antena types
         prop.setProperty(PROPERTY_LABEL_ANT1, labelAnt1);
         prop.setProperty(PROPERTY_LABEL_ANT2, labelAnt2);
+        
+        // Switching periods for the directions
+        setProperties(PROPERTY_DIRECTION_SWITCHING_PERIOD, arrayDirectionsSwitchingPeriods);
+        // isCheckmarked for each directions button
+        setProperties(PROPERTY_DIRECTION_IS_CHECKMARKED, arrayIsDirectionCheckmarked);
         
         try
         {
@@ -248,14 +275,10 @@ public final class DLineApplicationSettings
             Logger.getLogger(DLineApplicationSettings.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(0);
         }
-
-           
-        
-     
     }
     
     /**
-     * Loads the settings from a file called DLineSettings.properties
+     * Loads the settings from a settings file
      */
     public void LoadSettingsFromDisk()
     {
@@ -278,16 +301,16 @@ public final class DLineApplicationSettings
             
            
             String temp = prop.getProperty(PROPERTY_BUTTON_ORIENTATION);
-            if(temp==null)
+            if(temp == null)
                 throwMissingPropertyException(PROPERTY_BUTTON_ORIENTATION);
             
-            if(temp.equals(ButtonOrientation.North.toString()))
+            if(temp.equals(ButtonsOrientation.North.toString()))
             {
-                buttonOrientation = ButtonOrientation.North;
+                buttonsOrientation = ButtonsOrientation.North;
             }
             else
             {
-                buttonOrientation = ButtonOrientation.NorthWest;
+                buttonsOrientation = ButtonsOrientation.NorthWest;
             }
             
             
@@ -300,18 +323,7 @@ public final class DLineApplicationSettings
             this.jFrameDimensions = new Rectangle(x,y,w,h);
             
             // Now read the texts for the Direction Buttons
-            labelPlusY  = prop.getProperty(PROPERTY_LABEL_PLUS_Y);
-            if(labelPlusY == null)
-                throwMissingPropertyException(PROPERTY_LABEL_PLUS_Y);
-            labelMinusY = prop.getProperty(PROPERTY_LABEL_MINUS_Y);
-            if(labelMinusY == null)
-                throwMissingPropertyException(PROPERTY_LABEL_MINUS_Y);
-            labelPlusX  = prop.getProperty(PROPERTY_LABEL_PLUS_X);
-            if(labelPlusX == null)
-                throwMissingPropertyException(PROPERTY_LABEL_PLUS_X);
-            labelMinusX = prop.getProperty(PROPERTY_LABEL_MINUS_X);
-            if(labelMinusX == null)
-                throwMissingPropertyException(PROPERTY_LABEL_MINUS_X);
+            getProperties(PROPERTY_DIRECTION_LABEL, arrayDirectionLabels);
             
             //Read the antenna type texts
             labelAnt1  = prop.getProperty(PROPERTY_LABEL_ANT1);
@@ -321,6 +333,11 @@ public final class DLineApplicationSettings
             if(labelAnt2 == null)
                 throwMissingPropertyException(PROPERTY_LABEL_ANT2);
                     
+            // Switching periods for the antennas
+            getProperties(PROPERTY_DIRECTION_SWITCHING_PERIOD, arrayDirectionsSwitchingPeriods);
+            // isCycled for each antenna
+            getProperties(PROPERTY_DIRECTION_IS_CHECKMARKED, arrayIsDirectionCheckmarked);
+            
         } catch (IOException ex)
         {
             // If some error we will set to default values
@@ -349,7 +366,7 @@ public final class DLineApplicationSettings
         deviceId = "0";
         comPort = "";
         baudRate = "2400"; 
-        buttonOrientation = ButtonOrientation.North;        
+        buttonsOrientation = ButtonsOrientation.North;        
         
         // We have minimum size so we don't have to worry about the values:
         jFrameDimensions.height = 0;
@@ -358,14 +375,26 @@ public final class DLineApplicationSettings
         jFrameDimensions.y = 0;
         
         // Set texts for the direction buttons
-        labelPlusY  = "+Y";
-        labelMinusY = "-Y"; 
-        labelPlusX  = "+X";
-        labelMinusX = "-X"; 
+        arrayDirectionLabels[DLineApplicationState.AntennaDirections.plusY.ordinal()]  = "+Y";
+        arrayDirectionLabels[DLineApplicationState.AntennaDirections.minusY.ordinal()] = "-Y"; 
+        arrayDirectionLabels[DLineApplicationState.AntennaDirections.plusX.ordinal()]  = "+X";
+        arrayDirectionLabels[DLineApplicationState.AntennaDirections.minusX.ordinal()] = "-X"; 
         
         // Set texts for the antenna types
-        labelAnt1 = "Dipole";
-        labelAnt2 = "Loop";
+        labelAnt1 = DLineApplicationState.AntennaTypes.dipole.toString();
+        labelAnt2 = DLineApplicationState.AntennaTypes.loop.toString();;
+        
+        // Switching periods
+        for(int i=0; i<arrayDirectionsSwitchingPeriods.length; i++)
+        {
+          arrayDirectionsSwitchingPeriods[i] = Integer.toString(DLineApplication.DEFAULT_SWITCHING_PERIOD_IN_MS);
+        }
+        
+        // isDirectionCheckmarked
+        for(int i=0; i<arrayIsDirectionCheckmarked.length; i++)
+        {
+          arrayIsDirectionCheckmarked[i] = Boolean.toString(true);
+        }
                 
     }
     

@@ -1,14 +1,15 @@
 package org.lz1aq.dlinecontroller;
 
-
 import java.awt.Dimension;
-import java.awt.Event;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JCheckBox;
+import javax.swing.JFormattedTextField;
+import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.Timer;
 /*
@@ -23,91 +24,116 @@ import org.lz1aq.dlinecontroller.DLineApplicationState.AntennaDirections;
  *
  * @author Chavdar
  */
-public class DLineApplication extends javax.swing.JFrame {   
-    
-    private static final long serialVersionUID = 1L;
-    
-    static final int MIN_SWITCHING_SPEED_IN_MS = 150;
-    static final int DEFAULT_SWITCHING_SPEED_IN_MS = 2000;
-    static final int MAX_SWITCHING_SPEED_IN_MS = 60000;
+public class DLineApplication extends javax.swing.JFrame
+{
 
+    private static final long serialVersionUID = 1L;
+    static final String PROGRAM_VERSION = "1.6";
+    static final String PROGRAM_NAME    = "DLineController";
+    
     private final DLineApplicationState     dLineApplicationState;
     private final DLineApplicationSettings  dLineSettings;
     private final DLineSerialComm           dLineSerialComm;
+
+    private final DefaultComboBoxModel comPortComboBoxModel;
+    private final DefaultComboBoxModel baudRateComboBoxModel;
+    private final DefaultComboBoxModel deviceIdComboBoxModel;
+
     
-    private final DefaultComboBoxModel  comPortComboBoxModel;
-    private final DefaultComboBoxModel  baudRateComboBoxModel;
-    private final DefaultComboBoxModel  deviceIdComboBoxModel;
-   
-    static final int MIN_FB_SWITCHING_RATIO = 1;
-    static final int DEFAULT_FB_SWITCHING_RATIO = 3; 
-    static final int MAX_FB_SWITCHING_RATIO = 10;
-    private int fbSwitchingRatio = DEFAULT_FB_SWITCHING_RATIO;
-    private int counter3to1ratio = 0;
+    // Stuff used for automatic direction switching
+    static final int MIN_SWITCHING_PERIOD_IN_MS     = 150;
+    static final int DEFAULT_SWITCHING_PERIOD_IN_MS = 1000;
+    static final int MAX_SWITCHING_PERIOD_IN_MS     = 60000;
+    public static final int DIRECTION_NOT_SET  = -1;   
     
-    private Timer timerForDirectionSwitching;    
-    private final ActionListener directionSwitching = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt)
-            {
-              if(jRadioButtonAllDirections.isSelected())
-              {
-                toggleAllDirections();
-              }
-              else
-              {
-                // Plus dirctions will be equal or longer than the Minus directions 
-                // where fbSwitchingRatio specifies the ratio
-                if(getAntennaDirectionButton(AntennaDirections.plusY).isSelected() ||
-                   getAntennaDirectionButton(AntennaDirections.plusX).isSelected())
-                {
-                  //skip two time intervals
-                  counter3to1ratio++;
-                  if(counter3to1ratio<fbSwitchingRatio)
-                    return;
-                  else
-                    counter3to1ratio = 0;
-                }
-                toggleFrontAndBack();
-                
-              }
-            }
-    };        
-   
+    private JToggleButton[]   buttonsNorthwestDirection;
+    private JToggleButton[]   buttonsNorthDirection;
+    private JFormattedTextField[] textfieldsDirectionsLabels;
+    private JTextField[]      textfieldsSwitchingPeriods;
+    private JCheckBox[]       checkboxesDirections;
     
-    
+    private Timer directionSwitchingTimer;
+
     /**
-     * Creates new form DLineApplication
+     * Constructor
      */
-    public DLineApplication() 
-    {  
+    public DLineApplication()
+    {
         // Data for the Combo boxes in the settings Dialog
-        this.baudRateComboBoxModel = new DefaultComboBoxModel(new String[] { "1200", "2400", "4800", "9600", "19200", "38400", "57600", "115200" });
-        this.comPortComboBoxModel  = DLineSerialComm.getComportsComboboxModel();
-        this.deviceIdComboBoxModel = new DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"});
+        this.baudRateComboBoxModel = new DefaultComboBoxModel(new String[]
+        {
+            "1200", "2400", "4800", "9600", "19200", "38400", "57600", "115200"
+        });
+        this.comPortComboBoxModel = DLineSerialComm.getComportsComboboxModel();
+        this.deviceIdComboBoxModel = new DefaultComboBoxModel(new String[]
+        {
+            "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
+        });
+       
                 
         // Load user settings from the properties file
         dLineSettings = new DLineApplicationSettings();
         // Init the DLineState object
         dLineApplicationState = new DLineApplicationState();
-        
+
         // Create the object which will take care of sending data through the UART
         dLineSerialComm = new DLineSerialComm();
-        
+
         // Print the working path and the 
-        System.out.println("Working Directory = " +
-                System.getProperty("user.dir"));
+        System.out.println("Working Directory = "
+                + System.getProperty("user.dir"));
         System.out.println("java.library.path = " + System.getProperty("java.library.path"));
         //System.setProperty("java.library.path", yourPath); // not used 
-        
+
         // Init GUI
-        initComponents();    
+        initComponents();
         
-        
-        // Set initial state of the buttons
-        pressDefaulButtons();
+        // For convenience put the direction related Swing controls into an arrays
+        packDirectionSwitchingControls();
     }
 
+    
+    /**
+     *  Adds all the Swing Controls for direction switching into arrays
+     */
+    private void packDirectionSwitchingControls()
+    {
+        /**
+         *  The order of inclusion should be the same as defined in
+         *  the class AntennaDirections
+         */
+        
+        // Direction buttons for North orientation
+        buttonsNorthDirection = new JToggleButton[]{toggleButtonNDirection_0, // plusY
+                                                    toggleButtonNDirection_1, // minusX
+                                                    toggleButtonNDirection_2, // minusY
+                                                    toggleButtonNDirection_3};// plusX
+        
+        // Direction buttons for North-West orientation 
+        buttonsNorthwestDirection = new JToggleButton[]{toggleButtonNwDirection_0, // plusY
+                                                        toggleButtonNwDirection_1, // minusX
+                                                        toggleButtonNwDirection_2, // minusY
+                                                        toggleButtonNwDirection_3};// plusX
+        
+        // Text fields for changing direction buttons labels
+        textfieldsDirectionsLabels = new JFormattedTextField[]{textfieldDirectionLabel_0,
+                                                         textfieldDirectionLabel_1,
+                                                         textfieldDirectionLabel_2,
+                                                         textfieldDirectionLabel_3};
+        
+        // Checkboxes for enabling/disabling direction during automatic switching
+        textfieldsSwitchingPeriods = new JTextField[]{textfieldDirectionPeriod_0,
+                                                      textfieldDirectionPeriod_1,
+                                                      textfieldDirectionPeriod_2,
+                                                      textfieldDirectionPeriod_3};
+        
+        checkboxesDirections = new JCheckBox[]{checkboxDirectionSwitching_0,
+                                               checkboxDirectionSwitching_1,
+                                               checkboxDirectionSwitching_2,
+                                               checkboxDirectionSwitching_3};
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -115,19 +141,20 @@ public class DLineApplication extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponents()
+    {
         java.awt.GridBagConstraints gridBagConstraints;
 
         jDialogSettings = new javax.swing.JDialog();
         jPanel1 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
-        jFormattedTextFieldMinusX = new javax.swing.JFormattedTextField();
+        textfieldDirectionLabel_1 = new javax.swing.JFormattedTextField();
         jLabel6 = new javax.swing.JLabel();
         jRadioButtonNorthWest = new javax.swing.JRadioButton();
-        jFormattedTextFieldPlusX = new javax.swing.JFormattedTextField();
-        jFormattedTextFieldMinusY = new javax.swing.JFormattedTextField();
+        textfieldDirectionLabel_3 = new javax.swing.JFormattedTextField();
+        textfieldDirectionLabel_2 = new javax.swing.JFormattedTextField();
         jLabel5 = new javax.swing.JLabel();
-        jFormattedTextFieldPlusY = new javax.swing.JFormattedTextField();
+        textfieldDirectionLabel_0 = new javax.swing.JFormattedTextField();
         jLabel8 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -135,9 +162,9 @@ public class DLineApplication extends javax.swing.JFrame {
         jRadioButtonNorth = new javax.swing.JRadioButton();
         jLabel15 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        textfieldSettingsAntenna_1 = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        textfieldSettingsAntenna_2 = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         jComboBoxDeviceId = new javax.swing.JComboBox();
         jComboBoxComPort = new javax.swing.JComboBox();
@@ -146,7 +173,7 @@ public class DLineApplication extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
-        jTextFieldCustomCommPort = new javax.swing.JTextField();
+        textfieldVirtualCommPort = new javax.swing.JTextField();
         jPanel5 = new javax.swing.JPanel();
         jButtonCancel = new javax.swing.JButton();
         jButtonSave = new javax.swing.JButton();
@@ -154,18 +181,20 @@ public class DLineApplication extends javax.swing.JFrame {
         jCheckBoxSingleElementMode = new javax.swing.JCheckBox();
         buttonGroupInSettings = new javax.swing.ButtonGroup();
         buttonGroupDirections = new javax.swing.ButtonGroup();
-        jDialogRelaySwitching = new javax.swing.JDialog();
-        jPanel2 = new javax.swing.JPanel();
-        jLabelDebugMode = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jTextFieldDebugSwitchingSpeed = new javax.swing.JTextField();
-        jLabel9 = new javax.swing.JLabel();
-        jRadioButtonAllDirections = new javax.swing.JRadioButton();
-        jRadioButtonFrontBack = new javax.swing.JRadioButton();
-        jTextFieldFBRatio = new javax.swing.JTextField();
+        jDialogPeriodicSwitching = new javax.swing.JDialog();
+        checkboxDirectionSwitching_1 = new javax.swing.JCheckBox();
+        checkboxDirectionSwitching_2 = new javax.swing.JCheckBox();
+        checkboxDirectionSwitching_0 = new javax.swing.JCheckBox();
         jLabel1 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        checkboxDirectionSwitching_3 = new javax.swing.JCheckBox();
+        textfieldDirectionPeriod_0 = new javax.swing.JTextField();
+        textfieldDirectionPeriod_1 = new javax.swing.JTextField();
+        jButtonPeriodicSwitchingDialogSet = new javax.swing.JButton();
+        textfieldDirectionPeriod_2 = new javax.swing.JTextField();
+        textfieldDirectionPeriod_3 = new javax.swing.JTextField();
         jDialogAbout = new javax.swing.JDialog();
-        jButton2 = new javax.swing.JButton();
+        buttonAboutDialogOK = new javax.swing.JButton();
         jLabel11 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
@@ -173,22 +202,22 @@ public class DLineApplication extends javax.swing.JFrame {
         jTextField3 = new javax.swing.JTextField();
         buttonGroupDebugWindow = new javax.swing.ButtonGroup();
         jPanel11 = new javax.swing.JPanel();
-        jToggleButton7 = new javax.swing.JToggleButton();
-        jToggleButton8 = new javax.swing.JToggleButton();
-        jToggleButton9 = new javax.swing.JToggleButton();
-        jToggleButton4 = new javax.swing.JToggleButton();
-        jToggleButton5 = new javax.swing.JToggleButton();
-        jToggleButton6 = new javax.swing.JToggleButton();
-        jToggleButton1 = new javax.swing.JToggleButton();
-        jToggleButton2 = new javax.swing.JToggleButton();
-        jToggleButton3 = new javax.swing.JToggleButton();
+        toggleButtonNwDirection_0 = new javax.swing.JToggleButton();
+        toggleButtonNDirection_0 = new javax.swing.JToggleButton();
+        toggleButtonNwDirection_1 = new javax.swing.JToggleButton();
+        toggleButtonNDirection_3 = new javax.swing.JToggleButton();
+        toggleButtonDirectionMode = new javax.swing.JToggleButton();
+        toggleButtonNDirection_1 = new javax.swing.JToggleButton();
+        toggleButtonNwDirection_3 = new javax.swing.JToggleButton();
+        toggleButtonNDirection_2 = new javax.swing.JToggleButton();
+        toggleButtonNwDirection_2 = new javax.swing.JToggleButton();
         jPanel12 = new javax.swing.JPanel();
         jToggleButtonAntennaType = new javax.swing.JToggleButton();
         jLabelSerialComm = new javax.swing.JLabel();
+        jCheckBoxPeriodicSwitching = new javax.swing.JCheckBox();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         jMenuSettigns = new javax.swing.JMenuItem();
-        jMenuDebugMode = new javax.swing.JMenuItem();
         exitMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         aboutMenuItem = new javax.swing.JMenuItem();
@@ -197,8 +226,10 @@ public class DLineApplication extends javax.swing.JFrame {
         jDialogSettings.setAlwaysOnTop(true);
         jDialogSettings.setModal(true);
         jDialogSettings.setType(java.awt.Window.Type.UTILITY);
-        jDialogSettings.addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentShown(java.awt.event.ComponentEvent evt) {
+        jDialogSettings.addComponentListener(new java.awt.event.ComponentAdapter()
+        {
+            public void componentShown(java.awt.event.ComponentEvent evt)
+            {
                 jDialogSettingsComponentShown(evt);
             }
         });
@@ -209,7 +240,7 @@ public class DLineApplication extends javax.swing.JFrame {
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Button settings"));
         jPanel3.setLayout(new java.awt.GridBagLayout());
 
-        jFormattedTextFieldMinusX.setText("jFormattedTextField5");
+        textfieldDirectionLabel_1.setText("-X");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 5;
@@ -217,7 +248,7 @@ public class DLineApplication extends javax.swing.JFrame {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
-        jPanel3.add(jFormattedTextFieldMinusX, gridBagConstraints);
+        jPanel3.add(textfieldDirectionLabel_1, gridBagConstraints);
 
         jLabel6.setText("-X:");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -242,7 +273,7 @@ public class DLineApplication extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 5);
         jPanel3.add(jRadioButtonNorthWest, gridBagConstraints);
 
-        jFormattedTextFieldPlusX.setText("jFormattedTextField3");
+        textfieldDirectionLabel_3.setText("+X");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;
@@ -250,9 +281,9 @@ public class DLineApplication extends javax.swing.JFrame {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
-        jPanel3.add(jFormattedTextFieldPlusX, gridBagConstraints);
+        jPanel3.add(textfieldDirectionLabel_3, gridBagConstraints);
 
-        jFormattedTextFieldMinusY.setText("jFormattedTextField2");
+        textfieldDirectionLabel_2.setText("-Y");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 3;
@@ -260,7 +291,7 @@ public class DLineApplication extends javax.swing.JFrame {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
-        jPanel3.add(jFormattedTextFieldMinusY, gridBagConstraints);
+        jPanel3.add(textfieldDirectionLabel_2, gridBagConstraints);
 
         jLabel5.setText("+X:");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -272,14 +303,14 @@ public class DLineApplication extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 10, 0);
         jPanel3.add(jLabel5, gridBagConstraints);
 
-        jFormattedTextFieldPlusY.setText("jFormattedTextField1");
+        textfieldDirectionLabel_0.setText("+Y");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        jPanel3.add(jFormattedTextFieldPlusY, gridBagConstraints);
+        jPanel3.add(textfieldDirectionLabel_0, gridBagConstraints);
 
         jLabel8.setText("-Y:");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -359,14 +390,14 @@ public class DLineApplication extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
         jPanel3.add(jLabel16, gridBagConstraints);
 
-        jTextField2.setText("jTextField2");
+        textfieldSettingsAntenna_1.setText("Dipole");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 7;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        jPanel3.add(jTextField2, gridBagConstraints);
+        jPanel3.add(textfieldSettingsAntenna_1, gridBagConstraints);
 
         jLabel17.setText("ant 2:");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -378,7 +409,7 @@ public class DLineApplication extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 0);
         jPanel3.add(jLabel17, gridBagConstraints);
 
-        jTextField4.setText("jTextField4");
+        textfieldSettingsAntenna_2.setText("Loop");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 7;
@@ -386,7 +417,7 @@ public class DLineApplication extends javax.swing.JFrame {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
-        jPanel3.add(jTextField4, gridBagConstraints);
+        jPanel3.add(textfieldSettingsAntenna_2, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -460,7 +491,7 @@ public class DLineApplication extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
         jPanel4.add(jLabel13, gridBagConstraints);
 
-        jLabel18.setText("Custom ComPort name");
+        jLabel18.setText("Virtual ComPort name");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
@@ -470,8 +501,8 @@ public class DLineApplication extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
         jPanel4.add(jLabel18, gridBagConstraints);
 
-        jTextFieldCustomCommPort.setText("jTextField5");
-        jTextFieldCustomCommPort.setToolTipText("Make sure this field is empty if you don't want to use a custom comport!");
+        textfieldVirtualCommPort.setText(" ");
+        textfieldVirtualCommPort.setToolTipText("Make sure this field is empty if you don't want to use a custom comport!");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
@@ -479,7 +510,7 @@ public class DLineApplication extends javax.swing.JFrame {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
-        jPanel4.add(jTextFieldCustomCommPort, gridBagConstraints);
+        jPanel4.add(textfieldVirtualCommPort, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -493,8 +524,10 @@ public class DLineApplication extends javax.swing.JFrame {
         jPanel5.setLayout(new java.awt.GridBagLayout());
 
         jButtonCancel.setText("Cancel");
-        jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButtonCancel.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jButtonCancelActionPerformed(evt);
             }
         });
@@ -508,8 +541,10 @@ public class DLineApplication extends javax.swing.JFrame {
         jPanel5.add(jButtonCancel, gridBagConstraints);
 
         jButtonSave.setText("Save");
-        jButtonSave.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButtonSave.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jButtonSaveActionPerformed(evt);
             }
         });
@@ -560,137 +595,161 @@ public class DLineApplication extends javax.swing.JFrame {
         gridBagConstraints.weighty = 1.0;
         jDialogSettings.getContentPane().add(jPanel1, gridBagConstraints);
 
-        jDialogRelaySwitching.setTitle("Debug mode is running...");
-        jDialogRelaySwitching.setAlwaysOnTop(true);
-        jDialogRelaySwitching.setModal(false);
-        jDialogRelaySwitching.setResizable(false);
-        jDialogRelaySwitching.addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentHidden(java.awt.event.ComponentEvent evt) {
-                jDialogRelaySwitchingComponentHidden(evt);
+        jDialogPeriodicSwitching.setTitle("Periodic direction switching");
+        jDialogPeriodicSwitching.setAlwaysOnTop(true);
+        jDialogPeriodicSwitching.setPreferredSize(new java.awt.Dimension(250, 200));
+        jDialogPeriodicSwitching.addComponentListener(new java.awt.event.ComponentAdapter()
+        {
+            public void componentShown(java.awt.event.ComponentEvent evt)
+            {
+                jDialogPeriodicSwitchingComponentShown(evt);
             }
-            public void componentShown(java.awt.event.ComponentEvent evt) {
-                jDialogRelaySwitchingComponentShown(evt);
-            }
-        });
-
-        jLabelDebugMode.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabelDebugMode.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabelDebugMode.setText("Direction is changed every:");
-        jLabelDebugMode.setToolTipText("");
-
-        jButton1.setText("Cancel");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+            public void componentHidden(java.awt.event.ComponentEvent evt)
+            {
+                jDialogPeriodicSwitchingComponentHidden(evt);
             }
         });
+        jDialogPeriodicSwitching.getContentPane().setLayout(new java.awt.GridBagLayout());
 
-        jTextFieldDebugSwitchingSpeed.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        jTextFieldDebugSwitchingSpeed.setText("2000");
-        jTextFieldDebugSwitchingSpeed.setToolTipText("Enter integer value [150 to 60000] and press Enter");
-        jTextFieldDebugSwitchingSpeed.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldDebugSwitchingSpeedActionPerformed(evt);
+        checkboxDirectionSwitching_1.setText("-X");
+        checkboxDirectionSwitching_1.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                checkboxDirectionSwitching_1ActionPerformed(evt);
             }
         });
-        jTextFieldDebugSwitchingSpeed.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTextFieldDebugSwitchingSpeedKeyPressed(evt);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+        jDialogPeriodicSwitching.getContentPane().add(checkboxDirectionSwitching_1, gridBagConstraints);
+
+        checkboxDirectionSwitching_2.setText("-Y");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+        jDialogPeriodicSwitching.getContentPane().add(checkboxDirectionSwitching_2, gridBagConstraints);
+
+        checkboxDirectionSwitching_0.setText("+Y");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+        jDialogPeriodicSwitching.getContentPane().add(checkboxDirectionSwitching_0, gridBagConstraints);
+
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Direction");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        jDialogPeriodicSwitching.getContentPane().add(jLabel1, gridBagConstraints);
+
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel9.setText("Period [ms]");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        jDialogPeriodicSwitching.getContentPane().add(jLabel9, gridBagConstraints);
+
+        checkboxDirectionSwitching_3.setText("+X");
+        checkboxDirectionSwitching_3.setToolTipText("");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+        jDialogPeriodicSwitching.getContentPane().add(checkboxDirectionSwitching_3, gridBagConstraints);
+
+        textfieldDirectionPeriod_0.setText("1000");
+        textfieldDirectionPeriod_0.setToolTipText("Enter a value (150-60000) and press the \"Set\" button.");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
+        jDialogPeriodicSwitching.getContentPane().add(textfieldDirectionPeriod_0, gridBagConstraints);
+
+        textfieldDirectionPeriod_1.setText("1000");
+        textfieldDirectionPeriod_1.setToolTipText("Enter a value (150-60000) and press the \"Set\" button.");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
+        jDialogPeriodicSwitching.getContentPane().add(textfieldDirectionPeriod_1, gridBagConstraints);
+
+        jButtonPeriodicSwitchingDialogSet.setText("Set");
+        jButtonPeriodicSwitchingDialogSet.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jButtonPeriodicSwitchingDialogSetActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 10, 5, 10);
+        jDialogPeriodicSwitching.getContentPane().add(jButtonPeriodicSwitchingDialogSet, gridBagConstraints);
 
-        jLabel9.setText("msecs");
+        textfieldDirectionPeriod_2.setText("1000");
+        textfieldDirectionPeriod_2.setToolTipText("Enter a value (150-60000) and press the \"Set\" button.");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
+        jDialogPeriodicSwitching.getContentPane().add(textfieldDirectionPeriod_2, gridBagConstraints);
 
-        buttonGroupDebugWindow.add(jRadioButtonAllDirections);
-        jRadioButtonAllDirections.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        jRadioButtonAllDirections.setSelected(true);
-        jRadioButtonAllDirections.setText("Toggle all four directions");
+        textfieldDirectionPeriod_3.setText("1000");
+        textfieldDirectionPeriod_3.setToolTipText("Enter a value (150-60000) and press the \"Set\" button.");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
+        jDialogPeriodicSwitching.getContentPane().add(textfieldDirectionPeriod_3, gridBagConstraints);
 
-        buttonGroupDebugWindow.add(jRadioButtonFrontBack);
-        jRadioButtonFrontBack.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        jRadioButtonFrontBack.setText("Toggle F/B");
-        jRadioButtonFrontBack.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButtonFrontBackActionPerformed(evt);
-            }
-        });
-
-        jTextFieldFBRatio.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        jTextFieldFBRatio.setText("3");
-        jTextFieldFBRatio.setToolTipText("Enter integer value [1 to 10] and press Enter");
-        jTextFieldFBRatio.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTextFieldFBRatioKeyPressed(evt);
-            }
-        });
-
-        jLabel1.setText("Ratio");
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabelDebugMode)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldDebugSwitchingSpeed, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel9))
-                    .addComponent(jRadioButtonAllDirections)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jRadioButtonFrontBack)
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jTextFieldFBRatio, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel1)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelDebugMode, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextFieldDebugSwitchingSpeed, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jRadioButtonAllDirections)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jRadioButtonFrontBack)
-                    .addComponent(jTextFieldFBRatio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addGap(39, 39, 39)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-
-        javax.swing.GroupLayout jDialogRelaySwitchingLayout = new javax.swing.GroupLayout(jDialogRelaySwitching.getContentPane());
-        jDialogRelaySwitching.getContentPane().setLayout(jDialogRelaySwitchingLayout);
-        jDialogRelaySwitchingLayout.setHorizontalGroup(
-            jDialogRelaySwitchingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jDialogRelaySwitchingLayout.setVerticalGroup(
-            jDialogRelaySwitchingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-
-        jDialogAbout.setTitle("About");
+        jDialogAbout.setTitle("DLineController v1.5");
         jDialogAbout.setAlwaysOnTop(true);
         jDialogAbout.setModal(true);
         jDialogAbout.setResizable(false);
 
-        jButton2.setText("OK");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+        buttonAboutDialogOK.setText("OK");
+        buttonAboutDialogOK.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                buttonAboutDialogOKActionPerformed(evt);
             }
         });
 
@@ -710,13 +769,15 @@ public class DLineApplication extends javax.swing.JFrame {
 
         jLabel14.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel14.setText("Serial Interface to LZ1AQ's DLine Controller ");
+        jLabel14.setText(PROGRAM_NAME+" v."+PROGRAM_VERSION);
 
         jTextField3.setEditable(false);
         jTextField3.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextField3.setText("github.com/potty-dzmeia/DLineController");
-        jTextField3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jTextField3.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jTextField3ActionPerformed(evt);
             }
         });
@@ -730,7 +791,7 @@ public class DLineApplication extends javax.swing.JFrame {
                 .addGroup(jDialogAboutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 342, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buttonAboutDialogOK, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jTextField3)
                     .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -750,179 +811,228 @@ public class DLineApplication extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton2)
+                .addComponent(buttonAboutDialogOK)
                 .addContainerGap())
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Serial Interface to LZ1AQ's DLine Controller");
         setMinimumSize(new java.awt.Dimension(200, 200));
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowOpened(java.awt.event.WindowEvent evt) {
+        addWindowListener(new java.awt.event.WindowAdapter()
+        {
+            public void windowOpened(java.awt.event.WindowEvent evt)
+            {
                 formWindowOpened(evt);
             }
-            public void windowClosing(java.awt.event.WindowEvent evt) {
+            public void windowClosing(java.awt.event.WindowEvent evt)
+            {
                 formWindowClosing(evt);
             }
         });
 
         jPanel11.setLayout(new java.awt.GridLayout(3, 3));
 
-        buttonGroupDirections.add(jToggleButton7);
-        jToggleButton7.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jToggleButton7.setText("+Y");
-        jToggleButton7.setMinimumSize(new java.awt.Dimension(0, 0));
-        jToggleButton7.setPreferredSize(new java.awt.Dimension(40, 40));
-        jToggleButton7.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jToggleButton7ItemStateChanged(evt);
+        buttonGroupDirections.add(toggleButtonNwDirection_0);
+        toggleButtonNwDirection_0.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        toggleButtonNwDirection_0.setText("+Y");
+        toggleButtonNwDirection_0.setMinimumSize(new java.awt.Dimension(0, 0));
+        toggleButtonNwDirection_0.setPreferredSize(new java.awt.Dimension(40, 40));
+        toggleButtonNwDirection_0.addItemListener(new java.awt.event.ItemListener()
+        {
+            public void itemStateChanged(java.awt.event.ItemEvent evt)
+            {
+                toggleButtonNwDirection_0ItemStateChanged(evt);
             }
         });
-        jPanel11.add(jToggleButton7);
+        jPanel11.add(toggleButtonNwDirection_0);
 
-        buttonGroupDirections.add(jToggleButton8);
-        jToggleButton8.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jToggleButton8.setText("+Y");
-        jToggleButton8.setMinimumSize(new java.awt.Dimension(0, 0));
-        jToggleButton8.setPreferredSize(new java.awt.Dimension(40, 40));
-        jToggleButton8.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jToggleButton8ItemStateChanged(evt);
+        buttonGroupDirections.add(toggleButtonNDirection_0);
+        toggleButtonNDirection_0.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        toggleButtonNDirection_0.setText("+Y");
+        toggleButtonNDirection_0.setMinimumSize(new java.awt.Dimension(0, 0));
+        toggleButtonNDirection_0.setPreferredSize(new java.awt.Dimension(40, 40));
+        toggleButtonNDirection_0.addItemListener(new java.awt.event.ItemListener()
+        {
+            public void itemStateChanged(java.awt.event.ItemEvent evt)
+            {
+                toggleButtonNDirection_0ItemStateChanged(evt);
             }
         });
-        jPanel11.add(jToggleButton8);
+        jPanel11.add(toggleButtonNDirection_0);
 
-        buttonGroupDirections.add(jToggleButton9);
-        jToggleButton9.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jToggleButton9.setText("-X");
-        jToggleButton9.setMinimumSize(new java.awt.Dimension(0, 0));
-        jToggleButton9.setPreferredSize(new java.awt.Dimension(40, 40));
-        jToggleButton9.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jToggleButton9ItemStateChanged(evt);
+        buttonGroupDirections.add(toggleButtonNwDirection_1);
+        toggleButtonNwDirection_1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        toggleButtonNwDirection_1.setText("-X");
+        toggleButtonNwDirection_1.setMinimumSize(new java.awt.Dimension(0, 0));
+        toggleButtonNwDirection_1.setPreferredSize(new java.awt.Dimension(40, 40));
+        toggleButtonNwDirection_1.addItemListener(new java.awt.event.ItemListener()
+        {
+            public void itemStateChanged(java.awt.event.ItemEvent evt)
+            {
+                toggleButtonNwDirection_1ItemStateChanged(evt);
             }
         });
-        jPanel11.add(jToggleButton9);
+        jPanel11.add(toggleButtonNwDirection_1);
 
-        buttonGroupDirections.add(jToggleButton4);
-        jToggleButton4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jToggleButton4.setText("+X");
-        jToggleButton4.setMinimumSize(new java.awt.Dimension(0, 0));
-        jToggleButton4.setPreferredSize(new java.awt.Dimension(40, 40));
-        jToggleButton4.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jToggleButton4ItemStateChanged(evt);
+        buttonGroupDirections.add(toggleButtonNDirection_3);
+        toggleButtonNDirection_3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        toggleButtonNDirection_3.setText("+X");
+        toggleButtonNDirection_3.setMinimumSize(new java.awt.Dimension(0, 0));
+        toggleButtonNDirection_3.setPreferredSize(new java.awt.Dimension(40, 40));
+        toggleButtonNDirection_3.addItemListener(new java.awt.event.ItemListener()
+        {
+            public void itemStateChanged(java.awt.event.ItemEvent evt)
+            {
+                toggleButtonNDirection_3ItemStateChanged(evt);
             }
         });
-        jPanel11.add(jToggleButton4);
+        jPanel11.add(toggleButtonNDirection_3);
 
-        jToggleButton5.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jToggleButton5.setText("Add");
-        jToggleButton5.setToolTipText("");
-        jToggleButton5.setMinimumSize(new java.awt.Dimension(0, 0));
-        jToggleButton5.setPreferredSize(new java.awt.Dimension(40, 40));
-        jToggleButton5.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jToggleButton5ItemStateChanged(evt);
+        toggleButtonDirectionMode.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        toggleButtonDirectionMode.setText("Add");
+        toggleButtonDirectionMode.setToolTipText("");
+        toggleButtonDirectionMode.setMinimumSize(new java.awt.Dimension(0, 0));
+        toggleButtonDirectionMode.setPreferredSize(new java.awt.Dimension(40, 40));
+        toggleButtonDirectionMode.addItemListener(new java.awt.event.ItemListener()
+        {
+            public void itemStateChanged(java.awt.event.ItemEvent evt)
+            {
+                toggleButtonDirectionModeItemStateChanged(evt);
             }
         });
-        jPanel11.add(jToggleButton5);
+        jPanel11.add(toggleButtonDirectionMode);
 
-        buttonGroupDirections.add(jToggleButton6);
-        jToggleButton6.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jToggleButton6.setText("-X");
-        jToggleButton6.setMinimumSize(new java.awt.Dimension(0, 0));
-        jToggleButton6.setPreferredSize(new java.awt.Dimension(40, 40));
-        jToggleButton6.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jToggleButton6ItemStateChanged(evt);
+        buttonGroupDirections.add(toggleButtonNDirection_1);
+        toggleButtonNDirection_1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        toggleButtonNDirection_1.setText("-X");
+        toggleButtonNDirection_1.setMinimumSize(new java.awt.Dimension(0, 0));
+        toggleButtonNDirection_1.setPreferredSize(new java.awt.Dimension(40, 40));
+        toggleButtonNDirection_1.addItemListener(new java.awt.event.ItemListener()
+        {
+            public void itemStateChanged(java.awt.event.ItemEvent evt)
+            {
+                toggleButtonNDirection_1ItemStateChanged(evt);
             }
         });
-        jPanel11.add(jToggleButton6);
+        jPanel11.add(toggleButtonNDirection_1);
 
-        buttonGroupDirections.add(jToggleButton1);
-        jToggleButton1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jToggleButton1.setText("+X");
-        jToggleButton1.setMinimumSize(new java.awt.Dimension(0, 0));
-        jToggleButton1.setPreferredSize(new java.awt.Dimension(40, 40));
-        jToggleButton1.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jToggleButton1ItemStateChanged(evt);
+        buttonGroupDirections.add(toggleButtonNwDirection_3);
+        toggleButtonNwDirection_3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        toggleButtonNwDirection_3.setText("+X");
+        toggleButtonNwDirection_3.setMinimumSize(new java.awt.Dimension(0, 0));
+        toggleButtonNwDirection_3.setPreferredSize(new java.awt.Dimension(40, 40));
+        toggleButtonNwDirection_3.addItemListener(new java.awt.event.ItemListener()
+        {
+            public void itemStateChanged(java.awt.event.ItemEvent evt)
+            {
+                toggleButtonNwDirection_3ItemStateChanged(evt);
             }
         });
-        jPanel11.add(jToggleButton1);
+        jPanel11.add(toggleButtonNwDirection_3);
 
-        buttonGroupDirections.add(jToggleButton2);
-        jToggleButton2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jToggleButton2.setText("-Y");
-        jToggleButton2.setMinimumSize(new java.awt.Dimension(0, 0));
-        jToggleButton2.setPreferredSize(new java.awt.Dimension(40, 40));
-        jToggleButton2.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jToggleButton2ItemStateChanged(evt);
+        buttonGroupDirections.add(toggleButtonNDirection_2);
+        toggleButtonNDirection_2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        toggleButtonNDirection_2.setText("-Y");
+        toggleButtonNDirection_2.setMinimumSize(new java.awt.Dimension(0, 0));
+        toggleButtonNDirection_2.setPreferredSize(new java.awt.Dimension(40, 40));
+        toggleButtonNDirection_2.addItemListener(new java.awt.event.ItemListener()
+        {
+            public void itemStateChanged(java.awt.event.ItemEvent evt)
+            {
+                toggleButtonNDirection_2ItemStateChanged(evt);
             }
         });
-        jPanel11.add(jToggleButton2);
+        jPanel11.add(toggleButtonNDirection_2);
 
-        buttonGroupDirections.add(jToggleButton3);
-        jToggleButton3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jToggleButton3.setText("-Y");
-        jToggleButton3.setMinimumSize(new java.awt.Dimension(0, 0));
-        jToggleButton3.setPreferredSize(new java.awt.Dimension(40, 40));
-        jToggleButton3.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jToggleButton3ItemStateChanged(evt);
+        buttonGroupDirections.add(toggleButtonNwDirection_2);
+        toggleButtonNwDirection_2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        toggleButtonNwDirection_2.setText("-Y");
+        toggleButtonNwDirection_2.setMinimumSize(new java.awt.Dimension(0, 0));
+        toggleButtonNwDirection_2.setPreferredSize(new java.awt.Dimension(40, 40));
+        toggleButtonNwDirection_2.addItemListener(new java.awt.event.ItemListener()
+        {
+            public void itemStateChanged(java.awt.event.ItemEvent evt)
+            {
+                toggleButtonNwDirection_2ItemStateChanged(evt);
             }
         });
-        jPanel11.add(jToggleButton3);
+        jPanel11.add(toggleButtonNwDirection_2);
 
-        jPanel12.setLayout(new java.awt.BorderLayout());
+        jPanel12.setLayout(new java.awt.GridBagLayout());
 
         jToggleButtonAntennaType.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jToggleButtonAntennaType.setText("Antenna Type");
         jToggleButtonAntennaType.setToolTipText("Antenna type");
-        jToggleButtonAntennaType.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+        jToggleButtonAntennaType.addItemListener(new java.awt.event.ItemListener()
+        {
+            public void itemStateChanged(java.awt.event.ItemEvent evt)
+            {
                 jToggleButtonAntennaTypeItemStateChanged(evt);
             }
         });
-        jPanel12.add(jToggleButtonAntennaType, java.awt.BorderLayout.CENTER);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        jPanel12.add(jToggleButtonAntennaType, gridBagConstraints);
 
         jLabelSerialComm.setText("Serial Comm:");
         jLabelSerialComm.setMinimumSize(null);
         jLabelSerialComm.setPreferredSize(null);
-        jPanel12.add(jLabelSerialComm, java.awt.BorderLayout.PAGE_END);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 0.1;
+        jPanel12.add(jLabelSerialComm, gridBagConstraints);
         jLabelSerialComm.getAccessibleContext().setAccessibleName("jLabelSerialComm");
         jLabelSerialComm.getAccessibleContext().setAccessibleDescription("");
 
+        jCheckBoxPeriodicSwitching.setText("Periodic Switching");
+        jCheckBoxPeriodicSwitching.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jCheckBoxPeriodicSwitching.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jCheckBoxPeriodicSwitchingActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 0.6;
+        gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
+        jPanel12.add(jCheckBoxPeriodicSwitching, gridBagConstraints);
+
         fileMenu.setMnemonic('f');
         fileMenu.setText("File");
-        fileMenu.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
+        fileMenu.addKeyListener(new java.awt.event.KeyAdapter()
+        {
+            public void keyPressed(java.awt.event.KeyEvent evt)
+            {
                 fileMenuKeyPressed(evt);
             }
         });
 
         jMenuSettigns.setText("Settings");
-        jMenuSettigns.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jMenuSettigns.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jMenuSettignsActionPerformed(evt);
             }
         });
         fileMenu.add(jMenuSettigns);
 
-        jMenuDebugMode.setText("Debug mode");
-        jMenuDebugMode.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuDebugModeActionPerformed(evt);
-            }
-        });
-        fileMenu.add(jMenuDebugMode);
-
         exitMenuItem.setMnemonic('x');
         exitMenuItem.setText("Exit");
-        exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        exitMenuItem.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 exitMenuItemActionPerformed(evt);
             }
         });
@@ -935,8 +1045,10 @@ public class DLineApplication extends javax.swing.JFrame {
 
         aboutMenuItem.setMnemonic('a');
         aboutMenuItem.setText("About");
-        aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        aboutMenuItem.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 aboutMenuItemActionPerformed(evt);
             }
         });
@@ -950,16 +1062,16 @@ public class DLineApplication extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
-            .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
+                .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
 
@@ -967,197 +1079,143 @@ public class DLineApplication extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void fileMenuKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fileMenuKeyPressed
-        
+
     }//GEN-LAST:event_fileMenuKeyPressed
 
     private void jDialogSettingsComponentShown(java.awt.event.ComponentEvent evt)//GEN-FIRST:event_jDialogSettingsComponentShown
     {//GEN-HEADEREND:event_jDialogSettingsComponentShown
         // Settings dialog is shown and we need to set the states of the controls
-        loadUserSettings();
+        initSettingsDialog();
     }//GEN-LAST:event_jDialogSettingsComponentShown
 
     private void formWindowOpened(java.awt.event.WindowEvent evt)//GEN-FIRST:event_formWindowOpened
     {//GEN-HEADEREND:event_formWindowOpened
-        // Set the desired buttons orientation and labels  
-        setButtonsOrientation();
-        setDirectionButtonsLabels();
-        setAntennaButtonLabel();
-        dLineApplicationState.setSingleElementMode(dLineSettings.isSingleElementMode());
-        // Read last used JFrame dimensions and restore it
-        this.setBounds(dLineSettings.getJFrameDimensions());
-        
+       initMainWindow(true);
     }//GEN-LAST:event_formWindowOpened
 
-    private void jToggleButton7ItemStateChanged(java.awt.event.ItemEvent evt)//GEN-FIRST:event_jToggleButton7ItemStateChanged
-    {//GEN-HEADEREND:event_jToggleButton7ItemStateChanged
-        if(evt.getStateChange()==ItemEvent.SELECTED)
+    private void toggleButtonNwDirection_0ItemStateChanged(java.awt.event.ItemEvent evt)//GEN-FIRST:event_toggleButtonNwDirection_0ItemStateChanged
+    {//GEN-HEADEREND:event_toggleButtonNwDirection_0ItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED)
         {
-           dLineApplicationState.setAntennaDirection(AntennaDirections.plusY);
-           setJFrameTitleToShowCurrentState();
-           sendSerialCommand();
-        } 
-    }//GEN-LAST:event_jToggleButton7ItemStateChanged
+            onDirectionButtonPressed(AntennaDirections.plusY);
+        }
+    }//GEN-LAST:event_toggleButtonNwDirection_0ItemStateChanged
 
-    private void jToggleButton8ItemStateChanged(java.awt.event.ItemEvent evt)//GEN-FIRST:event_jToggleButton8ItemStateChanged
-    {//GEN-HEADEREND:event_jToggleButton8ItemStateChanged
-        if(evt.getStateChange()==ItemEvent.SELECTED)
+    private void toggleButtonNDirection_0ItemStateChanged(java.awt.event.ItemEvent evt)//GEN-FIRST:event_toggleButtonNDirection_0ItemStateChanged
+    {//GEN-HEADEREND:event_toggleButtonNDirection_0ItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED)
+        {     
+            onDirectionButtonPressed(AntennaDirections.plusY);
+        }
+    }//GEN-LAST:event_toggleButtonNDirection_0ItemStateChanged
+
+    private void toggleButtonNwDirection_1ItemStateChanged(java.awt.event.ItemEvent evt)//GEN-FIRST:event_toggleButtonNwDirection_1ItemStateChanged
+    {//GEN-HEADEREND:event_toggleButtonNwDirection_1ItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED)
         {
-           dLineApplicationState.setAntennaDirection(AntennaDirections.plusY);
-           setJFrameTitleToShowCurrentState();
-           sendSerialCommand();
-        } 
-    }//GEN-LAST:event_jToggleButton8ItemStateChanged
+            onDirectionButtonPressed(AntennaDirections.minusX);
+        }
+    }//GEN-LAST:event_toggleButtonNwDirection_1ItemStateChanged
 
-    private void jToggleButton9ItemStateChanged(java.awt.event.ItemEvent evt)//GEN-FIRST:event_jToggleButton9ItemStateChanged
-    {//GEN-HEADEREND:event_jToggleButton9ItemStateChanged
-        if(evt.getStateChange()==ItemEvent.SELECTED)
+    private void toggleButtonNDirection_1ItemStateChanged(java.awt.event.ItemEvent evt)//GEN-FIRST:event_toggleButtonNDirection_1ItemStateChanged
+    {//GEN-HEADEREND:event_toggleButtonNDirection_1ItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED)
         {
-           dLineApplicationState.setAntennaDirection(AntennaDirections.minusX);
-           setJFrameTitleToShowCurrentState();
-           sendSerialCommand();
-        } 
-    }//GEN-LAST:event_jToggleButton9ItemStateChanged
+            onDirectionButtonPressed(AntennaDirections.minusX);
+        }
+    }//GEN-LAST:event_toggleButtonNDirection_1ItemStateChanged
 
-    private void jToggleButton6ItemStateChanged(java.awt.event.ItemEvent evt)//GEN-FIRST:event_jToggleButton6ItemStateChanged
-    {//GEN-HEADEREND:event_jToggleButton6ItemStateChanged
-        if(evt.getStateChange()==ItemEvent.SELECTED)
+    private void toggleButtonNwDirection_2ItemStateChanged(java.awt.event.ItemEvent evt)//GEN-FIRST:event_toggleButtonNwDirection_2ItemStateChanged
+    {//GEN-HEADEREND:event_toggleButtonNwDirection_2ItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED)
         {
-           dLineApplicationState.setAntennaDirection(AntennaDirections.minusX);
-           setJFrameTitleToShowCurrentState();
-           sendSerialCommand();
-        } 
-    }//GEN-LAST:event_jToggleButton6ItemStateChanged
+            onDirectionButtonPressed(AntennaDirections.minusY);
+        }
+    }//GEN-LAST:event_toggleButtonNwDirection_2ItemStateChanged
 
-    private void jToggleButton3ItemStateChanged(java.awt.event.ItemEvent evt)//GEN-FIRST:event_jToggleButton3ItemStateChanged
-    {//GEN-HEADEREND:event_jToggleButton3ItemStateChanged
-        if(evt.getStateChange()==ItemEvent.SELECTED)
+    private void toggleButtonNDirection_2ItemStateChanged(java.awt.event.ItemEvent evt)//GEN-FIRST:event_toggleButtonNDirection_2ItemStateChanged
+    {//GEN-HEADEREND:event_toggleButtonNDirection_2ItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED)
         {
-           dLineApplicationState.setAntennaDirection(AntennaDirections.minusY);
-           setJFrameTitleToShowCurrentState();
-           sendSerialCommand();
-        } 
-    }//GEN-LAST:event_jToggleButton3ItemStateChanged
+            onDirectionButtonPressed(AntennaDirections.minusY);
+        }
+    }//GEN-LAST:event_toggleButtonNDirection_2ItemStateChanged
 
-    private void jToggleButton2ItemStateChanged(java.awt.event.ItemEvent evt)//GEN-FIRST:event_jToggleButton2ItemStateChanged
-    {//GEN-HEADEREND:event_jToggleButton2ItemStateChanged
-        if(evt.getStateChange()==ItemEvent.SELECTED)
+    private void toggleButtonNwDirection_3ItemStateChanged(java.awt.event.ItemEvent evt)//GEN-FIRST:event_toggleButtonNwDirection_3ItemStateChanged
+    {//GEN-HEADEREND:event_toggleButtonNwDirection_3ItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED)
         {
-           dLineApplicationState.setAntennaDirection(AntennaDirections.minusY);
-           setJFrameTitleToShowCurrentState();
-           sendSerialCommand();
-        } 
-    }//GEN-LAST:event_jToggleButton2ItemStateChanged
+            onDirectionButtonPressed(AntennaDirections.plusX);
+        }
+    }//GEN-LAST:event_toggleButtonNwDirection_3ItemStateChanged
 
-    private void jToggleButton1ItemStateChanged(java.awt.event.ItemEvent evt)//GEN-FIRST:event_jToggleButton1ItemStateChanged
-    {//GEN-HEADEREND:event_jToggleButton1ItemStateChanged
-        if(evt.getStateChange()==ItemEvent.SELECTED)
+    private void toggleButtonDirectionModeItemStateChanged(java.awt.event.ItemEvent evt)//GEN-FIRST:event_toggleButtonDirectionModeItemStateChanged
+    {//GEN-HEADEREND:event_toggleButtonDirectionModeItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED)
         {
-           dLineApplicationState.setAntennaDirection(AntennaDirections.plusX);
-           setJFrameTitleToShowCurrentState();
-           sendSerialCommand();
-        } 
-    }//GEN-LAST:event_jToggleButton1ItemStateChanged
-
-    private void jToggleButton5ItemStateChanged(java.awt.event.ItemEvent evt)//GEN-FIRST:event_jToggleButton5ItemStateChanged
-    {//GEN-HEADEREND:event_jToggleButton5ItemStateChanged
-      if (evt.getStateChange() == ItemEvent.SELECTED)
-      {
-        dLineApplicationState.setAntennaMode(DLineApplicationState.AntennaModes.additive);
-        jToggleButton5.setText(DLineApplicationState.AntennaModes.additive.toString());
+            dLineApplicationState.setAntennaMode(DLineApplicationState.AntennaModes.additive);
+            toggleButtonDirectionMode.setText(DLineApplicationState.AntennaModes.additive.toString());      
+        }
+        else
+        {
+            dLineApplicationState.setAntennaMode(DLineApplicationState.AntennaModes.subtractive);
+            toggleButtonDirectionMode.setText(DLineApplicationState.AntennaModes.subtractive.toString());       
+        }
+        
         setJFrameTitleToShowCurrentState();
         sendSerialCommand();
-      } else
-      {
-        dLineApplicationState.setAntennaMode(DLineApplicationState.AntennaModes.subtractive);
-        jToggleButton5.setText(DLineApplicationState.AntennaModes.subtractive.toString());
-        setJFrameTitleToShowCurrentState();
-        sendSerialCommand();
-      }
-    }//GEN-LAST:event_jToggleButton5ItemStateChanged
+    }//GEN-LAST:event_toggleButtonDirectionModeItemStateChanged
 
     private void jToggleButtonAntennaTypeItemStateChanged(java.awt.event.ItemEvent evt)//GEN-FIRST:event_jToggleButtonAntennaTypeItemStateChanged
     {//GEN-HEADEREND:event_jToggleButtonAntennaTypeItemStateChanged
-        if(evt.getStateChange()==ItemEvent.SELECTED)
+        if (evt.getStateChange() == ItemEvent.SELECTED)
         {
-           dLineApplicationState.setAntennaType(DLineApplicationState.AntennaTypes.antenna_2);
-           jToggleButtonAntennaType.setText(dLineSettings.getLabelAnt2());
-           setJFrameTitleToShowCurrentState();
-        } 
-        else if(evt.getStateChange()==ItemEvent.DESELECTED)
-        {
-           dLineApplicationState.setAntennaType(DLineApplicationState.AntennaTypes.antenna_1);
-           jToggleButtonAntennaType.setText(dLineSettings.getLabelAnt1());
-           setJFrameTitleToShowCurrentState();
+            dLineApplicationState.setAntennaType(DLineApplicationState.AntennaTypes.loop);
+            jToggleButtonAntennaType.setText(dLineSettings.getLabelAnt2());
         }
-        
+        else if (evt.getStateChange() == ItemEvent.DESELECTED)
+        {
+            dLineApplicationState.setAntennaType(DLineApplicationState.AntennaTypes.dipole);
+            jToggleButtonAntennaType.setText(dLineSettings.getLabelAnt1());
+        }
+
+        setJFrameTitleToShowCurrentState();
         sendSerialCommand();
     }//GEN-LAST:event_jToggleButtonAntennaTypeItemStateChanged
 
-    private void jToggleButton4ItemStateChanged(java.awt.event.ItemEvent evt)//GEN-FIRST:event_jToggleButton4ItemStateChanged
-    {//GEN-HEADEREND:event_jToggleButton4ItemStateChanged
-        if(evt.getStateChange()==ItemEvent.SELECTED)
+    private void toggleButtonNDirection_3ItemStateChanged(java.awt.event.ItemEvent evt)//GEN-FIRST:event_toggleButtonNDirection_3ItemStateChanged
+    {//GEN-HEADEREND:event_toggleButtonNDirection_3ItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED)
         {
-           dLineApplicationState.setAntennaDirection(AntennaDirections.plusX);
-           setJFrameTitleToShowCurrentState();
-           sendSerialCommand();
-        } 
-    }//GEN-LAST:event_jToggleButton4ItemStateChanged
+            onDirectionButtonPressed(AntennaDirections.plusX);
+        }
+    }//GEN-LAST:event_toggleButtonNDirection_3ItemStateChanged
 
     private void formWindowClosing(java.awt.event.WindowEvent evt)//GEN-FIRST:event_formWindowClosing
     {//GEN-HEADEREND:event_formWindowClosing
-        // Before closing we need to save the dimensions of the JFrame
-        if(this.getExtendedState() != MAXIMIZED_BOTH)
-        {
-          dLineSettings.setJFrameDimensions(this.getBounds());
-          dLineSettings.SaveSettingsToDisk();
-        }
-        
+        storeMainWindowParams();
         dLineSerialComm.close();
     }//GEN-LAST:event_formWindowClosing
 
-    private void jDialogRelaySwitchingComponentShown(java.awt.event.ComponentEvent evt)//GEN-FIRST:event_jDialogRelaySwitchingComponentShown
-    {//GEN-HEADEREND:event_jDialogRelaySwitchingComponentShown
-        int speed = Integer.parseInt(jTextFieldDebugSwitchingSpeed.getText());
-        
-        // Star the timer responsible for direction switching
-        timerForDirectionSwitching = new Timer(speed, directionSwitching);
-        timerForDirectionSwitching.setRepeats(true);
-        timerForDirectionSwitching.start();
-    }//GEN-LAST:event_jDialogRelaySwitchingComponentShown
+    private void jDialogPeriodicSwitchingComponentShown(java.awt.event.ComponentEvent evt)//GEN-FIRST:event_jDialogPeriodicSwitchingComponentShown
+    {//GEN-HEADEREND:event_jDialogPeriodicSwitchingComponentShown
+        initSwitchingDialog();
 
-    private void jDialogRelaySwitchingComponentHidden(java.awt.event.ComponentEvent evt)//GEN-FIRST:event_jDialogRelaySwitchingComponentHidden
-    {//GEN-HEADEREND:event_jDialogRelaySwitchingComponentHidden
-        timerForDirectionSwitching.stop();
-    }//GEN-LAST:event_jDialogRelaySwitchingComponentHidden
+        // Switching logic is inside the Listener - so let's get there by starting it
+        directionSwitchingTimer = new Timer(100, directionSwitchingListener);
+        directionSwitchingTimer.setRepeats(false);
+        directionSwitchingTimer.start();
+    }//GEN-LAST:event_jDialogPeriodicSwitchingComponentShown
 
-    private void jTextFieldDebugSwitchingSpeedKeyPressed(java.awt.event.KeyEvent evt)//GEN-FIRST:event_jTextFieldDebugSwitchingSpeedKeyPressed
-    {//GEN-HEADEREND:event_jTextFieldDebugSwitchingSpeedKeyPressed
-        if(evt.getKeyCode() != Event.ENTER)
-            return;
-        
-        int speed = DEFAULT_SWITCHING_SPEED_IN_MS;
-        try
-        {
-            speed = Integer.parseInt(jTextFieldDebugSwitchingSpeed.getText());
-        }
-        catch (Exception exc)
-        {
-            jTextFieldDebugSwitchingSpeed.setText(Integer.toString(DEFAULT_SWITCHING_SPEED_IN_MS));
-        }
-        
-        if (speed > MAX_SWITCHING_SPEED_IN_MS)
-        {
-            speed = MAX_SWITCHING_SPEED_IN_MS;
-            jTextFieldDebugSwitchingSpeed.setText(Integer.toString(speed));
-        }
-        else if(speed<MIN_SWITCHING_SPEED_IN_MS)
-        {
-            speed = MIN_SWITCHING_SPEED_IN_MS;  
-            jTextFieldDebugSwitchingSpeed.setText(Integer.toString(speed));
-        }
+    private void jDialogPeriodicSwitchingComponentHidden(java.awt.event.ComponentEvent evt)//GEN-FIRST:event_jDialogPeriodicSwitchingComponentHidden
+    {//GEN-HEADEREND:event_jDialogPeriodicSwitchingComponentHidden
+        directionSwitchingTimer.stop();
 
-        timerForDirectionSwitching.setDelay(speed);        
-    }//GEN-LAST:event_jTextFieldDebugSwitchingSpeedKeyPressed
+        if (jCheckBoxPeriodicSwitching.isSelected())
+        {
+            jCheckBoxPeriodicSwitching.setSelected(false);
+        }
+    }//GEN-LAST:event_jDialogPeriodicSwitchingComponentHidden
 
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_exitMenuItemActionPerformed
     {//GEN-HEADEREND:event_exitMenuItemActionPerformed
@@ -1171,27 +1229,16 @@ public class DLineApplication extends javax.swing.JFrame {
         jDialogSettings.setVisible(true);
     }//GEN-LAST:event_jMenuSettignsActionPerformed
 
-    private void jMenuDebugModeActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuDebugModeActionPerformed
-    {//GEN-HEADEREND:event_jMenuDebugModeActionPerformed
-        jDialogRelaySwitching.pack();
-        jDialogRelaySwitching.setVisible(true);
-    }//GEN-LAST:event_jMenuDebugModeActionPerformed
-
     private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_aboutMenuItemActionPerformed
     {//GEN-HEADEREND:event_aboutMenuItemActionPerformed
         jDialogAbout.pack();
         jDialogAbout.setVisible(true);
     }//GEN-LAST:event_aboutMenuItemActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton1ActionPerformed
-    {//GEN-HEADEREND:event_jButton1ActionPerformed
-        jDialogRelaySwitching.setVisible(false);
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton2ActionPerformed
-    {//GEN-HEADEREND:event_jButton2ActionPerformed
+    private void buttonAboutDialogOKActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_buttonAboutDialogOKActionPerformed
+    {//GEN-HEADEREND:event_buttonAboutDialogOKActionPerformed
         jDialogAbout.setVisible(false);
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_buttonAboutDialogOKActionPerformed
 
     private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButtonCancelActionPerformed
     {//GEN-HEADEREND:event_jButtonCancelActionPerformed
@@ -1201,88 +1248,84 @@ public class DLineApplication extends javax.swing.JFrame {
     private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButtonSaveActionPerformed
     {//GEN-HEADEREND:event_jButtonSaveActionPerformed
         jDialogSettings.setVisible(false); // Hide the SettingsDialog
-        saveUserSettings(); // Read the state of the controls and save them
-        setDirectionButtonsLabels();
-        setAntennaButtonLabel();
-        setButtonsOrientation();
-        dLineApplicationState.setSingleElementMode(dLineSettings.isSingleElementMode());
+        storeSettingsDialogParams();       // Read the state of the controls and save them
+        
+        initMainWindow(false);        
     }//GEN-LAST:event_jButtonSaveActionPerformed
-
-  private void jRadioButtonFrontBackActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jRadioButtonFrontBackActionPerformed
-  {//GEN-HEADEREND:event_jRadioButtonFrontBackActionPerformed
-    // TODO add your handling code here:
-  }//GEN-LAST:event_jRadioButtonFrontBackActionPerformed
 
     private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jTextField3ActionPerformed
     {//GEN-HEADEREND:event_jTextField3ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField3ActionPerformed
 
-  private void jTextFieldDebugSwitchingSpeedActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jTextFieldDebugSwitchingSpeedActionPerformed
-  {//GEN-HEADEREND:event_jTextFieldDebugSwitchingSpeedActionPerformed
-    // TODO add your handling code here:
-  }//GEN-LAST:event_jTextFieldDebugSwitchingSpeedActionPerformed
+    private void checkboxDirectionSwitching_1ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_checkboxDirectionSwitching_1ActionPerformed
+    {//GEN-HEADEREND:event_checkboxDirectionSwitching_1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_checkboxDirectionSwitching_1ActionPerformed
 
-  private void jTextFieldFBRatioKeyPressed(java.awt.event.KeyEvent evt)//GEN-FIRST:event_jTextFieldFBRatioKeyPressed
-  {//GEN-HEADEREND:event_jTextFieldFBRatioKeyPressed
-    if (evt.getKeyCode() != Event.ENTER)
-    {
-      return;
-    }
+    private void jCheckBoxPeriodicSwitchingActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jCheckBoxPeriodicSwitchingActionPerformed
+    {//GEN-HEADEREND:event_jCheckBoxPeriodicSwitchingActionPerformed
+        if (jCheckBoxPeriodicSwitching.isSelected())
+        {
+            jDialogPeriodicSwitching.pack();
+            jDialogPeriodicSwitching.setVisible(true);
+        }
+        else
+        {
+            jDialogPeriodicSwitching.setVisible(false);
+        }
+    }//GEN-LAST:event_jCheckBoxPeriodicSwitchingActionPerformed
 
-    int ratio = DEFAULT_FB_SWITCHING_RATIO;
-    try
-    {
-      ratio = Integer.parseInt(jTextFieldFBRatio.getText());
-    } catch (Exception exc)
-    {
-      jTextFieldFBRatio.setText(Integer.toString(DEFAULT_FB_SWITCHING_RATIO));
-    }
-
-    if (ratio > MAX_FB_SWITCHING_RATIO)
-    {
-      jTextFieldFBRatio.setText(Integer.toString(MAX_FB_SWITCHING_RATIO));
-    } 
-    else if (ratio < MIN_FB_SWITCHING_RATIO)
-    {
-      jTextFieldFBRatio.setText(Integer.toString(MIN_FB_SWITCHING_RATIO));
-    }
-    
-    fbSwitchingRatio = ratio;
-    
-  }//GEN-LAST:event_jTextFieldFBRatioKeyPressed
+    private void jButtonPeriodicSwitchingDialogSetActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButtonPeriodicSwitchingDialogSetActionPerformed
+    {//GEN-HEADEREND:event_jButtonPeriodicSwitchingDialogSetActionPerformed
+        storeSwitchingDialogParams();
+    }//GEN-LAST:event_jButtonPeriodicSwitchingDialogSetActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String args[])
+    {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+        try
+        {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels())
+            {
+                if ("Nimbus".equals(info.getName()))
+                {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
+        }
+        catch (ClassNotFoundException ex)
+        {
             java.util.logging.Logger.getLogger(DLineApplication.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
+        }
+        catch (InstantiationException ex)
+        {
             java.util.logging.Logger.getLogger(DLineApplication.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
+        }
+        catch (IllegalAccessException ex)
+        {
             java.util.logging.Logger.getLogger(DLineApplication.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        }
+        catch (javax.swing.UnsupportedLookAndFeelException ex)
+        {
             java.util.logging.Logger.getLogger(DLineApplication.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
+        java.awt.EventQueue.invokeLater(new Runnable()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
                 new DLineApplication().setVisible(true);
             }
         });
@@ -1290,27 +1333,28 @@ public class DLineApplication extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
+    private javax.swing.JButton buttonAboutDialogOK;
     private javax.swing.ButtonGroup buttonGroupDebugWindow;
     private javax.swing.ButtonGroup buttonGroupDirections;
     private javax.swing.ButtonGroup buttonGroupInSettings;
+    private javax.swing.JCheckBox checkboxDirectionSwitching_0;
+    private javax.swing.JCheckBox checkboxDirectionSwitching_1;
+    private javax.swing.JCheckBox checkboxDirectionSwitching_2;
+    private javax.swing.JCheckBox checkboxDirectionSwitching_3;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButtonCancel;
+    private javax.swing.JButton jButtonPeriodicSwitchingDialogSet;
     private javax.swing.JButton jButtonSave;
+    private javax.swing.JCheckBox jCheckBoxPeriodicSwitching;
     private javax.swing.JCheckBox jCheckBoxSingleElementMode;
     private javax.swing.JComboBox jComboBoxBaudRate;
     private javax.swing.JComboBox jComboBoxComPort;
     private javax.swing.JComboBox jComboBoxDeviceId;
     private javax.swing.JDialog jDialogAbout;
-    private javax.swing.JDialog jDialogRelaySwitching;
+    private javax.swing.JDialog jDialogPeriodicSwitching;
     private javax.swing.JDialog jDialogSettings;
-    private javax.swing.JFormattedTextField jFormattedTextFieldMinusX;
-    private javax.swing.JFormattedTextField jFormattedTextFieldMinusY;
-    private javax.swing.JFormattedTextField jFormattedTextFieldPlusX;
-    private javax.swing.JFormattedTextField jFormattedTextFieldPlusY;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1329,369 +1373,498 @@ public class DLineApplication extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JLabel jLabelDebugMode;
     private javax.swing.JLabel jLabelSerialComm;
-    private javax.swing.JMenuItem jMenuDebugMode;
     private javax.swing.JMenuItem jMenuSettigns;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
-    private javax.swing.JRadioButton jRadioButtonAllDirections;
-    private javax.swing.JRadioButton jRadioButtonFrontBack;
     private javax.swing.JRadioButton jRadioButtonNorth;
     private javax.swing.JRadioButton jRadioButtonNorthWest;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextFieldCustomCommPort;
-    private javax.swing.JTextField jTextFieldDebugSwitchingSpeed;
-    private javax.swing.JTextField jTextFieldFBRatio;
-    private javax.swing.JToggleButton jToggleButton1;
-    private javax.swing.JToggleButton jToggleButton2;
-    private javax.swing.JToggleButton jToggleButton3;
-    private javax.swing.JToggleButton jToggleButton4;
-    private javax.swing.JToggleButton jToggleButton5;
-    private javax.swing.JToggleButton jToggleButton6;
-    private javax.swing.JToggleButton jToggleButton7;
-    private javax.swing.JToggleButton jToggleButton8;
-    private javax.swing.JToggleButton jToggleButton9;
     private javax.swing.JToggleButton jToggleButtonAntennaType;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JFormattedTextField textfieldDirectionLabel_0;
+    private javax.swing.JFormattedTextField textfieldDirectionLabel_1;
+    private javax.swing.JFormattedTextField textfieldDirectionLabel_2;
+    private javax.swing.JFormattedTextField textfieldDirectionLabel_3;
+    private javax.swing.JTextField textfieldDirectionPeriod_0;
+    private javax.swing.JTextField textfieldDirectionPeriod_1;
+    private javax.swing.JTextField textfieldDirectionPeriod_2;
+    private javax.swing.JTextField textfieldDirectionPeriod_3;
+    private javax.swing.JTextField textfieldSettingsAntenna_1;
+    private javax.swing.JTextField textfieldSettingsAntenna_2;
+    private javax.swing.JTextField textfieldVirtualCommPort;
+    private javax.swing.JToggleButton toggleButtonDirectionMode;
+    private javax.swing.JToggleButton toggleButtonNDirection_0;
+    private javax.swing.JToggleButton toggleButtonNDirection_1;
+    private javax.swing.JToggleButton toggleButtonNDirection_2;
+    private javax.swing.JToggleButton toggleButtonNDirection_3;
+    private javax.swing.JToggleButton toggleButtonNwDirection_0;
+    private javax.swing.JToggleButton toggleButtonNwDirection_1;
+    private javax.swing.JToggleButton toggleButtonNwDirection_2;
+    private javax.swing.JToggleButton toggleButtonNwDirection_3;
     // End of variables declaration//GEN-END:variables
 
-  public DefaultComboBoxModel getBaudRateComboBoxModel()
-  {
-    return baudRateComboBoxModel;
-  }
-
-  /* Sets the labels of the direction buttons.*/
-  private void setDirectionButtonsLabels()
-  {
-    jToggleButton7.setText(dLineSettings.getLabelPlusY());
-    jToggleButton9.setText(dLineSettings.getLabelPlusX());
-    jToggleButton3.setText(dLineSettings.getLabelMinusY());
-    jToggleButton1.setText(dLineSettings.getLabelMinusX());
-    jToggleButton8.setText(dLineSettings.getLabelPlusY());
-    jToggleButton6.setText(dLineSettings.getLabelMinusX());
-    jToggleButton4.setText(dLineSettings.getLabelPlusX());
-    jToggleButton2.setText(dLineSettings.getLabelMinusY());
-  }
-  
-  
-  private void setAntennaButtonLabel()
-  {
-    if(jToggleButtonAntennaType.isSelected() == false)
+    
+    // Called when the state of the direction button changes to pressed
+    private void onDirectionButtonPressed(AntennaDirections direction)
     {
-      jToggleButtonAntennaType.setText(dLineSettings.getLabelAnt1());
-    }
-    else
-    {
-      jToggleButtonAntennaType.setText(dLineSettings.getLabelAnt2());
-    }
-  }
-
-  /**
-   * Enables and disables the desired direction button set depending on the
-   * orientation stored in dLineSettings. <br>
-   */
-  private void setButtonsOrientation()
-  {
-    if (dLineSettings.getButtonOrientation() == DLineApplicationSettings.ButtonOrientation.North)
-    {
-      jToggleButton7.setVisible(false);
-      jToggleButton9.setVisible(false);
-      jToggleButton3.setVisible(false);
-      jToggleButton1.setVisible(false);
-      jToggleButton8.setVisible(true);
-      jToggleButton6.setVisible(true);
-      jToggleButton4.setVisible(true);
-      jToggleButton2.setVisible(true);
-    } else
-    {
-      jToggleButton7.setVisible(true);
-      jToggleButton9.setVisible(true);
-      jToggleButton3.setVisible(true);
-      jToggleButton1.setVisible(true);
-      jToggleButton8.setVisible(false);
-      jToggleButton6.setVisible(false);
-      jToggleButton4.setVisible(false);
-      jToggleButton2.setVisible(false);
-    }
-
-  }
-
-  /**
-   * Sends a command to the DLine Controller device. The command represents the
-   * current state of the Java application.
-   */
-  private void sendSerialCommand()
-  {
-    try
-    {
-      // Send the command to the DLine Controller device
-      dLineSerialComm.sendCommand(dLineSettings.getComPort(),
-              Integer.parseInt(dLineSettings.getBaudRate()),
-              Byte.parseByte(dLineSettings.getDeviceId()),
-              dLineApplicationState.getState());
-      // Draw the command being send at the bottom of the jFrame
-      final Dimension size = jLabelSerialComm.getPreferredSize();
-      jLabelSerialComm.setMinimumSize(size);
-      jLabelSerialComm.setPreferredSize(size);
-      jLabelSerialComm.setText(dLineSettings.getComPort() + ": " + String.format("%8s", Integer.toBinaryString(dLineApplicationState.getState())).replace(" ", "0"));
-    } catch (Exception ex)
-    {
-      // Draw debug info at the bottom of the jFrame
-      final Dimension size = jLabelSerialComm.getPreferredSize();
-      jLabelSerialComm.setMinimumSize(size);
-      jLabelSerialComm.setPreferredSize(size);
-      jLabelSerialComm.setText(dLineSettings.getComPort() + ": " + ex.toString());
-      Logger.getLogger(DLineApplication.class.getName()).log(Level.SEVERE, null, ex);
-    }
-  }
-
-  /**
-   * Sets the title of the JFrame to show the currently selected antenna and
-   * direction. <br>
-   * For example: "Loop: +Y(additive)" quite low 
-   */
-  private void setJFrameTitleToShowCurrentState()
-  {
-    String type;
-    String mode;
-    String direction;
-
-    // Read antenna Type
-    switch (dLineApplicationState.getAntennaType())
-    {
-      case antenna_1:
-        type = dLineSettings.getLabelAnt1();
-        break;
-      case antenna_2:
-      default:
-        type = dLineSettings.getLabelAnt2();
-        break;
+        dLineApplicationState.setAntennaDirection(direction);
+        setJFrameTitleToShowCurrentState();
+        sendSerialCommand();
     }
     
-    // Read antenna Mode
-    mode = "(" + dLineApplicationState.getAntennaMode().toString() + ")"; 
-  
+    
+    private void storeMainWindowParams()
+    {
+        // If not maximized...
+        if (this.getExtendedState() != MAXIMIZED_BOTH)
+        {
+            dLineSettings.setJFrameDimensions(this.getBounds()); // save the dimensions of the JFrame
+        }
 
-    // Read the antenna Direction
-    switch (dLineApplicationState.getAntennaDirection())
-    {
-      case plusY:
-        direction = dLineSettings.getLabelPlusY();
-        break;
-      case minusY:
-        direction = dLineSettings.getLabelMinusY();
-        break;
-      case plusX:
-        direction = dLineSettings.getLabelPlusX();
-        break;
-      case minusX:
-      default:  
-        direction = dLineSettings.getLabelMinusX();
-        break;
-    }
-
-    this.setTitle(type+": "+direction+mode);
-  }
-
-  /**
-   * This presses "+Y", "Add" and the "antenna type" button  
-   */
-  private void pressDefaulButtons()
-  {
-    // press +Y
-    getAntennaDirectionButton(AntennaDirections.plusY).setSelected(true);
-    // press Add
-    jToggleButton5.setSelected(true);
-    // press antenna type button
-    jToggleButtonAntennaType.setSelected(true);
-  }
-  
-
-  /**
-   * When called this will change the current direction to the opposite of
-   * the current one (i.e. Front and Back)
-   */
-  private void toggleFrontAndBack()
-  {
-    if(getAntennaDirectionButton(AntennaDirections.plusY).isSelected())
-    {
-      getAntennaDirectionButton(AntennaDirections.minusY).setSelected(true);
-    }
-    else if(getAntennaDirectionButton(AntennaDirections.minusX).isSelected())
-    {
-      getAntennaDirectionButton(AntennaDirections.plusX).setSelected(true);
-    }
-    else if(getAntennaDirectionButton(AntennaDirections.minusY).isSelected())
-    {
-      getAntennaDirectionButton(AntennaDirections.plusY).setSelected(true);
-    }
-    else // plusX
-    {
-      getAntennaDirectionButton(AntennaDirections.minusX).setSelected(true);
-    }
-  }
-  
-  
-  /**
-   * When called this function will change the current direction (clockwise)
-   */
-  private void toggleAllDirections()
-  {
-    if(getAntennaDirectionButton(AntennaDirections.plusY).isSelected())
-    {
-      getAntennaDirectionButton(AntennaDirections.minusX).setSelected(true);
-    }
-    else if(getAntennaDirectionButton(AntennaDirections.minusX).isSelected())
-    {
-      getAntennaDirectionButton(AntennaDirections.minusY).setSelected(true);
-    }
-    else if(getAntennaDirectionButton(AntennaDirections.minusY).isSelected())
-    {
-      getAntennaDirectionButton(AntennaDirections.plusX).setSelected(true);
-    }
-    else
-    {
-      getAntennaDirectionButton(AntennaDirections.plusY).setSelected(true);
-    }
-  }
-
-  
-  /**
-   * User has closed the setting dialog and we need to save the state of the
-   * controls
-   */
-  private void saveUserSettings()
-  {
-    dLineSettings.setDeviceId(jComboBoxDeviceId.getSelectedItem().toString());
-
-    if (jRadioButtonNorth.isSelected())
-    {
-      dLineSettings.setButtonOrientation(DLineApplicationSettings.ButtonOrientation.North);
-    } else
-    {
-      dLineSettings.setButtonOrientation(DLineApplicationSettings.ButtonOrientation.NorthWest);
+        dLineSettings.SaveSettingsToDisk(); // Save all settings to disk
     }
     
-    // In case there is CustomComPort defined we will use it...
-    if(!jTextFieldCustomCommPort.getText().isEmpty())
-    {
-      dLineSettings.setComPort(jTextFieldCustomCommPort.getText());
-    }
-    else
-    {
-      if (jComboBoxComPort.getSelectedItem() != null)
-      {
-        dLineSettings.setComPort(jComboBoxComPort.getSelectedItem().toString());
-      }
-    }
     
-    dLineSettings.setBaudRate(jComboBoxBaudRate.getSelectedItem().toString());
-
-    // Store direction button texts
-    dLineSettings.setLabelPlusY(jFormattedTextFieldPlusY.getText());
-    dLineSettings.setLabelMinusY(jFormattedTextFieldMinusY.getText());
-    dLineSettings.setLabelPlusX(jFormattedTextFieldPlusX.getText());
-    dLineSettings.setLabelMinusX(jFormattedTextFieldMinusX.getText());
-    
-    // Store antenna button texts
-    dLineSettings.setLabelAnt1(jTextField2.getText());
-    dLineSettings.setLabelAnt2(jTextField4.getText());
-    
-    // 
-    dLineSettings.setSingleElementMode(jCheckBoxSingleElementMode.isSelected());
-    
-    dLineSettings.SaveSettingsToDisk();
-  }
-
-  
-  
-  /**
-   * User has opened the setting dialog and we need to load the state of the
-   * controls
-   */
-  private void loadUserSettings()
-  {
-    jComboBoxDeviceId.setSelectedItem(dLineSettings.getDeviceId());
-
-    if (dLineSettings.getButtonOrientation() == DLineApplicationSettings.ButtonOrientation.North)
+    public DefaultComboBoxModel getBaudRateComboBoxModel()
     {
-      jRadioButtonNorth.setSelected(true);
-      jRadioButtonNorthWest.setSelected(false);
-    } else
-    {
-      jRadioButtonNorth.setSelected(false);
-      jRadioButtonNorthWest.setSelected(true);
+        return baudRateComboBoxModel;
     }
 
-    // If standart ComPort is set...
-    if(comPortComboBoxModel.getIndexOf(dLineSettings.getComPort()) >= 0)
+    /* Sets the labels of the direction buttons.*/
+    private void setDirectionButtonsLabels()
     {
-      jComboBoxComPort.setSelectedItem(dLineSettings.getComPort());
-      jTextFieldCustomCommPort.setText(""); // Custom 
+        for(int i=0; i<buttonsNorthDirection.length; i++)
+        {
+            buttonsNorthDirection[i].setText(dLineSettings.getDirectionLabel(i));
+            buttonsNorthwestDirection[i].setText(dLineSettings.getDirectionLabel(i));
+        }
     }
-    else
-    {
-      jTextFieldCustomCommPort.setText(dLineSettings.getComPort());
-    }
-           
-    
-    jComboBoxBaudRate.setSelectedItem(dLineSettings.getBaudRate());
 
-    // Direction buttons text       
-    jFormattedTextFieldPlusY.setText(dLineSettings.getLabelPlusY());
-    jFormattedTextFieldMinusY.setText(dLineSettings.getLabelMinusY());
-    jFormattedTextFieldPlusX.setText(dLineSettings.getLabelPlusX());
-    jFormattedTextFieldMinusX.setText(dLineSettings.getLabelMinusX());
-    
-    // Antenna button texts
-    jTextField2.setText(dLineSettings.getLabelAnt1());
-    jTextField4.setText(dLineSettings.getLabelAnt2());
-    
-    //
-    jCheckBoxSingleElementMode.setSelected(dLineSettings.isSingleElementMode());
-  }
-  
-  
-  
-  private JToggleButton getAntennaDirectionButton(AntennaDirections button)
-  {
-    if(dLineSettings.getButtonOrientation() == DLineApplicationSettings.ButtonOrientation.NorthWest)
+    private void setAntennaButtonsLabels()
     {
-      switch(button) 
-      {
-        case plusY:
-          return jToggleButton7;
-        case minusX:
-          return jToggleButton9;
-        case minusY:
-          return jToggleButton3;
-        case plusX:
-          return jToggleButton1;
-      }
+        if (jToggleButtonAntennaType.isSelected() == false)
+        {
+            jToggleButtonAntennaType.setText(dLineSettings.getLabelAnt1());
+        }
+        else
+        {
+            jToggleButtonAntennaType.setText(dLineSettings.getLabelAnt2());
+        }
     }
-   
-    switch (button)
+
+    /**
+     * Enables and disables the desired direction button set depending on the
+     * orientation stored in dLineSettings. <br>
+     */
+    private void setButtonsOrientation()
     {
-      case plusY:
-        return jToggleButton8;
-      case minusX:
-        return jToggleButton6;
-      case minusY:
-        return jToggleButton2;
-      default:
-        System.err.print("Error!");
-      case plusX:
-        return jToggleButton4;
+        if (dLineSettings.getButtonsOrientation() == DLineApplicationSettings.ButtonsOrientation.North)
+        {
+            for(int i=0; i<buttonsNorthDirection.length; i++)
+            {
+                buttonsNorthDirection[i].setVisible(true);
+                buttonsNorthwestDirection[i].setVisible(false);
+            }
+        }
+        else
+        {
+            for(int i=0; i<buttonsNorthDirection.length; i++)
+            {
+                buttonsNorthDirection[i].setVisible(false);
+                buttonsNorthwestDirection[i].setVisible(true);
+            }
+        }
+
     }
-  }
+
+    /**
+     * Sends a command to the DLine Controller device. The command represents
+     * the current state of the Java application.
+     */
+    private void sendSerialCommand()
+    {
+        try
+        {
+            // Send the command to the DLine Controller device
+            dLineSerialComm.sendCommand(dLineSettings.getComPort(),
+                    Integer.parseInt(dLineSettings.getBaudRate()),
+                    Byte.parseByte(dLineSettings.getDeviceId()),
+                    dLineApplicationState.getState());
+            // Draw the command being send at the bottom of the jFrame
+            final Dimension size = jLabelSerialComm.getPreferredSize();
+            jLabelSerialComm.setMinimumSize(size);
+            jLabelSerialComm.setPreferredSize(size);
+            jLabelSerialComm.setText(dLineSettings.getComPort() + ": " + String.format("%8s", Integer.toBinaryString(dLineApplicationState.getState())).replace(" ", "0"));
+        }
+        catch (Exception ex)
+        {
+            // Draw debug info at the bottom of the jFrame
+            final Dimension size = jLabelSerialComm.getPreferredSize();
+            jLabelSerialComm.setMinimumSize(size);
+            jLabelSerialComm.setPreferredSize(size);
+            jLabelSerialComm.setText(dLineSettings.getComPort() + ": " + ex.toString());
+            Logger.getLogger(DLineApplication.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Sets the title of the JFrame to show the currently selected antenna and
+     * direction. <br>
+     * For example: "Loop: +Y(additive)" quite low
+     */
+    private void setJFrameTitleToShowCurrentState()
+    {
+        String type;
+        String mode;
+        String direction;
+
+        // Read antenna Type
+        switch (dLineApplicationState.getAntennaType())
+        {
+            case dipole:
+                type = dLineSettings.getLabelAnt1();
+                break;
+            case loop:
+            default:
+                type = dLineSettings.getLabelAnt2();
+                break;
+        }
+
+        // Read antenna Mode
+        mode = "(" + dLineApplicationState.getAntennaMode().toString() + ")";
+
+        // Read the antenna Direction
+        switch (dLineApplicationState.getAntennaDirection())
+        {
+            case plusY:
+                direction = dLineSettings.getDirectionLabel(AntennaDirections.plusY.ordinal());
+                break;
+            case minusY:
+                direction = dLineSettings.getDirectionLabel(AntennaDirections.minusY.ordinal());
+                break;
+            case plusX:
+                direction = dLineSettings.getDirectionLabel(AntennaDirections.plusX.ordinal());
+                break;
+            case minusX:
+            default:
+                direction = dLineSettings.getDirectionLabel(AntennaDirections.minusX.ordinal());
+                break;
+        }
+
+        this.setTitle(type + ": " + direction + mode);
+    }
+
+  
+    /**
+     * User has closed the setting dialog and we need to save the state of the
+     * controls
+     */
+    private void storeSettingsDialogParams()
+    {
+        dLineSettings.setDeviceId(jComboBoxDeviceId.getSelectedItem().toString());
+
+        if (jRadioButtonNorth.isSelected())
+        {
+            dLineSettings.setButtonsOrientation(DLineApplicationSettings.ButtonsOrientation.North);
+        }
+        else
+        {
+            dLineSettings.setButtonsOrientation(DLineApplicationSettings.ButtonsOrientation.NorthWest);
+        }
+
+        // In case there is Virtual ComPort defined we will use it...
+        if (!textfieldVirtualCommPort.getText().trim().isEmpty())
+        {
+            dLineSettings.setComPort(textfieldVirtualCommPort.getText());
+        }
+        else
+        {
+            if (jComboBoxComPort.getSelectedItem() != null)
+            {
+                dLineSettings.setComPort(jComboBoxComPort.getSelectedItem().toString());
+            }
+        }
+
+        dLineSettings.setBaudRate(jComboBoxBaudRate.getSelectedItem().toString());
+
+        // Store direction button texts
+        for(int i=0; i<textfieldsDirectionsLabels.length; i++)
+        {
+            dLineSettings.setDirectionLabel(i, textfieldsDirectionsLabels[i].getText());     
+        }
+
+        // Store antenna button texts
+        dLineSettings.setLabelAnt1(textfieldSettingsAntenna_1.getText());
+        dLineSettings.setLabelAnt2(textfieldSettingsAntenna_2.getText());
+
+        // 
+        dLineSettings.setSingleElementMode(jCheckBoxSingleElementMode.isSelected());
+    }
+
+    
+    /**
+     * Initialize the controls of the main windows
+     */
+    private void initMainWindow(boolean initMainWindowSize)
+    {     
+        // Set the desired buttons orientation and labels  
+        setButtonsOrientation();
+        setDirectionButtonsLabels();
+        setAntennaButtonsLabels();
+        dLineApplicationState.setSingleElementMode(dLineSettings.isSingleElementMode());
+        // Read last used JFrame dimensions and restore it
+        if(initMainWindowSize)
+        {
+            this.setBounds(dLineSettings.getJFrameDimensions());
+        }
+        
+        // set the Direction button
+        getAntennaDirectionButton(dLineApplicationState.getAntennaDirection()).setSelected(true);
+        
+        // set Additive/Subtractive
+        if(dLineApplicationState.getAntennaMode() == DLineApplicationState.AntennaModes.additive)
+        {
+            toggleButtonDirectionMode.setSelected(true); 
+        }
+        else
+        {
+            toggleButtonDirectionMode.setSelected(false); 
+        }
+        
+        // set Dipole/Loop
+        if(dLineApplicationState.getAntennaType() == DLineApplicationState.AntennaTypes.loop)
+        {
+            jToggleButtonAntennaType.setSelected(true);
+        }
+        else
+        {
+            jToggleButtonAntennaType.setSelected(false);
+        }
+    }
+    
+    
+    /**
+     * User has opened the setting dialog and we need to load the state of the
+     * controls
+     */
+    private void initSettingsDialog()
+    {
+        jComboBoxDeviceId.setSelectedItem(dLineSettings.getDeviceId());
+
+        if (dLineSettings.getButtonsOrientation() == DLineApplicationSettings.ButtonsOrientation.North)
+        {
+            jRadioButtonNorth.setSelected(true);
+            jRadioButtonNorthWest.setSelected(false);
+        }
+        else
+        {
+            jRadioButtonNorth.setSelected(false);
+            jRadioButtonNorthWest.setSelected(true);
+        }
+
+        // If standart ComPort is set...
+        if (comPortComboBoxModel.getIndexOf(dLineSettings.getComPort()) >= 0)
+        {
+            jComboBoxComPort.setSelectedItem(dLineSettings.getComPort());
+            textfieldVirtualCommPort.setText(""); // Custom 
+        }
+        else
+        {
+            textfieldVirtualCommPort.setText(dLineSettings.getComPort());
+        }
+
+        jComboBoxBaudRate.setSelectedItem(dLineSettings.getBaudRate());
+
+        // Direction buttons text  
+        for(int i=0; i<textfieldsDirectionsLabels.length; i++)
+        {
+            textfieldsDirectionsLabels[i].setText(dLineSettings.getDirectionLabel(i));
+        }
+
+        // Antenna button texts
+        textfieldSettingsAntenna_1.setText(dLineSettings.getLabelAnt1());
+        textfieldSettingsAntenna_2.setText(dLineSettings.getLabelAnt2());
+
+        //
+        jCheckBoxSingleElementMode.setSelected(dLineSettings.isSingleElementMode());
+    }
+
+    
+    /**
+     * Initializes the controls of the Switching dialog 
+     */
+    void initSwitchingDialog()
+    {
+        for(int i=0; i<checkboxesDirections.length; i++)
+        {
+            // Set the correct texts for each direction
+            checkboxesDirections[i].setText(dLineSettings.getDirectionLabel(i));
+            // Set the state for each direction
+            checkboxesDirections[i].setSelected(dLineSettings.getIsDirectionCheckmarked(i));
+            // Set the switching period for each direction
+            textfieldsSwitchingPeriods[i].setText(Integer.toString(dLineSettings.getDirectionSwitchingPeriod(i)));
+        }
+    }
+    
+    
+    /**
+     * Stores all the parameters from the Switching dialog
+     */
+    void storeSwitchingDialogParams()
+    {
+        for(int i=0; i<checkboxesDirections.length; i++)
+        {
+            // Store which antennas are checked
+            dLineSettings.setIsDirectionCheckmarked(i, checkboxesDirections[i].isSelected());
+            
+            // Store the switching periods for each antenna
+            int period = convertStringPeriodToInt(textfieldsSwitchingPeriods[i].getText());
+            dLineSettings.setDirectionSwitchingPeriod(i, period);
+            textfieldsSwitchingPeriods[i].setText(Integer.toString(period)); // make sure we show the actual period
+        }
+    }
+    
+    
+    /**
+     * Converts the string into integer and in the process validates if the
+     * value has the expected value.
+     *
+     * @param period Period in milliseconds
+     */
+    private int convertStringPeriodToInt(String stingPeriod)
+    {
+        int period;
+
+        try
+        {
+            period = Integer.parseInt(stingPeriod);
+        } 
+        catch (NumberFormatException exc)
+        {
+            period = DEFAULT_SWITCHING_PERIOD_IN_MS;
+            return period; // Return default value if the user didn't enter a number
+        }
+
+        if (period < MIN_SWITCHING_PERIOD_IN_MS)
+        {
+            period = MIN_SWITCHING_PERIOD_IN_MS;
+        } 
+        else if (period > MAX_SWITCHING_PERIOD_IN_MS)
+        {
+            period = MAX_SWITCHING_PERIOD_IN_MS;
+        }
+        
+        return period;
+    }
+    
+    
+    private JToggleButton getAntennaDirectionButton(AntennaDirections button)
+    {
+        if (dLineSettings.getButtonsOrientation() == DLineApplicationSettings.ButtonsOrientation.North)
+        {
+            return buttonsNorthDirection[button.ordinal()];  
+        }
+        else
+        {
+            return buttonsNorthwestDirection[button.ordinal()]; 
+        }
+    }
+    
+    private JToggleButton getAntennaDirectionButton(int button)
+    {
+        if (dLineSettings.getButtonsOrientation() == DLineApplicationSettings.ButtonsOrientation.North)
+        {
+            return buttonsNorthDirection[button];  
+        }
+        else
+        {
+            return buttonsNorthwestDirection[button]; 
+        }
+    }
+
+    
+    /**
+     * Handler for the automatic direction switching
+     */
+    private final ActionListener directionSwitchingListener = new ActionListener()
+    {
+        @Override
+        public void actionPerformed(ActionEvent evt)
+        {
+            int next;
+
+            //ToDo: sfsdfsf
+            next = findNextCheckmarkedDirection(dLineApplicationState.getAntennaDirection().ordinal());
+
+            // Start timer for the required period
+            if (next == DIRECTION_NOT_SET)
+            {
+                directionSwitchingTimer.setDelay(200); // let's come back in some time and check if the user has checked some direction
+                directionSwitchingTimer.start();
+            }
+            else
+            {
+                // Press the direction button
+                getAntennaDirectionButton(next).setSelected(true);
+
+                int perdiod = dLineSettings.getDirectionSwitchingPeriod(next);
+                directionSwitchingTimer.setInitialDelay(perdiod);
+                directionSwitchingTimer.start();
+            }
+        }
+    };
+    
+    
+    
+    /**
+     * Finds the next direction from the SwitchingDialog that is checkmarked
+     * 
+     * Example: current CheckmarkedDirection is 2 and we have the 
+     * following direction selection: 
+     * 0 - no checked 
+     * 1 - checked 
+     * 2 - checked 
+     * 3 - not checked.
+     *
+     * In this case the currentAnt will be set to ANT2
+     * 
+     * @param currentCheckmarkedAntenna - a value from ANT_NOTSET to ANT_4
+     * @return Next checkmarked antenna (a value from ANT_NOTSET to ANT_4)
+     */
+    int findNextCheckmarkedDirection(int currentCheckmarkedDirection)
+    {
+        // Get the checkmark status for each direction
+        boolean[] arrayIsEnabled = new boolean[checkboxesDirections.length];
+        for(int i=0; i<arrayIsEnabled.length; i++)
+        {
+            arrayIsEnabled[i] = dLineSettings.getIsDirectionCheckmarked(i);
+        }
+
+        // Traverse all antennas starting from the currentCheckmarkedAntenna
+        int direction = currentCheckmarkedDirection;
+        
+        for (int i = 0; i < checkboxesDirections.length; i++)
+        {
+            direction++;
+            if (direction >= checkboxesDirections.length)
+            {
+                // start from the first direction if we reach the end of the array
+                direction = 0; 
+            }
+
+            if (arrayIsEnabled[direction])
+            {
+                return direction; // found next
+            }
+        }
+
+        return DIRECTION_NOT_SET; // We didn't find selected antenna
+    }
 }

@@ -1,0 +1,2 @@
+- Add "select" entry inside the Comport name dropbox
+
