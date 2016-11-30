@@ -23,7 +23,7 @@ public class DLineApplicationState
     {
         antennaDirection  = AntennaDirections.plusY;
         antennaType       = AntennaTypes.loop;
-        antennaMode       = AntennaModes.additive;
+        antennaMode       = AntennaModes.subtractive;
         hardwareState     = new DLineHardwareState();
     }
     

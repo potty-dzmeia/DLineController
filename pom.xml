@@ -4,8 +4,8 @@
 
   <groupId>org.lz1aq</groupId>
   <artifactId>dlinecontroller</artifactId>
-  <version>1.6</version>
-  <description>What's new: Now while in Debug mode the user can press buttons on the maini window</description>
+  <version>1.6.1</version>
+  <description>What's new: startup.bat is now not opening command prompt; Subtractive mode is the set on startup.</description>
   <packaging>jar</packaging>
   <name>dlinecontroller</name>
   <url>www.active-antenna.eu</url>
