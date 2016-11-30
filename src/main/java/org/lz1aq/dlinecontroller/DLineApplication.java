@@ -28,7 +28,7 @@ public class DLineApplication extends javax.swing.JFrame
 {
 
     private static final long serialVersionUID = 1L;
-    static final String PROGRAM_VERSION = "1.6";
+    static final String PROGRAM_VERSION = "1.6.1";
     static final String PROGRAM_NAME    = "DLineController";
     
     private final DLineApplicationState     dLineApplicationState;
@@ -213,8 +213,9 @@ public class DLineApplication extends javax.swing.JFrame
         toggleButtonNwDirection_2 = new javax.swing.JToggleButton();
         jPanel12 = new javax.swing.JPanel();
         jToggleButtonAntennaType = new javax.swing.JToggleButton();
-        jLabelSerialComm = new javax.swing.JLabel();
         jCheckBoxPeriodicSwitching = new javax.swing.JCheckBox();
+        jPanel2 = new javax.swing.JPanel();
+        jLabelSerialComm = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         jMenuSettigns = new javax.swing.JMenuItem();
@@ -471,7 +472,7 @@ public class DLineApplication extends javax.swing.JFrame
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 0, 0);
         jPanel4.add(jLabel7, gridBagConstraints);
 
-        jLabel12.setText("CommPort name");
+        jLabel12.setText("CommPort");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -491,7 +492,7 @@ public class DLineApplication extends javax.swing.JFrame
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
         jPanel4.add(jLabel13, gridBagConstraints);
 
-        jLabel18.setText("Virtual ComPort name");
+        jLabel18.setText("Virtual ComPort");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
@@ -597,7 +598,8 @@ public class DLineApplication extends javax.swing.JFrame
 
         jDialogPeriodicSwitching.setTitle("Periodic direction switching");
         jDialogPeriodicSwitching.setAlwaysOnTop(true);
-        jDialogPeriodicSwitching.setPreferredSize(new java.awt.Dimension(250, 200));
+        jDialogPeriodicSwitching.setMinimumSize(new java.awt.Dimension(50, 50));
+        jDialogPeriodicSwitching.setPreferredSize(new java.awt.Dimension(200, 200));
         jDialogPeriodicSwitching.addComponentListener(new java.awt.event.ComponentAdapter()
         {
             public void componentShown(java.awt.event.ComponentEvent evt)
@@ -741,6 +743,7 @@ public class DLineApplication extends javax.swing.JFrame
 
         jDialogAbout.setTitle("DLineController v1.5");
         jDialogAbout.setAlwaysOnTop(true);
+        jDialogAbout.setMinimumSize(new java.awt.Dimension(50, 50));
         jDialogAbout.setModal(true);
         jDialogAbout.setResizable(false);
 
@@ -817,7 +820,7 @@ public class DLineApplication extends javax.swing.JFrame
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Serial Interface to LZ1AQ's DLine Controller");
-        setMinimumSize(new java.awt.Dimension(200, 200));
+        setMinimumSize(new java.awt.Dimension(100, 100));
         addWindowListener(new java.awt.event.WindowAdapter()
         {
             public void windowOpened(java.awt.event.WindowEvent evt)
@@ -829,6 +832,7 @@ public class DLineApplication extends javax.swing.JFrame
                 formWindowClosing(evt);
             }
         });
+        getContentPane().setLayout(new java.awt.GridBagLayout());
 
         jPanel11.setLayout(new java.awt.GridLayout(3, 3));
 
@@ -958,6 +962,16 @@ public class DLineApplication extends javax.swing.JFrame
         });
         jPanel11.add(toggleButtonNwDirection_2);
 
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        getContentPane().add(jPanel11, gridBagConstraints);
+
+        jPanel12.setMinimumSize(new java.awt.Dimension(0, 0));
         jPanel12.setLayout(new java.awt.GridBagLayout());
 
         jToggleButtonAntennaType.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -972,22 +986,10 @@ public class DLineApplication extends javax.swing.JFrame
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         jPanel12.add(jToggleButtonAntennaType, gridBagConstraints);
-
-        jLabelSerialComm.setText("Serial Comm:");
-        jLabelSerialComm.setMinimumSize(null);
-        jLabelSerialComm.setPreferredSize(null);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 0.1;
-        jPanel12.add(jLabelSerialComm, gridBagConstraints);
-        jLabelSerialComm.getAccessibleContext().setAccessibleName("jLabelSerialComm");
-        jLabelSerialComm.getAccessibleContext().setAccessibleDescription("");
 
         jCheckBoxPeriodicSwitching.setText("Periodic Switching");
         jCheckBoxPeriodicSwitching.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -1004,8 +1006,41 @@ public class DLineApplication extends javax.swing.JFrame
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 0.6;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
         jPanel12.add(jCheckBoxPeriodicSwitching, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 0.4;
+        getContentPane().add(jPanel12, gridBagConstraints);
+
+        jPanel2.setMinimumSize(new java.awt.Dimension(0, 0));
+        jPanel2.setLayout(new java.awt.GridBagLayout());
+
+        jLabelSerialComm.setText("Serial Comm:");
+        jLabelSerialComm.setMinimumSize(null);
+        jLabelSerialComm.setPreferredSize(null);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        jPanel2.add(jLabelSerialComm, gridBagConstraints);
+        jLabelSerialComm.getAccessibleContext().setAccessibleName("jLabelSerialComm");
+        jLabelSerialComm.getAccessibleContext().setAccessibleDescription("");
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 0.1;
+        getContentPane().add(jPanel2, gridBagConstraints);
 
         fileMenu.setMnemonic('f');
         fileMenu.setText("File");
@@ -1057,23 +1092,6 @@ public class DLineApplication extends javax.swing.JFrame
         menuBar.add(helpMenu);
 
         setJMenuBar(menuBar);
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
-        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -1378,6 +1396,7 @@ public class DLineApplication extends javax.swing.JFrame
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
@@ -1612,17 +1631,22 @@ public class DLineApplication extends javax.swing.JFrame
     /**
      * Initialize the controls of the main windows
      */
-    private void initMainWindow(boolean initMainWindowSize)
+    private void initMainWindow(boolean isStartup)
     {     
         // Set the desired buttons orientation and labels  
         setButtonsOrientation();
         setDirectionButtonsLabels();
         setAntennaButtonsLabels();
         dLineApplicationState.setSingleElementMode(dLineSettings.isSingleElementMode());
-        // Read last used JFrame dimensions and restore it
-        if(initMainWindowSize)
+        
+// Read last used JFrame dimensions and restore it
+        if(isStartup)
         {
-            this.setBounds(dLineSettings.getJFrameDimensions());
+            if(dLineSettings.getJFrameDimensions().isEmpty() == false)
+            {
+                this.setBounds(dLineSettings.getJFrameDimensions());             
+            }
+           
         }
         
         // set the Direction button

@@ -1,2 +1,2 @@
 - Add "select" entry inside the Comport name dropbox
-
+- periodic switching dimenssions should be remembered
