@@ -1,7 +1,7 @@
 DLineController
 ===============
 
-Software for controlling LZ1AQ's Variable Delay Line Kit for Wideband Active Antenna Phased Arrays
+Software written by LZ1ABC for controlling LZ1AQ's Variable Delay Line Kit for Wideband Active Antenna Phased Arrays
 For more info see http://www.active-antenna.eu/
 
 The program is written in Java and supports the following operating systems:
