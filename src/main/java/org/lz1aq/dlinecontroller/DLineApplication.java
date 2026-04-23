@@ -141,8 +141,7 @@ public class DLineApplication extends javax.swing.JFrame
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
         jDialogSettings = new javax.swing.JDialog();
@@ -177,8 +176,6 @@ public class DLineApplication extends javax.swing.JFrame
         jPanel5 = new javax.swing.JPanel();
         jButtonCancel = new javax.swing.JButton();
         jButtonSave = new javax.swing.JButton();
-        jPanel6 = new javax.swing.JPanel();
-        jCheckBoxSingleElementMode = new javax.swing.JCheckBox();
         buttonGroupInSettings = new javax.swing.ButtonGroup();
         buttonGroupDirections = new javax.swing.ButtonGroup();
         jDialogPeriodicSwitching = new javax.swing.JDialog();
@@ -212,8 +209,10 @@ public class DLineApplication extends javax.swing.JFrame
         toggleButtonNDirection_2 = new javax.swing.JToggleButton();
         toggleButtonNwDirection_2 = new javax.swing.JToggleButton();
         jPanel12 = new javax.swing.JPanel();
-        jToggleButtonAntennaType = new javax.swing.JToggleButton();
+        jPanel6 = new javax.swing.JPanel();
+        jCheckBoxSingleElementMode = new javax.swing.JCheckBox();
         jCheckBoxPeriodicSwitching = new javax.swing.JCheckBox();
+        jToggleButtonAntennaType = new javax.swing.JToggleButton();
         jPanel2 = new javax.swing.JPanel();
         jLabelSerialComm = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
@@ -227,10 +226,8 @@ public class DLineApplication extends javax.swing.JFrame
         jDialogSettings.setAlwaysOnTop(true);
         jDialogSettings.setModal(true);
         jDialogSettings.setType(java.awt.Window.Type.UTILITY);
-        jDialogSettings.addComponentListener(new java.awt.event.ComponentAdapter()
-        {
-            public void componentShown(java.awt.event.ComponentEvent evt)
-            {
+        jDialogSettings.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
                 jDialogSettingsComponentShown(evt);
             }
         });
@@ -525,10 +522,8 @@ public class DLineApplication extends javax.swing.JFrame
         jPanel5.setLayout(new java.awt.GridBagLayout());
 
         jButtonCancel.setText("Cancel");
-        jButtonCancel.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCancelActionPerformed(evt);
             }
         });
@@ -542,10 +537,8 @@ public class DLineApplication extends javax.swing.JFrame
         jPanel5.add(jButtonCancel, gridBagConstraints);
 
         jButtonSave.setText("Save");
-        jButtonSave.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        jButtonSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSaveActionPerformed(evt);
             }
         });
@@ -567,29 +560,6 @@ public class DLineApplication extends javax.swing.JFrame
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanel1.add(jPanel5, gridBagConstraints);
 
-        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Other"));
-        jPanel6.setLayout(new java.awt.GridBagLayout());
-
-        jCheckBoxSingleElementMode.setText("Single element mode");
-        jCheckBoxSingleElementMode.setToolTipText("If checked this will set bit6 to TRUE");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 10, 5);
-        jPanel6.add(jCheckBoxSingleElementMode, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanel1.add(jPanel6, gridBagConstraints);
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
@@ -599,25 +569,19 @@ public class DLineApplication extends javax.swing.JFrame
         jDialogPeriodicSwitching.setTitle("Periodic direction switching");
         jDialogPeriodicSwitching.setAlwaysOnTop(true);
         jDialogPeriodicSwitching.setMinimumSize(new java.awt.Dimension(50, 50));
-        jDialogPeriodicSwitching.setPreferredSize(new java.awt.Dimension(200, 200));
-        jDialogPeriodicSwitching.addComponentListener(new java.awt.event.ComponentAdapter()
-        {
-            public void componentShown(java.awt.event.ComponentEvent evt)
-            {
+        jDialogPeriodicSwitching.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
                 jDialogPeriodicSwitchingComponentShown(evt);
             }
-            public void componentHidden(java.awt.event.ComponentEvent evt)
-            {
+            public void componentHidden(java.awt.event.ComponentEvent evt) {
                 jDialogPeriodicSwitchingComponentHidden(evt);
             }
         });
         jDialogPeriodicSwitching.getContentPane().setLayout(new java.awt.GridBagLayout());
 
         checkboxDirectionSwitching_1.setText("-X");
-        checkboxDirectionSwitching_1.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        checkboxDirectionSwitching_1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 checkboxDirectionSwitching_1ActionPerformed(evt);
             }
         });
@@ -702,10 +666,8 @@ public class DLineApplication extends javax.swing.JFrame
         jDialogPeriodicSwitching.getContentPane().add(textfieldDirectionPeriod_1, gridBagConstraints);
 
         jButtonPeriodicSwitchingDialogSet.setText("Set");
-        jButtonPeriodicSwitchingDialogSet.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        jButtonPeriodicSwitchingDialogSet.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonPeriodicSwitchingDialogSetActionPerformed(evt);
             }
         });
@@ -748,10 +710,8 @@ public class DLineApplication extends javax.swing.JFrame
         jDialogAbout.setResizable(false);
 
         buttonAboutDialogOK.setText("OK");
-        buttonAboutDialogOK.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        buttonAboutDialogOK.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonAboutDialogOKActionPerformed(evt);
             }
         });
@@ -777,10 +737,8 @@ public class DLineApplication extends javax.swing.JFrame
         jTextField3.setEditable(false);
         jTextField3.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextField3.setText("github.com/potty-dzmeia/DLineController");
-        jTextField3.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField3ActionPerformed(evt);
             }
         });
@@ -821,15 +779,12 @@ public class DLineApplication extends javax.swing.JFrame
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Serial Interface to LZ1AQ's DLine Controller");
         setMinimumSize(new java.awt.Dimension(100, 100));
-        addWindowListener(new java.awt.event.WindowAdapter()
-        {
-            public void windowOpened(java.awt.event.WindowEvent evt)
-            {
-                formWindowOpened(evt);
-            }
-            public void windowClosing(java.awt.event.WindowEvent evt)
-            {
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
+            }
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
             }
         });
         getContentPane().setLayout(new java.awt.GridBagLayout());
@@ -841,10 +796,8 @@ public class DLineApplication extends javax.swing.JFrame
         toggleButtonNwDirection_0.setText("+Y");
         toggleButtonNwDirection_0.setMinimumSize(new java.awt.Dimension(0, 0));
         toggleButtonNwDirection_0.setPreferredSize(new java.awt.Dimension(40, 40));
-        toggleButtonNwDirection_0.addItemListener(new java.awt.event.ItemListener()
-        {
-            public void itemStateChanged(java.awt.event.ItemEvent evt)
-            {
+        toggleButtonNwDirection_0.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 toggleButtonNwDirection_0ItemStateChanged(evt);
             }
         });
@@ -855,10 +808,8 @@ public class DLineApplication extends javax.swing.JFrame
         toggleButtonNDirection_0.setText("+Y");
         toggleButtonNDirection_0.setMinimumSize(new java.awt.Dimension(0, 0));
         toggleButtonNDirection_0.setPreferredSize(new java.awt.Dimension(40, 40));
-        toggleButtonNDirection_0.addItemListener(new java.awt.event.ItemListener()
-        {
-            public void itemStateChanged(java.awt.event.ItemEvent evt)
-            {
+        toggleButtonNDirection_0.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 toggleButtonNDirection_0ItemStateChanged(evt);
             }
         });
@@ -869,10 +820,8 @@ public class DLineApplication extends javax.swing.JFrame
         toggleButtonNwDirection_1.setText("-X");
         toggleButtonNwDirection_1.setMinimumSize(new java.awt.Dimension(0, 0));
         toggleButtonNwDirection_1.setPreferredSize(new java.awt.Dimension(40, 40));
-        toggleButtonNwDirection_1.addItemListener(new java.awt.event.ItemListener()
-        {
-            public void itemStateChanged(java.awt.event.ItemEvent evt)
-            {
+        toggleButtonNwDirection_1.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 toggleButtonNwDirection_1ItemStateChanged(evt);
             }
         });
@@ -883,10 +832,8 @@ public class DLineApplication extends javax.swing.JFrame
         toggleButtonNDirection_3.setText("+X");
         toggleButtonNDirection_3.setMinimumSize(new java.awt.Dimension(0, 0));
         toggleButtonNDirection_3.setPreferredSize(new java.awt.Dimension(40, 40));
-        toggleButtonNDirection_3.addItemListener(new java.awt.event.ItemListener()
-        {
-            public void itemStateChanged(java.awt.event.ItemEvent evt)
-            {
+        toggleButtonNDirection_3.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 toggleButtonNDirection_3ItemStateChanged(evt);
             }
         });
@@ -897,10 +844,8 @@ public class DLineApplication extends javax.swing.JFrame
         toggleButtonDirectionMode.setToolTipText("");
         toggleButtonDirectionMode.setMinimumSize(new java.awt.Dimension(0, 0));
         toggleButtonDirectionMode.setPreferredSize(new java.awt.Dimension(40, 40));
-        toggleButtonDirectionMode.addItemListener(new java.awt.event.ItemListener()
-        {
-            public void itemStateChanged(java.awt.event.ItemEvent evt)
-            {
+        toggleButtonDirectionMode.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 toggleButtonDirectionModeItemStateChanged(evt);
             }
         });
@@ -911,10 +856,8 @@ public class DLineApplication extends javax.swing.JFrame
         toggleButtonNDirection_1.setText("-X");
         toggleButtonNDirection_1.setMinimumSize(new java.awt.Dimension(0, 0));
         toggleButtonNDirection_1.setPreferredSize(new java.awt.Dimension(40, 40));
-        toggleButtonNDirection_1.addItemListener(new java.awt.event.ItemListener()
-        {
-            public void itemStateChanged(java.awt.event.ItemEvent evt)
-            {
+        toggleButtonNDirection_1.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 toggleButtonNDirection_1ItemStateChanged(evt);
             }
         });
@@ -925,10 +868,8 @@ public class DLineApplication extends javax.swing.JFrame
         toggleButtonNwDirection_3.setText("+X");
         toggleButtonNwDirection_3.setMinimumSize(new java.awt.Dimension(0, 0));
         toggleButtonNwDirection_3.setPreferredSize(new java.awt.Dimension(40, 40));
-        toggleButtonNwDirection_3.addItemListener(new java.awt.event.ItemListener()
-        {
-            public void itemStateChanged(java.awt.event.ItemEvent evt)
-            {
+        toggleButtonNwDirection_3.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 toggleButtonNwDirection_3ItemStateChanged(evt);
             }
         });
@@ -939,10 +880,8 @@ public class DLineApplication extends javax.swing.JFrame
         toggleButtonNDirection_2.setText("-Y");
         toggleButtonNDirection_2.setMinimumSize(new java.awt.Dimension(0, 0));
         toggleButtonNDirection_2.setPreferredSize(new java.awt.Dimension(40, 40));
-        toggleButtonNDirection_2.addItemListener(new java.awt.event.ItemListener()
-        {
-            public void itemStateChanged(java.awt.event.ItemEvent evt)
-            {
+        toggleButtonNDirection_2.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 toggleButtonNDirection_2ItemStateChanged(evt);
             }
         });
@@ -953,10 +892,8 @@ public class DLineApplication extends javax.swing.JFrame
         toggleButtonNwDirection_2.setText("-Y");
         toggleButtonNwDirection_2.setMinimumSize(new java.awt.Dimension(0, 0));
         toggleButtonNwDirection_2.setPreferredSize(new java.awt.Dimension(40, 40));
-        toggleButtonNwDirection_2.addItemListener(new java.awt.event.ItemListener()
-        {
-            public void itemStateChanged(java.awt.event.ItemEvent evt)
-            {
+        toggleButtonNwDirection_2.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 toggleButtonNwDirection_2ItemStateChanged(evt);
             }
         });
@@ -974,13 +911,41 @@ public class DLineApplication extends javax.swing.JFrame
         jPanel12.setMinimumSize(new java.awt.Dimension(0, 0));
         jPanel12.setLayout(new java.awt.GridBagLayout());
 
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Other"));
+        jPanel6.setLayout(new java.awt.GridLayout());
+
+        jCheckBoxSingleElementMode.setText("Single element mode");
+        jCheckBoxSingleElementMode.setToolTipText("If checked this will set bit6 to TRUE");
+        jCheckBoxSingleElementMode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxSingleElementModeActionPerformed(evt);
+            }
+        });
+        jPanel6.add(jCheckBoxSingleElementMode);
+
+        jCheckBoxPeriodicSwitching.setText("Periodic Switching");
+        jCheckBoxPeriodicSwitching.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jCheckBoxPeriodicSwitching.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxPeriodicSwitchingActionPerformed(evt);
+            }
+        });
+        jPanel6.add(jCheckBoxPeriodicSwitching);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        jPanel12.add(jPanel6, gridBagConstraints);
+
         jToggleButtonAntennaType.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jToggleButtonAntennaType.setText("Antenna Type");
         jToggleButtonAntennaType.setToolTipText("Antenna type");
-        jToggleButtonAntennaType.addItemListener(new java.awt.event.ItemListener()
-        {
-            public void itemStateChanged(java.awt.event.ItemEvent evt)
-            {
+        jToggleButtonAntennaType.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jToggleButtonAntennaTypeItemStateChanged(evt);
             }
         });
@@ -990,23 +955,6 @@ public class DLineApplication extends javax.swing.JFrame
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         jPanel12.add(jToggleButtonAntennaType, gridBagConstraints);
-
-        jCheckBoxPeriodicSwitching.setText("Periodic Switching");
-        jCheckBoxPeriodicSwitching.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jCheckBoxPeriodicSwitching.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                jCheckBoxPeriodicSwitchingActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 0.6;
-        jPanel12.add(jCheckBoxPeriodicSwitching, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1044,19 +992,15 @@ public class DLineApplication extends javax.swing.JFrame
 
         fileMenu.setMnemonic('f');
         fileMenu.setText("File");
-        fileMenu.addKeyListener(new java.awt.event.KeyAdapter()
-        {
-            public void keyPressed(java.awt.event.KeyEvent evt)
-            {
+        fileMenu.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
                 fileMenuKeyPressed(evt);
             }
         });
 
         jMenuSettigns.setText("Settings");
-        jMenuSettigns.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        jMenuSettigns.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuSettignsActionPerformed(evt);
             }
         });
@@ -1064,10 +1008,8 @@ public class DLineApplication extends javax.swing.JFrame
 
         exitMenuItem.setMnemonic('x');
         exitMenuItem.setText("Exit");
-        exitMenuItem.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 exitMenuItemActionPerformed(evt);
             }
         });
@@ -1080,10 +1022,8 @@ public class DLineApplication extends javax.swing.JFrame
 
         aboutMenuItem.setMnemonic('a');
         aboutMenuItem.setText("About");
-        aboutMenuItem.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 aboutMenuItemActionPerformed(evt);
             }
         });
@@ -1298,6 +1238,12 @@ public class DLineApplication extends javax.swing.JFrame
     {//GEN-HEADEREND:event_jButtonPeriodicSwitchingDialogSetActionPerformed
         storeSwitchingDialogParams();
     }//GEN-LAST:event_jButtonPeriodicSwitchingDialogSetActionPerformed
+
+    private void jCheckBoxSingleElementModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxSingleElementModeActionPerformed
+        dLineApplicationState.setSingleElementMode(jCheckBoxSingleElementMode.isSelected());
+        setJFrameTitleToShowCurrentState();
+        sendSerialCommand();
+    }//GEN-LAST:event_jCheckBoxSingleElementModeActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1622,9 +1568,6 @@ public class DLineApplication extends javax.swing.JFrame
         // Store antenna button texts
         dLineSettings.setLabelAnt1(textfieldSettingsAntenna_1.getText());
         dLineSettings.setLabelAnt2(textfieldSettingsAntenna_2.getText());
-
-        // 
-        dLineSettings.setSingleElementMode(jCheckBoxSingleElementMode.isSelected());
     }
 
     
@@ -1637,7 +1580,6 @@ public class DLineApplication extends javax.swing.JFrame
         setButtonsOrientation();
         setDirectionButtonsLabels();
         setAntennaButtonsLabels();
-        dLineApplicationState.setSingleElementMode(dLineSettings.isSingleElementMode());
         
 // Read last used JFrame dimensions and restore it
         if(isStartup)
@@ -1715,9 +1657,6 @@ public class DLineApplication extends javax.swing.JFrame
         // Antenna button texts
         textfieldSettingsAntenna_1.setText(dLineSettings.getLabelAnt1());
         textfieldSettingsAntenna_2.setText(dLineSettings.getLabelAnt2());
-
-        //
-        jCheckBoxSingleElementMode.setSelected(dLineSettings.isSingleElementMode());
     }
 
     

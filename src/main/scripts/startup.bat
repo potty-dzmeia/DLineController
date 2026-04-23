@@ -1,1 +1,1 @@
-start javaw -classpath "dlinecontroller-1.6.1.jar" org.lz1aq.dlinecontroller.DLineApplication
+start javaw -classpath "dlinecontroller-1.6.2.jar" org.lz1aq.dlinecontroller.DLineApplication

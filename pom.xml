@@ -4,31 +4,47 @@
 
   <groupId>org.lz1aq</groupId>
   <artifactId>dlinecontroller</artifactId>
-  <version>1.6.1</version>
-  <description>What's new: startup.bat is now not opening command prompt; Subtractive mode is the set on startup.</description>
+  <version>1.6.2</version>
+  <description>What's new: Single Element mode is now located on the main window.</description>
   <packaging>jar</packaging>
   <name>dlinecontroller</name>
   <url>www.active-antenna.eu</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 
 
    <!-- ============================Build============================ -->
   <build>
-
-    <plugins>
     
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>3.3.0</version>
+        </plugin>  
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>3.5.0</version>
+        </plugin>
+       <plugin>
+           <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <version>3.1.1</version>
+          </plugin>
+          
       <!-- =====Plugin===== -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.2</version>
         <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
+          <source>1.8</source>
+          <target>1.8</target>
         </configuration>
       </plugin>
       
@@ -54,7 +70,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.5.5</version>
+        <version>3.5.0</version>
         <configuration>
           <!-- Configures the used assembly descriptor -->
           <descriptors>
@@ -95,6 +111,7 @@
     </dependency>
     
   </dependencies>
-  
+
+
   
 </project>

@@ -47,7 +47,6 @@ public final class DLineApplicationSettings
     private String      labelAnt1;
     private String      labelAnt2;
     private Rectangle   jFrameDimensions;             // JFrame settings: position and size
-    private boolean     isSingleElementMode = false;  // This setting is not saved to the file
     private final String[]  arrayDirectionsSwitchingPeriods;  // Duration period for a direction during the automatic switching
     private final String[]  arrayIsDirectionCheckmarked;      // If the direction is enabled for automatic switching
     private final String[]  arrayDirectionLabels;             // Labels for the direction buttons
@@ -166,29 +165,6 @@ public final class DLineApplicationSettings
     public String getLabelAnt2()
     {
       return labelAnt2;
-    }
-    
-
-    /**
-     * This setting is not saved to a file (also it is initialized to 0 on object
-     * creation)
-     * 
-     * @param isEnabled True is single element mode is enabled
-     */
-    public void setSingleElementMode(boolean isEnabled)
-    {
-      this.isSingleElementMode = isEnabled;
-    }
-    
-    /**
-     * This setting is not saved to a file (also it is initialized to 0 on object
-     * creation)
-     * 
-   * @return True is single element mode is enabled
-     */
-    public boolean isSingleElementMode()
-    {
-      return this.isSingleElementMode;
     }
     
     
