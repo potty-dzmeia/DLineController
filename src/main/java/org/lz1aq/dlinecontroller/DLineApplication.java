@@ -28,7 +28,7 @@ public class DLineApplication extends javax.swing.JFrame
 {
 
     private static final long serialVersionUID = 1L;
-    static final String PROGRAM_VERSION = "1.6.1";
+    static final String PROGRAM_VERSION = "1.6.2";
     static final String PROGRAM_NAME    = "DLineController";
     
     private final DLineApplicationState     dLineApplicationState;
